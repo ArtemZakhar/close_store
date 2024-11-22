@@ -15,7 +15,7 @@ import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import LoadingButton from '@/components/common/LoadingButton';
 
@@ -33,6 +33,7 @@ const FinishRegistration = () => {
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
 
   const params = useSearchParams();
+  const router = useRouter();
 
   const token = params.get('token');
 
@@ -51,12 +52,12 @@ const FinishRegistration = () => {
   };
 
   const onSubmit = async (form: FormInputs) => {
-    const response = await finishRegistration({
+    await finishRegistration({
       password: form.password,
       token: token as string,
     });
 
-    console.log(response);
+    router.push(routePaths.root);
   };
 
   return (

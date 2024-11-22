@@ -6,7 +6,7 @@ export const styles = {
       justifyContent: 'center',
       alignItems: 'center',
       height: height || '100%',
-    }
+    };
   },
-  button: { width: '12rem', marginTop: '1rem' }
-}
+  button: { width: '12rem', marginTop: '1rem' },
+};

@@ -6,7 +6,7 @@ import { styles } from './Loading.styles';
 
 const Loading = ({
   backgroundColor = '#f5f5f5',
-  height = '90vh',
+  height = '30vh',
 }: {
   height?: string;
   backgroundColor?: string;

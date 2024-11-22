@@ -26,7 +26,12 @@ const NewUserForm = ({
   handleClose: () => void;
   type: UserRole;
 }) => {
-  const { isError, isLoading, isSuccess, createNewUser } = useCreateNewUser();
+  const {
+    isError,
+    isLoading,
+    isSuccess,
+    mutate: createNewUser,
+  } = useCreateNewUser();
 
   const {
     control,
@@ -41,7 +46,9 @@ const NewUserForm = ({
   });
 
   const onSubmit = async (formData: FormType) => {
-    createNewUser({ name: formData.name, email: formData.email, role: type });
+    createNewUser({
+      user: { name: formData.name, email: formData.email, role: type },
+    });
   };
   return (
     <>

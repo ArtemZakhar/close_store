@@ -1,33 +1,28 @@
+import { encrypt } from '@/helpers/auth';
 import { connectToDatabase } from '@/lib/mongoDb';
 import User, { UserSchemaType } from '@/models/Users';
 import { sendVerificationEmail } from '@/services/mailer';
 import { NewUserType, UserStatus } from '@/types/users/userType';
 
+import { revalidateTag } from 'next/cache';
 import { NextResponse } from 'next/server';
-
-import jwt from 'jsonwebtoken';
 
 import { responseMessages } from '../constants/responseMessages';
 
 export async function POST(request: Request) {
   await connectToDatabase();
-
   const body: NewUserType = await request.json();
 
   const user = await User.findOne({ email: body.email }).lean<UserSchemaType>();
 
-  if (user && user.status !== UserStatus.deleted) {
+  if (user && user.status === UserStatus.created) {
     return NextResponse.json(
       { error: true, message: responseMessages.user.message },
       { status: responseMessages.codes[409] },
     );
   }
 
-  const token = jwt.sign(
-    { email: body.email },
-    process.env.JWT_SECRET as string,
-    { expiresIn: '7d' },
-  );
+  const token = await encrypt({ email: body.email }, '7d from now');
 
   const newUser = await User.create({
     name: body.name,
@@ -41,6 +36,8 @@ export async function POST(request: Request) {
 
   try {
     await sendVerificationEmail(body.email, token);
+    revalidateTag('users-list');
+
     return NextResponse.json(newUser, { status: responseMessages.codes[201] });
   } catch (error) {
     return NextResponse.json(

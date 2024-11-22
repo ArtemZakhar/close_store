@@ -1,11 +1,12 @@
+import { decrypt } from '@/helpers/auth';
 import { connectToDatabase } from '@/lib/mongoDb';
 import User, { UserSchemaType } from '@/models/Users';
 import { UserStatus } from '@/types/users/userType';
 
+import { revalidateTag } from 'next/cache';
 import { NextResponse } from 'next/server';
 
 import bcrypt from 'bcrypt';
-import jwt, { TokenExpiredError } from 'jsonwebtoken';
 
 import { responseMessages } from '../../constants/responseMessages';
 
@@ -29,20 +30,26 @@ export async function POST(request: Request) {
     );
   }
 
-  try {
-    jwt.verify(user.token, process.env.JWT_SECRET as string);
-  } catch (error) {
-    if (error instanceof TokenExpiredError) {
-      await User.updateOne({ token }, { $set: { status: UserStatus.expired } });
+  const result = (await decrypt(user.token)) as {
+    email: string;
+    iat: number;
+    exp: number;
+  };
 
-      return NextResponse.json({
-        status: responseMessages.codes[401],
-        message: responseMessages.token.expired,
-      });
-    }
+  if (!result || result.email !== user.email) {
+    return NextResponse.json(
+      {
+        error: true,
+        message: responseMessages.token.invalid,
+      },
+      { status: responseMessages.codes[401] },
+    );
+  }
+
+  if (result.exp <= result.iat) {
     return NextResponse.json({
       status: responseMessages.codes[401],
-      message: responseMessages.token.invalid,
+      message: responseMessages.token.expired,
     });
   }
 
@@ -50,8 +57,16 @@ export async function POST(request: Request) {
 
   await User.updateOne(
     { token },
-    { $set: { password: ncryptedPassword, status: UserStatus.created } },
+    {
+      $set: {
+        password: ncryptedPassword,
+        status: UserStatus.created,
+        token: null,
+      },
+    },
   );
+
+  revalidateTag('users-list');
 
   return NextResponse.json({ status: responseMessages.codes[200] });
 }

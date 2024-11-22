@@ -10,6 +10,9 @@ import type { Metadata } from 'next';
 import globalStyles from '@/styles/globalStyles';
 import theme from '@/styles/theme';
 
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+
 export const metadata: Metadata = {
   title: 'Shop store',
   description: 'This is the private shop store',

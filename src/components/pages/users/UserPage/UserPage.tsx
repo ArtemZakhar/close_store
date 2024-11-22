@@ -1,106 +1,90 @@
 'use client';
 
+import { canInvite } from '@/helpers/roleAccess';
+import { showUserRole } from '@/helpers/showUserRole';
+import { UserRole } from '@/types/users/userType';
+import { UsersDataType } from '@/types/users/usersData';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
-import Fade from '@mui/material/Fade';
 import Tab from '@mui/material/Tab';
 import TableContainer from '@mui/material/TableContainer';
+
+import { useState } from 'react';
+
+import InviteUser from '@/components/common/InviteUser';
 
 import UserTable from '../UserTable';
 import { styles } from './UserPage.styles';
 
-const UserPage = () => {
+const UserPage = ({
+  role,
+  users,
+  visibleTab,
+}: {
+  role: UserRole;
+  users: UsersDataType;
+  visibleTab: UserRole;
+}) => {
+  const [tab, setTab] = useState<UserRole>(visibleTab);
   const theme = useTheme();
 
+  const canInviteUser = canInvite(role, tab);
+
+  const handleChange = (data: string) => {
+    setTab(data as UserRole);
+  };
+
   return (
-    <TableContainer sx={styles.tabsContainer}>
-      <TabContext value={value}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <TabList onChange={handleChange}>
-            {hasAdminAccess && (
-              <Tab label={t('manageUsers.admins')} value="1" />
-            )}
-            {hasStudiosAccess && (
-              <Tab label={t('manageUsers.studious')} value="2" />
-            )}
-
-            {hasReviewerAccess && (
-              <Tab label={t('manageUsers.reviewers')} value="4" />
-            )}
-
-            {hasClientsAccess && (
-              <Tab label={t('manageUsers.clients')} value="3" />
-            )}
-
-            {hasContractorsAccess && (
-              <Tab label={t('manageUsers.contractors')} value="5" />
-            )}
-          </TabList>
+    <>
+      {canInviteUser && (
+        <Box sx={{ position: 'absolute', top: '0', right: '0' }}>
+          <InviteUser type={tab} />
         </Box>
-        {hasAdminAccess && (
-          <Fade
-            timeout={theme.transitions.duration.standard}
-            in={value === '1'}
-          >
-            <TabPanel value="1">
-              <UserTable type={UserRole.ADMIN} canInviteUser={canInviteUser} />
-            </TabPanel>
-          </Fade>
-        )}
-        {hasStudiosAccess && (
-          <Fade
-            timeout={theme.transitions.duration.standard}
-            in={value === '2'}
-          >
-            <TabPanel value="2">
-              <UserTable type={UserRole.STUDIO} canInviteUser={canInviteUser} />
-            </TabPanel>
-          </Fade>
-        )}
-
-        {hasReviewerAccess && (
-          <Fade
-            timeout={theme.transitions.duration.standard}
-            in={value === '4'}
-          >
-            <TabPanel value="4">
-              <UserTable
-                type={UserRole.REVIEWER}
-                canInviteUser={canInviteUser}
+      )}
+      <TableContainer sx={styles.tabsContainer}>
+        <TabContext value={tab}>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <TabList onChange={(event, newValue) => handleChange(newValue)}>
+              <Tab
+                label={showUserRole(UserRole.admin as UserRole)}
+                key={UserRole.admin}
+                value={UserRole.admin}
               />
-            </TabPanel>
-          </Fade>
-        )}
-
-        {hasClientsAccess && (
-          <Fade
-            timeout={theme.transitions.duration.standard}
-            in={value === '3'}
-          >
-            <TabPanel value="3">
-              <UserTable type={UserRole.CLIENT} canInviteUser={canInviteUser} />
-            </TabPanel>
-          </Fade>
-        )}
-
-        {hasContractorsAccess && (
-          <Fade
-            timeout={theme.transitions.duration.standard}
-            in={value === '5'}
-          >
-            <TabPanel value="5">
-              <UserTable
-                type={UserRole.CONTRACTOR}
-                canInviteUser={canInviteUser}
+              <Tab
+                label={showUserRole(UserRole.owner as UserRole)}
+                key={UserRole.owner}
+                value={UserRole.owner}
               />
-            </TabPanel>
-          </Fade>
-        )}
-      </TabContext>
-    </TableContainer>
+              <Tab
+                label={showUserRole(UserRole.seller as UserRole)}
+                key={UserRole.seller}
+                value={UserRole.seller}
+              />
+              <Tab
+                label={showUserRole(UserRole.buyer as UserRole)}
+                key={UserRole.buyer}
+                value={UserRole.buyer}
+              />
+            </TabList>
+          </Box>
+
+          {Object.entries(users).map(([role, data]) => (
+            <Box key={role}>
+              {tab === role && (
+                <Box>
+                  <TabPanel value={role} sx={{ padding: '0.5rem' }}>
+                    <UserTable users={data.users} />
+                  </TabPanel>
+                </Box>
+              )}
+            </Box>
+          ))}
+        </TabContext>
+      </TableContainer>
+    </>
   );
 };
 

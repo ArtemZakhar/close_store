@@ -1,5 +1,6 @@
 'use client';
 
+import { showInviteUserRole } from '@/helpers/showUserRole';
 import { UserRole } from '@/types/users/userType';
 import CloseIcon from '@mui/icons-material/Close';
 import { useTheme } from '@mui/material';
@@ -22,29 +23,18 @@ const InviteUser = ({ type }: { type: UserRole }) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  let invitee: string = '';
-
-  if (type === UserRole.admin) {
-    invitee = 'адміністратора';
-  }
-
-  if (type === UserRole.owner) {
-    invitee = 'власника';
-  }
-
-  if (type === UserRole.seller) {
-    invitee = 'продавця';
-  }
-
   return (
     <Box sx={styles.container}>
-      <ButtonStyled label={`Запросити ${invitee}`} handleClick={handleOpen} />
+      <ButtonStyled
+        label={`Запросити ${showInviteUserRole(type)}`}
+        handleClick={handleOpen}
+      />
 
       <Modal open={open} onClose={handleClose}>
         <Fade in={open} timeout={theme.transitions.duration.standard}>
           <Box sx={styles.modalContainer}>
             <Typography variant="h6" component="h2">
-              {`Запросити ${invitee}`}
+              {`Запросити ${showInviteUserRole(type)}`}
             </Typography>
 
             <Button

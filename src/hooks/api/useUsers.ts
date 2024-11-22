@@ -3,34 +3,12 @@ import { NewUserType } from '@/types/users/userType';
 
 import { useEffect, useState } from 'react';
 
-import { error } from 'console';
+import { useRouter } from 'next/navigation';
+
+import { useMutation } from './useMutation';
 
 export const useCreateNewUser = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-
-  const createNewUser = async (user: NewUserType) => {
-    setIsLoading(true);
-
-    postNewUser(user)
-      .then(() => setIsSuccess(true))
-      .catch(() => setIsError(true))
-      .finally(() => setIsLoading(false));
-  };
-
-  useEffect(() => {
-    let timeout: ReturnType<typeof setTimeout>;
-
-    if (isError || isSuccess) {
-      timeout = setTimeout(() => {
-        setIsSuccess(false);
-        setIsError(false);
-      }, 3000);
-    }
-
-    return () => clearTimeout(timeout);
-  }, [isError, isSuccess]);
-
-  return { isError, isSuccess, isLoading, createNewUser };
+  return useMutation({
+    mutateFn: (user: { user: NewUserType }) => postNewUser(user),
+  });
 };

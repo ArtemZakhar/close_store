@@ -1,3 +1,3 @@
-import TitleStyled from "./TitleStyled";
+import TitleStyled from './TitleStyled';
 
-export default TitleStyled
+export default TitleStyled;

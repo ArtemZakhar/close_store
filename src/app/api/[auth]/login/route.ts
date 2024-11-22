@@ -1,4 +1,4 @@
-import { encrypt } from '@/helper/login';
+import { encrypt } from '@/helpers/auth';
 import { connectToDatabase } from '@/lib/mongoDb';
 import User, { UserSchemaType } from '@/models/Users';
 
@@ -46,4 +46,6 @@ export async function POST(request: NextRequest) {
   const session = await encrypt({ id: user._id, role: user.role, expires });
 
   cookies().set('session', session, { expires, httpOnly: true });
+
+  return NextResponse.json({ status: responseMessages.codes[200] });
 }

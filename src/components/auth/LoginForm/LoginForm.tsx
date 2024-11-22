@@ -1,32 +1,54 @@
 'use client';
 
+import { login } from '@/app/api/authService';
 import { routePaths } from '@/constants/routePaths';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
+import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import LoadingButton from '@/components/common/LoadingButton';
 
 import { styles } from './LoginForm.styles';
 
 type FormType = {
-  user: string;
+  email: string;
   password: string;
 };
 
 export const LoginForm = () => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const router = useRouter();
+
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<FormType>();
 
-  const onSubmit = () => {};
+  const onSubmit = async (data: FormType) => {
+    await login({
+      email: data.email,
+      password: data.password,
+    });
+
+    router.push(routePaths.users);
+  };
+
+  const handleClickShowPassword = () => {
+    setShowPassword((prev) => !prev);
+  };
 
   return (
     <Box component="section" sx={styles.container}>
@@ -36,14 +58,16 @@ export const LoginForm = () => {
           <Box sx={styles.inputWrapper}>
             <Controller
               control={control}
-              name="user"
+              name="email"
+              defaultValue=""
               render={({ field }) => (
                 <TextField
                   {...field}
                   placeholder="Зазначте електронну пошту користувача"
-                  error={!!errors.user}
+                  error={!!errors.email}
+                  value={field.value}
                   fullWidth
-                  helperText={errors.user ? errors.user.message : ''}
+                  helperText={errors.email ? errors.email.message : ''}
                 />
               )}
             />
@@ -55,14 +79,31 @@ export const LoginForm = () => {
           <Box sx={styles.inputWrapper}>
             <Controller
               control={control}
-              name="user"
+              name="password"
+              defaultValue=""
               render={({ field }) => (
                 <TextField
                   {...field}
                   placeholder="Введіть пароль"
-                  error={!!errors.user}
+                  error={!!errors.password}
+                  type={showPassword ? 'text' : 'password'}
                   fullWidth
-                  helperText={errors.user ? errors.user.message : ''}
+                  value={field.value}
+                  helperText={errors.password ? errors.password.message : ''}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                 />
               )}
             />

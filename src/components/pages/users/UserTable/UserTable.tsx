@@ -33,28 +33,16 @@ const UserTable = ({ users }: { users: User[] }) => {
 
   return (
     <TableContainer
-      border
       headerData={[
-        <TableCellHeader border key="name">
-          Ім&apos;я
-        </TableCellHeader>,
-        <TableCellHeader border key="email">
-          Пошта
-        </TableCellHeader>,
+        <TableCellHeader key="name">Ім&apos;я</TableCellHeader>,
+        <TableCellHeader key="email">Пошта</TableCellHeader>,
         <TableCellHeader align="center" key="details">
           Деталі
         </TableCellHeader>,
       ]}
     >
       {users.map(({ _id, name, email }) => (
-        <TableRow
-          key={_id}
-          sx={{
-            '& td': {
-              borderRight: '1px solid #E1E1E1',
-            },
-          }}
-        >
+        <TableRow key={_id}>
           <TableCell>{name}</TableCell>
           <TableCell>{email}</TableCell>
         </TableRow>
