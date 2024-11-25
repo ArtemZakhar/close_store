@@ -8,7 +8,9 @@ import { useRouter } from 'next/navigation';
 import { useMutation } from './useMutation';
 
 export const useCreateNewUser = () => {
+  const router = useRouter();
   return useMutation({
     mutateFn: (user: { user: NewUserType }) => postNewUser(user),
+    onSuccess: () => router.refresh(),
   });
 };

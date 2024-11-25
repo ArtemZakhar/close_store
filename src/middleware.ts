@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { decrypt } from './helpers/auth';
 
 export default async function middleware(req: NextRequest) {
-  const session = req.cookies.get('session')?.value;
+  const session = req.cookies.get('session')?.value || null;
 
   if (!session) {
     return NextResponse.redirect(`${process.env.BASE_URL}login`);
@@ -19,5 +19,5 @@ export default async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/users'],
+  matcher: ['/', '/users', '/goods'],
 };

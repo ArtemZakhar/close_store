@@ -1,11 +1,19 @@
 import { errorMessages } from './formErrorsMessages';
 
+const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const nonPrintingPattern = /^(?!.*[\s]).*$/;
 const specialCharacterPattern = /^(?=.*[!@#$%^&*(),.?":{}|<>]).*$/;
 const digitPattern = /^(?=.*\d).*$/;
 const uppercasePattern = /^(?=.*[A-Z]).*$/;
 
 export const validation = {
+  email: {
+    required: errorMessages.email.required,
+    pattern: {
+      value: emailPattern,
+      message: errorMessages.email.valid,
+    },
+  },
   password: {
     required: errorMessages.password.required,
     minLength: {

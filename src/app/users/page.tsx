@@ -12,7 +12,7 @@ import ErrorBoundary from '@/components/common/ErrorBoundary';
 import Loading from '@/components/common/Loading';
 import SectionDescriptionStyled from '@/components/common/SectionDescriptionStyled';
 import TitleStyled from '@/components/common/TitleStyled';
-import UserPage from '@/components/pages/users/UserPage';
+import UserPage from '@/components/pages/UserPage';
 
 import { getAllUsers } from '../api/userService';
 

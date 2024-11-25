@@ -1,6 +1,5 @@
 'use client';
 
-import { login } from '@/app/api/authService';
 import { routePaths } from '@/constants/routePaths';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -15,10 +14,13 @@ import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 import LoadingButton from '@/components/common/LoadingButton';
 
+import { useLogin } from '@/hooks/api/useAuth';
+import { useShowFetchResultMessage } from '@/hooks/useShowUpdateResultMessage';
+
+import { validation } from '../formValidation';
 import { styles } from './LoginForm.styles';
 
 type FormType = {
@@ -28,8 +30,7 @@ type FormType = {
 
 export const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
-
-  const router = useRouter();
+  const { mutate, isError, isLoading, isSuccess, error } = useLogin();
 
   const {
     control,
@@ -38,13 +39,18 @@ export const LoginForm = () => {
   } = useForm<FormType>();
 
   const onSubmit = async (data: FormType) => {
-    await login({
+    mutate({
       email: data.email,
       password: data.password,
     });
-
-    router.push(routePaths.users);
   };
+
+  useShowFetchResultMessage({
+    isError,
+    isSuccess,
+    closeFunction: () => {},
+    error,
+  });
 
   const handleClickShowPassword = () => {
     setShowPassword((prev) => !prev);
@@ -60,6 +66,7 @@ export const LoginForm = () => {
               control={control}
               name="email"
               defaultValue=""
+              rules={validation.email}
               render={({ field }) => (
                 <TextField
                   {...field}
@@ -80,6 +87,7 @@ export const LoginForm = () => {
             <Controller
               control={control}
               name="password"
+              rules={validation.password}
               defaultValue=""
               render={({ field }) => (
                 <TextField
@@ -110,7 +118,7 @@ export const LoginForm = () => {
           </Box>
         </Box>
 
-        <LoadingButton isLoading={false} label="Увійти" />
+        <LoadingButton isLoading={isLoading} label="Увійти" />
 
         <Box sx={styles.buttonWrapper}>
           <Typography variant="body1">Забули пароль?</Typography>

@@ -14,13 +14,16 @@ export async function POST(request: NextRequest) {
 
   const body: { email: string; password: string } = await request.json();
 
-  const user = await User.findOne({ email: body.email }).lean<UserSchemaType>();
+  const email = body.email.toLowerCase();
+
+  const user = await User.findOne({
+    email,
+  }).lean<UserSchemaType>();
 
   if (!user) {
     return NextResponse.json(
       {
-        error: true,
-        message: responseMessages.user.noUser,
+        error: responseMessages.user.noUser,
       },
       { status: responseMessages.codes[404] },
     );
@@ -34,8 +37,7 @@ export async function POST(request: NextRequest) {
   if (!isPasswordCorrect) {
     return NextResponse.json(
       {
-        error: true,
-        message: responseMessages.user.wrongPassword,
+        error: responseMessages.user.wrongPassword,
       },
       { status: responseMessages.codes[401] },
     );

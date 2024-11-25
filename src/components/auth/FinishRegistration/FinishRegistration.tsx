@@ -5,7 +5,6 @@ import { routePaths } from '@/constants/routePaths';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
@@ -14,16 +13,17 @@ import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import LoadingButton from '@/components/common/LoadingButton';
+
+import { useFinishRegistration } from '@/hooks/api/useAuth';
+import { useShowFetchResultMessage } from '@/hooks/useShowUpdateResultMessage';
 
 import { validation } from '../formValidation';
 import { styles } from './FinishRegistration.styles';
 
 type FormInputs = {
-  email: string;
   password: string;
   repeatPassword: string;
 };
@@ -33,9 +33,10 @@ const FinishRegistration = () => {
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
 
   const params = useSearchParams();
-  const router = useRouter();
-
   const token = params.get('token');
+
+  const { mutate, isError, isLoading, isSuccess, error } =
+    useFinishRegistration();
 
   const {
     handleSubmit,
@@ -52,13 +53,19 @@ const FinishRegistration = () => {
   };
 
   const onSubmit = async (form: FormInputs) => {
-    await finishRegistration({
-      password: form.password,
-      token: token as string,
+    mutate({
+      data: {
+        password: form.password,
+        token: token as string,
+      },
     });
-
-    router.push(routePaths.root);
   };
+
+  useShowFetchResultMessage({
+    isError,
+    isSuccess,
+    error,
+  });
 
   return (
     <Box component="section" sx={styles.container}>
@@ -143,7 +150,7 @@ const FinishRegistration = () => {
           </Box>
         </Box>
 
-        <LoadingButton isLoading={false} label="Завершити реєстрацію" />
+        <LoadingButton isLoading={isLoading} label="Завершити реєстрацію" />
       </Box>
     </Box>
   );

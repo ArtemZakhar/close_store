@@ -13,16 +13,16 @@ import { responseMessages } from '../../constants/responseMessages';
 export async function POST(request: Request) {
   await connectToDatabase();
 
-  const body: { token: string; password: string } = await request.json();
-  const { token, password } = body;
+  const body: { data: { token: string; password: string } } =
+    await request.json();
+  const { token, password } = body.data;
 
   const user = await User.findOne({ token }).lean<UserSchemaType>();
 
   if (!user) {
     return NextResponse.json(
       {
-        error: true,
-        message: responseMessages.password.noUser,
+        error: responseMessages.password.noUser,
       },
       {
         status: responseMessages.codes[403],

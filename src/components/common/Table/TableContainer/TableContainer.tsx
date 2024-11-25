@@ -92,7 +92,7 @@ const TableContainerStyled = ({
           labelRowsPerPage="Строк на сторінці"
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          sx={{ width: '100%' }}
+          sx={styles.pagination}
         />
       )}
     </TableContainer>

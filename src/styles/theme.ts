@@ -114,6 +114,10 @@ const theme = createTheme({
           padding: '0.5rem 1rem',
           textTransform: 'none',
         },
+        contained: {
+          color: '#FFF',
+          fontWeight: '700',
+        },
       },
     },
     MuiFilledInput: {

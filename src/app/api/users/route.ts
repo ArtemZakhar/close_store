@@ -9,11 +9,21 @@ import { NextResponse } from 'next/server';
 
 import { responseMessages } from '../constants/responseMessages';
 
+export async function GET() {
+  await connectToDatabase();
+
+  const users = await User.find({}, 'name email _id role').exec();
+
+  return NextResponse.json(users, { status: responseMessages.codes[200] });
+}
+
 export async function POST(request: Request) {
   await connectToDatabase();
   const body: NewUserType = await request.json();
 
-  const user = await User.findOne({ email: body.email }).lean<UserSchemaType>();
+  const email = body.email.toLowerCase();
+
+  const user = await User.findOne({ email }).lean<UserSchemaType>();
 
   if (user && user.status === UserStatus.created) {
     return NextResponse.json(
@@ -22,11 +32,11 @@ export async function POST(request: Request) {
     );
   }
 
-  const token = await encrypt({ email: body.email }, '7d from now');
+  const token = await encrypt({ email }, '7d from now');
 
   const newUser = await User.create({
     name: body.name,
-    email: body.email,
+    email,
     role: body.role,
     status: UserStatus.pending,
     token,
@@ -35,7 +45,7 @@ export async function POST(request: Request) {
   await newUser.save();
 
   try {
-    await sendVerificationEmail(body.email, token);
+    await sendVerificationEmail(email, token);
     revalidateTag('users-list');
 
     return NextResponse.json(newUser, { status: responseMessages.codes[201] });
@@ -45,12 +55,4 @@ export async function POST(request: Request) {
       { status: responseMessages.codes[500] },
     );
   }
-}
-
-export async function GET() {
-  await connectToDatabase();
-
-  const users = await User.find({}, 'name email _id role').exec();
-
-  return NextResponse.json(users, { status: responseMessages.codes[200] });
 }

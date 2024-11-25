@@ -16,8 +16,8 @@ import { useState } from 'react';
 
 import InviteUser from '@/components/common/InviteUser';
 
-import UserTable from '../UserTable';
 import { styles } from './UserPage.styles';
+import UserTable from './UserTable';
 
 const UserPage = ({
   role,
@@ -48,16 +48,20 @@ const UserPage = ({
         <TabContext value={tab}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <TabList onChange={(event, newValue) => handleChange(newValue)}>
-              <Tab
-                label={showUserRole(UserRole.admin as UserRole)}
-                key={UserRole.admin}
-                value={UserRole.admin}
-              />
-              <Tab
-                label={showUserRole(UserRole.owner as UserRole)}
-                key={UserRole.owner}
-                value={UserRole.owner}
-              />
+              {role === UserRole.admin && (
+                <>
+                  <Tab
+                    label={showUserRole(UserRole.admin as UserRole)}
+                    key={UserRole.admin}
+                    value={UserRole.admin}
+                  />
+                  <Tab
+                    label={showUserRole(UserRole.owner as UserRole)}
+                    key={UserRole.owner}
+                    value={UserRole.owner}
+                  />
+                </>
+              )}
               <Tab
                 label={showUserRole(UserRole.seller as UserRole)}
                 key={UserRole.seller}
@@ -76,7 +80,11 @@ const UserPage = ({
               {tab === role && (
                 <Box>
                   <TabPanel value={role} sx={{ padding: '0.5rem' }}>
-                    <UserTable users={data.users} />
+                    <UserTable
+                      users={data.users}
+                      canInvite={canInviteUser}
+                      type={role}
+                    />
                   </TabPanel>
                 </Box>
               )}

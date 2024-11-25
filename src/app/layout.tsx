@@ -1,3 +1,4 @@
+import { getSession } from '@/helpers/getSession';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -6,6 +7,9 @@ import { ThemeProvider } from '@mui/material/styles';
 import { Toaster } from 'react-hot-toast';
 
 import type { Metadata } from 'next';
+import { NextResponse } from 'next/server';
+
+import Navigation from '@/components/layout/Navigation';
 
 import globalStyles from '@/styles/globalStyles';
 import theme from '@/styles/theme';
@@ -19,16 +23,19 @@ export const metadata: Metadata = {
   robots: 'noindex,nofollow',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getSession();
+
   return (
     <html lang="uk">
       <body>
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
+            <Navigation role={session?.role} />
             <Box component="main" sx={{ minHeight: '90vh' }}>
               <Toaster position="top-center" />
               <CssBaseline />

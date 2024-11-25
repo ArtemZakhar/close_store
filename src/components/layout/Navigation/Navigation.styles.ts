@@ -22,4 +22,8 @@ export const styles = {
     alignItems: 'start',
     justifyContent: 'start',
   },
+  navButton: {
+    fontSize: '1rem',
+    lineHeight: '1.5rem',
+  },
 };

@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import { Controller, useForm } from 'react-hook-form';
 
 import { useCreateNewUser } from '@/hooks/api/useUsers';
-import { useShowUpdateResultMessage } from '@/hooks/useShowUpdateResultMessage';
+import { useShowFetchResultMessage } from '@/hooks/useShowUpdateResultMessage';
 
 import LoadingButton from '../LoadingButton';
 import { styles } from './NewUserForm.styles';
@@ -39,7 +39,7 @@ const NewUserForm = ({
     formState: { errors },
   } = useForm<FormType>();
 
-  useShowUpdateResultMessage({
+  useShowFetchResultMessage({
     closeFunction: handleClose,
     isError,
     isSuccess,

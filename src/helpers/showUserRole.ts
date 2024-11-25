@@ -31,3 +31,17 @@ export const showInviteUserRole = (role: Partial<UserRole>) => {
     return 'продавця';
   }
 };
+
+export const thereAreNoUsers = (role: Partial<UserRole>) => {
+  if (role === UserRole.owner) {
+    return 'Власники';
+  }
+
+  if (role === UserRole.buyer) {
+    return 'Покупці';
+  }
+
+  if (role === UserRole.seller) {
+    return 'Продавці';
+  }
+};

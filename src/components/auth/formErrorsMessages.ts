@@ -1,4 +1,8 @@
 export const errorMessages = {
+  email: {
+    required: "Поле обов'язкове для заповнення",
+    valid: 'Перевірте правильність введеного паролю.',
+  },
   password: {
     required: "Пароль обов'язковий",
     minLength: 'Мінімально 8 символів',

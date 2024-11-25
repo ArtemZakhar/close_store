@@ -1,24 +1,38 @@
+import { responseMessages } from '@/app/api/constants/responseMessages';
+
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 
-export const useShowUpdateResultMessage = ({
+export const useShowFetchResultMessage = ({
   isError,
   isSuccess,
-  closeFunction,
-  dataType,
+  closeFunction = () => {},
   error,
   customErrorMessage,
+  customMessage,
 }: {
   isError: boolean;
   isSuccess: boolean;
-  closeFunction: () => void;
-  dataType?: string;
+  closeFunction?: () => void;
   error?: Error | null;
   customErrorMessage?: string;
+  customMessage?: string;
 }) => {
   useEffect(() => {
     if (isError) {
       toast.dismiss();
+      console.log(error?.message);
+
+      if (error?.message === responseMessages.user.noUser) {
+        toast.error('Перевірте правильність електронної пошти');
+        return;
+      }
+
+      if (error?.message === responseMessages.user.wrongPassword) {
+        toast.error('Не правильний пароль');
+
+        return;
+      }
 
       if (customErrorMessage) {
         toast.error(customErrorMessage);
@@ -31,6 +45,12 @@ export const useShowUpdateResultMessage = ({
     }
 
     if (isSuccess) {
+      if (customMessage) {
+        toast.success(customMessage);
+
+        return;
+      }
+
       toast.dismiss();
 
       toast.success('Успіх!');

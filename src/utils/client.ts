@@ -1,15 +1,3 @@
-// import axios from 'axios';
-import next from 'next';
-
-import { url } from 'inspector';
-
-// export const axiosInstance = axios.create({
-//   baseURL: process.env.BASE_URL,
-//   headers: {
-//     'Content-Type': 'application/json',
-//   },
-// });
-
 type RequestMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE';
 
 export const BASE_URL = process.env.BASE_URL;
@@ -44,7 +32,7 @@ const request = <T>({
 
   return fetch(BASE_URL + url, options).then((res) => {
     if (!res.ok) {
-      throw new Error();
+      return Promise.reject(res.json());
     }
 
     return res.json();
@@ -52,9 +40,16 @@ const request = <T>({
 };
 
 export const client = {
-  get: <T>({ url, tags }: { url: string; tags: string[] }) =>
+  get: <T>({ url, tags }: { url: string; tags?: string[] }) =>
     request<T>({ url, tags }),
 
-  post: <T>({ url, data, tags }: { url: string; data: any; tags?: string[] }) =>
-    request<T>({ url, method: 'POST', data, tags }),
+  post: <T>({
+    url,
+    data,
+    tags,
+  }: {
+    url: string;
+    data?: any;
+    tags?: string[];
+  }) => request<T>({ url, method: 'POST', data, tags }),
 };

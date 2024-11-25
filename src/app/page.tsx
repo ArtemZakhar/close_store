@@ -1,8 +1,16 @@
-import Typography from '@mui/material/Typography';
+import { getSession } from '@/helpers/getSession';
 
-import { axiosInstance } from '@/utils/client';
+import ContainerWithPadding from '@/components/common/ContainerWithPadding';
+import MainScreen from '@/components/pages/MainScreen';
 
 export default async function Home() {
-  return <Typography variant="h1">It works</Typography>;
+  const session = await getSession();
+
+  if (!session) return;
+
+  return (
+    <ContainerWithPadding>
+      <MainScreen role={session?.role} />
+    </ContainerWithPadding>
+  );
 }
-``;
