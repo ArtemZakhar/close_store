@@ -1,6 +1,6 @@
 type RequestMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE';
 
-export const BASE_URL = process.env.BASE_URL;
+export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const request = <T>({
   url,
@@ -29,6 +29,8 @@ const request = <T>({
       tags,
     };
   }
+
+  console.log(BASE_URL, url);
 
   return fetch(BASE_URL + url, options).then((res) => {
     if (!res.ok) {
