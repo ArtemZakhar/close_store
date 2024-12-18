@@ -1,7 +1,7 @@
 import { decrypt } from '@/helpers/auth';
 import { connectToDatabase } from '@/lib/mongoDb';
-import User, { UserSchemaType } from '@/models/Users';
-import { UserStatus } from '@/types/users/userType';
+import User from '@/models/Users';
+import { UserSchemaType, UserStatus } from '@/types/users/userType';
 
 import { revalidateTag } from 'next/cache';
 import { NextResponse } from 'next/server';

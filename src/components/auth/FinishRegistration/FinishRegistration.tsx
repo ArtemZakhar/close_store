@@ -35,7 +35,7 @@ const FinishRegistration = () => {
   const params = useSearchParams();
   const token = params.get('token');
 
-  const { mutate, isError, isLoading, isSuccess, error } =
+  const { mutate, isError, isPending, isSuccess, error } =
     useFinishRegistration();
 
   const {
@@ -150,7 +150,7 @@ const FinishRegistration = () => {
           </Box>
         </Box>
 
-        <LoadingButton isLoading={isLoading} label="Завершити реєстрацію" />
+        <LoadingButton isLoading={isPending} label="Завершити реєстрацію" />
       </Box>
     </Box>
   );

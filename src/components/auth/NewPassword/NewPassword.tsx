@@ -35,7 +35,7 @@ const NewPassword = () => {
   const {
     mutate: updatePassword,
     isError,
-    isLoading,
+    isPending,
     isSuccess,
     error,
   } = useNewPassword();
@@ -148,7 +148,7 @@ const NewPassword = () => {
           </Box>
         </Box>
 
-        <LoadingButton isLoading={isLoading} label="Змінити пароль" />
+        <LoadingButton isLoading={isPending} label="Змінити пароль" />
       </Box>
     </Box>
   );

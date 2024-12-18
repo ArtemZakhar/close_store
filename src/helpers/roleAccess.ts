@@ -8,6 +8,10 @@ export const canInvite = (role: UserRole, type: UserRole) => {
   return inviteAccess[role]?.includes(type) || false;
 };
 
+export const canDelete = (role: UserRole, type: UserRole) => {
+  return deleteAccess[role]?.includes(type) || false;
+};
+
 export const roleAccess = {
   [UserRole.admin]: [
     {
@@ -52,6 +56,13 @@ export const roleAccess = {
 const inviteAccess: { [key in UserRole]?: UserRole[] } = {
   [UserRole.admin]: [UserRole.admin, UserRole.owner],
   [UserRole.owner]: [UserRole.seller],
+  [UserRole.seller]: [],
+  [UserRole.buyer]: [],
+};
+
+const deleteAccess: { [key in UserRole]?: UserRole[] } = {
+  [UserRole.admin]: [UserRole.admin, UserRole.owner],
+  [UserRole.owner]: [UserRole.seller, UserRole.buyer],
   [UserRole.seller]: [],
   [UserRole.buyer]: [],
 };

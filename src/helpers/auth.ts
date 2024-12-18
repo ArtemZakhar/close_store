@@ -19,6 +19,6 @@ export const decrypt = async (token: string) => {
     return payload;
   } catch (err) {
     console.error('Token verification failed:', err);
-    throw new Error('Invalid token');
+    return false;
   }
 };

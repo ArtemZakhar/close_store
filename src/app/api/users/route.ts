@@ -1,10 +1,17 @@
-import { encrypt } from '@/helpers/auth';
+import { decrypt, encrypt } from '@/helpers/auth';
+import { canDelete } from '@/helpers/roleAccess';
 import { connectToDatabase } from '@/lib/mongoDb';
-import User, { UserSchemaType } from '@/models/Users';
+import User from '@/models/Users';
 import { sendVerificationEmail } from '@/services/mailer';
-import { NewUserType, UserStatus } from '@/types/users/userType';
+import {
+  NewUserType,
+  UserRole,
+  UserSchemaType,
+  UserStatus,
+} from '@/types/users/userType';
 
 import { revalidateTag } from 'next/cache';
+import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 import { responseMessages } from '../constants/responseMessages';
@@ -52,6 +59,44 @@ export async function POST(request: Request) {
   } catch (error) {
     return NextResponse.json(
       { error: responseMessages.user.emailSendingFailed },
+      { status: responseMessages.codes[500] },
+    );
+  }
+}
+
+export async function DELETE(request: Request) {
+  await connectToDatabase();
+
+  const body: { id: string; role: UserRole } = await request.json();
+  const cookie = cookies();
+  const session = cookie.get('session');
+
+  if (!session) {
+    return NextResponse.json(
+      { error: responseMessages.user.forbidden },
+      { status: responseMessages.codes[401] },
+    );
+  }
+
+  const { role } = (await decrypt(session.value)) as { role: UserRole };
+
+  const canDeleteUser = canDelete(role, body.role);
+
+  if (!canDeleteUser) {
+    return NextResponse.json(
+      { error: responseMessages.user.forbidden },
+      { status: responseMessages.codes[401] },
+    );
+  }
+
+  try {
+    await User.findOneAndDelete({ _id: body.id });
+    revalidateTag('users-list');
+
+    return NextResponse.json({ status: responseMessages.codes[200] });
+  } catch (error) {
+    return NextResponse.json(
+      { error: responseMessages.server.error },
       { status: responseMessages.codes[500] },
     );
   }

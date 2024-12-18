@@ -1,16 +1,22 @@
-import { postNewUser } from '@/app/api/userService';
-import { NewUserType } from '@/types/users/userType';
-
-import { useEffect, useState } from 'react';
+import { deleteUser, postNewUser } from '@/app/api/userService';
+import { NewUserType, User, UserRole } from '@/types/users/userType';
+import { useMutation } from '@tanstack/react-query';
 
 import { useRouter } from 'next/navigation';
-
-import { useMutation } from './useMutation';
 
 export const useCreateNewUser = () => {
   const router = useRouter();
   return useMutation({
-    mutateFn: (user: { user: NewUserType }) => postNewUser(user),
+    mutationFn: (user: { user: NewUserType }) => postNewUser(user),
+    onSuccess: () => router.refresh(),
+  });
+};
+
+export const useDeleteUser = () => {
+  const router = useRouter();
+
+  return useMutation({
+    mutationFn: (data: { id: string; role: UserRole }) => deleteUser({ data }),
     onSuccess: () => router.refresh(),
   });
 };

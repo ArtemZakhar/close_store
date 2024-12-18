@@ -25,3 +25,13 @@ export type NewUserType = {
   email: string;
   role: UserRole;
 };
+
+export type UserSchemaType = {
+  _id: string;
+  name: string;
+  email: string;
+  password?: string;
+  token: string;
+  status: UserStatus;
+  role: UserRole;
+};

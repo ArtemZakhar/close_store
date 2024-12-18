@@ -22,17 +22,17 @@ export default async function Goods() {
         <Box width="30rem">
           <TitleStyled label="Товари">
             {session.role === UserRole.admin || UserRole.owner ? (
-              <Typography>
+              <>
                 На цій сторінці можна заводити нові товари, редагувати існуючі,
                 шукати товари за кодом, продавати, вносити замітки, інформацію
                 по місцезнаходженю товару в магазині, а також списувати.
-              </Typography>
+              </>
             ) : (
-              <Typography>
+              <>
                 На цій сторінці є можливість продавати товари, вносити замітки
                 по товару, а також вносити замітки по місцезнаходженю товару в
                 магазині.
-              </Typography>
+              </>
             )}
           </TitleStyled>
         </Box>
@@ -40,7 +40,7 @@ export default async function Goods() {
         <Box>
           <Button
             component={Link}
-            href={routePaths.newGood}
+            href={routePaths.newGoods}
             variant="contained"
           >
             Додати новий товар

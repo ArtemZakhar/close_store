@@ -36,6 +36,18 @@ const theme = createTheme({
           '& .MuiOutlinedInput-notchedOutline': {
             borderColor: '#E1E1E1',
           },
+          '&.Mui-disabled': {
+            backgroundColor: '#E1E1E1',
+            color: '#000',
+
+            '& .MuiOutlinedInput-notchedOutline': {
+              borderColor: 'transparent',
+            },
+
+            '&:hover .MuiOutlinedInput-notchedOutline': {
+              borderColor: 'transparent',
+            },
+          },
         },
       },
     },
@@ -135,7 +147,7 @@ const theme = createTheme({
           },
         },
         icon: {
-          right: '1rem', // Match the padding of the input
+          right: '1rem',
         },
       },
     },
@@ -143,6 +155,78 @@ const theme = createTheme({
       styleOverrides: {
         select: {
           marginRight: '1rem',
+        },
+      },
+    },
+    MuiAutocomplete: {
+      styleOverrides: {
+        root: {
+          width: '100%',
+          margin: 0,
+          '& .Mui-focused': {
+            borderRadius: '1.25rem 1.25rem 0 0',
+          },
+          '& .MuiInputBase-root': {
+            '& legend': {
+              marginLeft: '0.7rem',
+            },
+          },
+          '& .MuiFormLabel-root': {
+            paddingInline: '0.6rem',
+          },
+          '& .MuiAutocomplete-input': {
+            marginLeft: '0.2rem',
+          },
+          '& .MuiOutlinedInput-root': { paddingLeft: '1rem' },
+          '& .Mui-disabled': {
+            backgroundColor: 'action.disabled',
+            '&:hover .MuiOutlinedInput-notchedOutline': {
+              borderColor: 'action.disabled',
+            },
+          },
+        },
+        listbox: {
+          padding: '1rem',
+          color: 'common.black',
+        },
+      },
+      defaultProps: {
+        disableClearable: true,
+        slotProps: {
+          popper: {
+            modifiers: [
+              {
+                name: 'flip',
+                enabled: false,
+              },
+              {
+                name: 'preventOverflow',
+                enabled: false,
+              },
+            ],
+          },
+        },
+      },
+    },
+    MuiModal: {
+      styleOverrides: {
+        root: {
+          '& > .MuiBox-root': {
+            position: 'absolute' as 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '42.25rem',
+            backgroundColor: '#FFF',
+            boxShadow:
+              '0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12)',
+            padding: '2rem',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1.5rem',
+            borderRadius: '1rem',
+            maxHeight: '90vh',
+          },
         },
       },
     },

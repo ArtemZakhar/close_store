@@ -1,6 +1,6 @@
 'use client';
 
-import { canInvite } from '@/helpers/roleAccess';
+import { canDelete, canInvite } from '@/helpers/roleAccess';
 import { showUserRole } from '@/helpers/showUserRole';
 import { UserRole } from '@/types/users/userType';
 import { UsersDataType } from '@/types/users/usersData';
@@ -29,9 +29,10 @@ const UserPage = ({
   visibleTab: UserRole;
 }) => {
   const [tab, setTab] = useState<UserRole>(visibleTab);
-  const theme = useTheme();
+  // const theme = useTheme();
 
   const canInviteUser = canInvite(role, tab);
+  const canDeleteUser = canDelete(role, tab);
 
   const handleChange = (data: string) => {
     setTab(data as UserRole);
@@ -49,18 +50,19 @@ const UserPage = ({
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <TabList onChange={(event, newValue) => handleChange(newValue)}>
               {role === UserRole.admin && (
-                <>
-                  <Tab
-                    label={showUserRole(UserRole.admin as UserRole)}
-                    key={UserRole.admin}
-                    value={UserRole.admin}
-                  />
-                  <Tab
-                    label={showUserRole(UserRole.owner as UserRole)}
-                    key={UserRole.owner}
-                    value={UserRole.owner}
-                  />
-                </>
+                <Tab
+                  label={showUserRole(UserRole.admin as UserRole)}
+                  key={UserRole.admin}
+                  value={UserRole.admin}
+                />
+              )}
+
+              {role === UserRole.admin && (
+                <Tab
+                  label={showUserRole(UserRole.owner as UserRole)}
+                  key={UserRole.owner}
+                  value={UserRole.owner}
+                />
               )}
               <Tab
                 label={showUserRole(UserRole.seller as UserRole)}
@@ -83,6 +85,7 @@ const UserPage = ({
                     <UserTable
                       users={data.users}
                       canInvite={canInviteUser}
+                      canDelete={canDeleteUser}
                       type={role}
                     />
                   </TabPanel>

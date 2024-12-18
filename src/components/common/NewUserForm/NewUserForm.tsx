@@ -28,7 +28,7 @@ const NewUserForm = ({
 }) => {
   const {
     isError,
-    isLoading,
+    isPending,
     isSuccess,
     mutate: createNewUser,
   } = useCreateNewUser();
@@ -104,7 +104,7 @@ const NewUserForm = ({
         </Box>
 
         <Box marginTop="1rem">
-          <LoadingButton isLoading={isLoading} label="Запросити" />
+          <LoadingButton isLoading={isPending} label="Запросити" />
         </Box>
       </Box>
     </>

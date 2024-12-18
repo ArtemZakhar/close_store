@@ -29,7 +29,7 @@ const ForgotPassword = () => {
     formState: { errors },
   } = useForm<FormType>();
 
-  const { mutate, isError, isLoading, isSuccess, error } = useForgotPassword();
+  const { mutate, isError, isPending, isSuccess, error } = useForgotPassword();
 
   const onSubmit = (data: FormType) => {
     mutate(data.email);
@@ -67,7 +67,7 @@ const ForgotPassword = () => {
           </Box>
         </Box>
 
-        <LoadingButton isLoading={isLoading} label="Відновити пароль" />
+        <LoadingButton isLoading={isPending} label="Відновити пароль" />
 
         <Box sx={styles.buttonWrapper}>
           <Typography variant="body1">Повернутись назад</Typography>

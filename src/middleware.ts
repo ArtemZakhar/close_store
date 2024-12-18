@@ -11,6 +11,10 @@ export default async function middleware(req: NextRequest) {
 
   const parsed = await decrypt(session);
 
+  if (!parsed) {
+    return NextResponse.redirect(`${process.env.BASE_URL}login`);
+  }
+
   if (parsed && parsed.exp && parsed.iat && parsed.exp <= parsed.iat) {
     return NextResponse.redirect(`${process.env.BASE_URL}login`);
   }

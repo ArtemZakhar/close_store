@@ -1,4 +1,4 @@
-import { NewUserType, User } from '@/types/users/userType';
+import { NewUserType, User, UserRole } from '@/types/users/userType';
 
 import { client } from '@/utils/client';
 
@@ -38,4 +38,16 @@ export const finishRegistration = async ({
     console.log('Failed finish registration', e);
     throw new Error('Failed finish registration');
   }
+};
+
+export const deleteUser = async ({
+  data,
+  tags,
+}: {
+  data: { id: string; role: UserRole };
+  tags?: string[];
+}) => {
+  try {
+    return await client.delete({ url: apiCalls.users, data, tags });
+  } catch (error) {}
 };

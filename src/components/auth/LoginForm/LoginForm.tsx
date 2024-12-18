@@ -30,7 +30,7 @@ type FormType = {
 
 export const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const { mutate, isError, isLoading, isSuccess, error } = useLogin();
+  const { mutate, isError, isPending, isSuccess, error } = useLogin();
 
   const {
     control,
@@ -118,7 +118,7 @@ export const LoginForm = () => {
           </Box>
         </Box>
 
-        <LoadingButton isLoading={isLoading} label="Увійти" />
+        <LoadingButton isLoading={isPending} label="Увійти" />
 
         <Box sx={styles.buttonWrapper}>
           <Typography variant="body1">Забули пароль?</Typography>

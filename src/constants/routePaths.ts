@@ -4,5 +4,5 @@ export const routePaths = {
   forgotPassword: 'forgot-password',
   users: 'users',
   goods: 'goods',
-  newGood: 'goods/new',
+  newGoods: 'goods/new',
 };

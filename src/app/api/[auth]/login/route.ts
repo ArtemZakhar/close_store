@@ -1,6 +1,7 @@
 import { encrypt } from '@/helpers/auth';
 import { connectToDatabase } from '@/lib/mongoDb';
-import User, { UserSchemaType } from '@/models/Users';
+import User from '@/models/Users';
+import { UserSchemaType } from '@/types/users/userType';
 
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
@@ -43,7 +44,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const expires = new Date(Date.now() + 1000 * 60 * 60 * 12);
+  const expires = Date.now() + 1000 * 60 * 60 * 12;
 
   const session = await encrypt({ id: user._id, role: user.role, expires });
 

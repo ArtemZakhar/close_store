@@ -52,4 +52,17 @@ export const client = {
     data?: any;
     tags?: string[];
   }) => request<T>({ url, method: 'POST', data, tags }),
+
+  patch: <T>({
+    url,
+    data,
+    tags,
+  }: {
+    url: string;
+    data: any;
+    tags?: string[];
+  }) => request<T>({ url, method: 'PATCH', data, tags }),
+
+  delete: ({ url, data, tags }: { url: string; data: any; tags?: string[] }) =>
+    request({ url, method: 'DELETE', data, tags }),
 };

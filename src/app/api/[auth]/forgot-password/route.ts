@@ -1,7 +1,8 @@
 import { encrypt } from '@/helpers/auth';
 import { connectToDatabase } from '@/lib/mongoDb';
-import User, { UserSchemaType } from '@/models/Users';
+import User from '@/models/Users';
 import { sendPasswordReminder } from '@/services/mailer';
+import { UserSchemaType } from '@/types/users/userType';
 
 import { NextRequest, NextResponse } from 'next/server';
 

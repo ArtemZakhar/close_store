@@ -7,7 +7,8 @@ import { ThemeProvider } from '@mui/material/styles';
 import { Toaster } from 'react-hot-toast';
 
 import type { Metadata } from 'next';
-import { NextResponse } from 'next/server';
+
+import ReactQueryProvider from '@/utils/providers/ReactQueryProvider';
 
 import Navigation from '@/components/layout/Navigation';
 
@@ -35,13 +36,15 @@ export default async function RootLayout({
       <body>
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
-            <Navigation role={session?.role} />
-            <Box component="main" sx={{ minHeight: '90vh' }}>
-              <Toaster position="top-center" />
-              <CssBaseline />
-              {globalStyles}
-              {children}
-            </Box>
+            <ReactQueryProvider>
+              <Navigation role={session?.role} />
+              <Box component="main" sx={{ minHeight: '90vh' }}>
+                <Toaster position="top-center" />
+                <CssBaseline />
+                {globalStyles}
+                {children}
+              </Box>
+            </ReactQueryProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

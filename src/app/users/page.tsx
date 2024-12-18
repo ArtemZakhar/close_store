@@ -39,8 +39,7 @@ export default async function Users() {
     redirect('/');
   }
 
-  const tab =
-    session.role === UserRole.admin ? UserRole.admin : UserRole.seller;
+  const tab = session.role === UserRole.admin ? UserRole.admin : UserRole.owner;
 
   return (
     <ContainerWithPadding>

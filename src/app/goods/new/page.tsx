@@ -8,7 +8,7 @@ import { redirect } from 'next/navigation';
 import ContainerWithPadding from '@/components/common/ContainerWithPadding';
 import SectionDescriptionStyled from '@/components/common/SectionDescriptionStyled';
 import TitleStyled from '@/components/common/TitleStyled';
-import NewGood from '@/components/pages/NewGood';
+import NewGoods from '@/components/pages/NewGoods';
 
 export default async function newGood() {
   const session = await getSession();
@@ -27,7 +27,7 @@ export default async function newGood() {
         </Box>
       </SectionDescriptionStyled>
 
-      <NewGood />
+      <NewGoods />
     </ContainerWithPadding>
   );
 }
