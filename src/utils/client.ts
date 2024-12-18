@@ -30,8 +30,6 @@ const request = <T>({
     };
   }
 
-  console.log(BASE_URL, url);
-
   return fetch(BASE_URL + url, options).then((res) => {
     if (!res.ok) {
       return Promise.reject(res.json());
