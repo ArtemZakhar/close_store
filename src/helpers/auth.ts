@@ -12,6 +12,7 @@ export const encrypt = async (payload: any, expired?: string) => {
 
 export const decrypt = async (token: string) => {
   try {
+    console.log('key: ',key);
     const { payload } = await jwtVerify(token, key, {
       algorithms: ['HS256'],
     });
