@@ -5,13 +5,16 @@ import { decrypt } from './helpers/auth';
 export default async function middleware(req: NextRequest) {
   const session = req.cookies.get('session')?.value || null;
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || req.nextUrl.origin;
-  console.log(origin);
+  console.log(baseUrl);
+  console.log('MiddleWare', session);
 
   if (!session) {
     return NextResponse.redirect(new URL('/login', baseUrl));
   }
 
   const parsed = await decrypt(session);
+
+  console.log('MiddleWare', parsed);
 
   if (!parsed) {
     return NextResponse.redirect(new URL('/login', baseUrl));

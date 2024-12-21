@@ -6,6 +6,8 @@ import { cookies } from 'next/headers';
 export const getSession = async (): Promise<Promise<SessionType> | null> => {
   const session = cookies().get('session')?.value || null;
 
+  console.log('getSession', session);
+
   if (!session) return null;
 
   return (await decrypt(session)) as SessionType;

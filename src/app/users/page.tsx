@@ -22,6 +22,8 @@ export const dynamicParams = true;
 export default async function Users() {
   const session = await getSession();
 
+  console.log('Users', session);
+
   if (!session) return;
 
   let allUsers: User[] = [];
