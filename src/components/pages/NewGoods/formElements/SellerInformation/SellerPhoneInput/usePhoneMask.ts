@@ -12,7 +12,7 @@ export const usePhoneMask = () => {
 
   const createMask = useCallback(
     (value: string, element: HTMLInputElement | null): string => {
-      const matrix = '+38 (___) ___ __ __';
+      const matrix = '+__ (___) ___ __ __';
       let i = 0;
       const defaultMaskValue = matrix.replace(/\D/g, '');
       let userInputNumbers = value.replace(/\D/g, '');

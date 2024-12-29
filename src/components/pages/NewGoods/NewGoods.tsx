@@ -7,6 +7,8 @@ import Box from '@mui/material/Box';
 
 import { useForm } from 'react-hook-form';
 
+import LoadingButton from '@/components/common/LoadingButton';
+
 import { useGetAllCountries } from '@/hooks/api/useLocation';
 
 import CategoryAutocomplete from './formElements/CategoryAutocomplete';
@@ -29,8 +31,16 @@ const NewGood = () => {
 
   const { data: countriesData, isError, isLoading } = useGetAllCountries();
 
+  const onSubmit = (data: FormType) => {
+    // console.log(data);
+  };
+
   return (
-    <Box component="form" marginTop="4rem">
+    <Box
+      component="form"
+      onSubmit={form.handleSubmit(onSubmit)}
+      marginTop="4rem"
+    >
       <CategoryAutocomplete form={form} selectedCategory={selectedCategory} />
 
       {selectedCategory && (
@@ -53,6 +63,8 @@ const NewGood = () => {
             isFetchingCountriesError={isError}
             isFetchingCountriesLoading={isLoading}
           />
+
+          <LoadingButton isLoading={false} label="Створити" />
         </>
       )}
     </Box>

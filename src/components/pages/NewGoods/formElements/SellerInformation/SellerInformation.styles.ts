@@ -10,5 +10,5 @@ export const styles = {
       marginBottom: '1rem',
     };
   },
-  sectionWrapper: { display: 'flex', gap: '3rem', marginBottom: '1rem' },
+  sectionWrapper: { display: 'flex', gap: '3rem', minHeight: '7rem' },
 };

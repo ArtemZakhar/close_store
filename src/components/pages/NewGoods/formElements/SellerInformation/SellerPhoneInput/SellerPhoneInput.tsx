@@ -58,7 +58,7 @@ const SellerPhoneInput = ({
               inputRef={inputRef}
               fullWidth
               value={field.value || ''}
-              onFocus={() => !field.value?.length && field.onChange('+38')}
+              onFocus={() => !field.value?.length && field.onChange('+')}
               placeholder="+38 (___) ___ __ __"
               error={!!errors.seller?.phone}
               onChange={(e) => handlePhoneChange(e, field)}

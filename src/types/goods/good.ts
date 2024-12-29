@@ -3,9 +3,7 @@ export type NewGoodType = {
   countryOfOrigin: string;
   model: string;
   description?: string;
-  sizes: string[];
-  colors: string[];
-  count: string;
+  goodsDetails: GoodsDetails[];
   incomePriceUSD?: string;
   incomePriceGRN?: string;
   outcomePrice?: string;
@@ -13,4 +11,14 @@ export type NewGoodType = {
   stored?: 'string';
   notes: 'string';
   buyDate: 'string';
+};
+
+export type GoodsDetails = {
+  color: string;
+  countAndSizes: GoodsQuantityAndCount[];
+};
+
+export type GoodsQuantityAndCount = {
+  size: string;
+  [key: string]: string;
 };

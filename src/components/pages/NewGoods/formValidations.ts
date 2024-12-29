@@ -1,3 +1,4 @@
+import { GoodsDetails } from '@/types/goods/good';
 import { SellerType } from '@/types/goods/seller';
 
 import { FormType } from './NewGoods';
@@ -37,7 +38,9 @@ export const validations = {
   sellerName: {
     required: errorMessages.required,
     validate: (value: SellerType | null) => {
-      return !!value?.name.trim().length || errorMessages.required;
+      return (
+        (value?.name && !!value?.name.trim().length) || errorMessages.required
+      );
     },
   },
   sellerEmail: {
@@ -97,6 +100,27 @@ export const validations = {
     required: errorMessages.required,
     validate: (value: string | undefined) => {
       return !!value?.trim().length || errorMessages.required;
+    },
+  },
+  goodsDetails: {
+    validate: (value: GoodsDetails[]) => {
+      if (!value) {
+        return "Поле обов'язкове для заповнення.";
+      }
+
+      if (value.some((item) => !item.color.length)) {
+        return 'Відсутній колір товару. Перевірте внесені дані.';
+      }
+
+      if (
+        value.some((item) =>
+          item.countAndSizes.every(
+            (sizeItem) => !sizeItem[sizeItem.size].length,
+          ),
+        )
+      ) {
+        return 'Відсутні розміри по товару. Перевірте внесені дані.';
+      }
     },
   },
 };
