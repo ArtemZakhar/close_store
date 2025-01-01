@@ -1,12 +1,13 @@
 'use client';
 
 import { CategoryType } from '@/types/goods/category';
-import { NewGoodType } from '@/types/goods/good';
+import { NewGoodFormType } from '@/types/goods/good';
 import { SellerType } from '@/types/goods/seller';
 import Box from '@mui/material/Box';
 
 import { useForm } from 'react-hook-form';
 
+import BackButton from '@/components/common/BackButton';
 import LoadingButton from '@/components/common/LoadingButton';
 
 import { useGetAllCountries } from '@/hooks/api/useLocation';
@@ -18,10 +19,9 @@ import SubCategoryAutocomplete from './formElements/SubCategoryAutocomplete';
 
 export type FormType = {
   category: CategoryType | null;
-  code: string;
   subCategory: string[];
   seller: SellerType | null;
-  goods: NewGoodType;
+  goods: NewGoodFormType;
 };
 
 const NewGood = () => {
@@ -32,7 +32,7 @@ const NewGood = () => {
   const { data: countriesData, isError, isLoading } = useGetAllCountries();
 
   const onSubmit = (data: FormType) => {
-    // console.log(data);
+    console.log({ data: JSON.stringify(data) });
   };
 
   return (
@@ -64,7 +64,22 @@ const NewGood = () => {
             isFetchingCountriesLoading={isLoading}
           />
 
-          <LoadingButton isLoading={false} label="Створити" />
+          <Box
+            sx={{
+              display: 'flex',
+              gap: '2rem',
+              justifyContent: 'end',
+              marginBlock: '2rem',
+            }}
+          >
+            <BackButton />
+
+            <LoadingButton
+              isLoading={false}
+              sx={{ width: '13rem' }}
+              label="Створити"
+            />
+          </Box>
         </>
       )}
     </Box>

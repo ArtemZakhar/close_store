@@ -29,6 +29,7 @@ const FirmCountry = ({
   const {
     control,
     formState: { errors },
+    setValue,
   } = form;
 
   return (
@@ -56,6 +57,9 @@ const FirmCountry = ({
               fullWidth
               freeSolo
               onChange={(_, newData) => field.onChange(newData)}
+              onInputChange={(event, newInputValue) => {
+                setValue('goods.countryOfOrigin', newInputValue);
+              }}
               getOptionLabel={(option) =>
                 typeof option === 'string' ? option : option.name
               }

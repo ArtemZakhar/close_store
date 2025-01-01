@@ -29,6 +29,7 @@ const SellerCountryInput = ({
   const {
     control,
     formState: { errors },
+    setValue,
   } = form;
 
   return (
@@ -39,7 +40,7 @@ const SellerCountryInput = ({
 
       <Box width="15rem">
         <Controller
-          name="seller.city"
+          name="seller.country"
           control={control}
           rules={validations.sellerCountry}
           defaultValue=""
@@ -59,6 +60,9 @@ const SellerCountryInput = ({
               getOptionLabel={(option) =>
                 typeof option === 'string' ? option : option.name
               }
+              onInputChange={(event, newInputValue) => {
+                setValue('seller.country', newInputValue);
+              }}
               onClose={(e) => {
                 e.stopPropagation();
                 document.activeElement &&

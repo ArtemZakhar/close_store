@@ -5,11 +5,14 @@ import Typography from '@mui/material/Typography';
 import { UseFormReturn } from 'react-hook-form';
 
 import { FormType } from '../../NewGoods';
+import BuyDate from './BuyDate';
 import FirmCountry from './FirmCountry';
 import GoodFirm from './GoodFirm';
 import GoodsDescription from './GoodsDescription';
 import GoodsDetails from './GoodsDetails';
 import { styles } from './GoodsInformation.styles';
+import GoodsNotes from './GoodsNotes';
+import GoodsSeasonAutocomplete from './GoodsSeasonAutocomplete';
 import InputTypeNumber from './InputTypeNumber';
 import ModelName from './ModelName';
 
@@ -70,6 +73,32 @@ const GoodsInformation = ({
           </Typography>
 
           <InputTypeNumber form={form} name="outcomePrice" />
+        </Box>
+      </Box>
+
+      <Box sx={styles.sectionWrapper}>
+        <GoodsSeasonAutocomplete form={form} />
+      </Box>
+
+      <Box sx={styles.sectionWrapper}>
+        <BuyDate form={form} />
+      </Box>
+
+      <Box sx={styles.sectionWrapper}>
+        <Box width="15rem">
+          <Typography marginBottom="1rem" variant="h4">
+            Нотатки
+          </Typography>
+
+          <GoodsNotes form={form} name="notes" rows={5} />
+        </Box>
+
+        <Box width="15rem">
+          <Typography marginBottom="1rem" variant="h4">
+            Де зберігається
+          </Typography>
+
+          <GoodsNotes form={form} name="stored" />
         </Box>
       </Box>
     </Box>

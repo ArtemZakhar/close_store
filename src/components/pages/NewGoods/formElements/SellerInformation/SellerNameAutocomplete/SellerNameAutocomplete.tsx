@@ -26,7 +26,10 @@ const SellerNameAutocomplete = ({
   const {
     control,
     formState: { errors },
+    getValues,
+    setValue,
   } = form;
+
   return (
     <Box sx={styles.blockWrapper}>
       <Typography marginBottom="1rem" variant="h4">
@@ -35,9 +38,9 @@ const SellerNameAutocomplete = ({
 
       <Box width="15rem">
         <Controller
-          name="seller"
+          name="seller.name"
           control={control}
-          defaultValue={null}
+          defaultValue={''}
           rules={validations.sellerName}
           render={({ field }) => (
             <Autocomplete
@@ -51,7 +54,14 @@ const SellerNameAutocomplete = ({
               options={sellerData || []}
               fullWidth
               freeSolo
-              onChange={(_, newData) => field.onChange(newData)}
+              onChange={(_, newData) => {
+                if (typeof newData !== 'string') {
+                  setValue('seller', newData);
+                }
+              }}
+              onInputChange={(event, newInputValue) => {
+                setValue('seller.name', newInputValue);
+              }}
               getOptionLabel={(option) =>
                 typeof option === 'string' ? option : option.name
               }
@@ -85,10 +95,10 @@ const SellerNameAutocomplete = ({
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  error={!!errors.seller}
+                  error={!!errors.seller && !!errors.seller?.name}
                   helperText={
-                    errors.seller && typeof errors.seller.message === 'string'
-                      ? errors.seller.message
+                    errors.seller && errors.seller?.name
+                      ? errors.seller.name.message
                       : ''
                   }
                   placeholder="Оберіть продавця"

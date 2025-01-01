@@ -6,7 +6,7 @@ import { errorMessages } from './errorMessages';
 
 export const onlyDigitsRegExp = /[-\s\D]+/gi;
 const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const phonePattern = /^\+38 \(\d{3}\) \d{3} \d{2} \d{2}$/;
+const phonePattern = /^\+\d{2} \(\d{3}\) \d{3} \d{2} \d{2}$/;
 const urlPattern = /^(?![_-])[a-z0-9_-]+(?<![_-])$/;
 
 export const validations = {
@@ -37,10 +37,8 @@ export const validations = {
   icon: { required: errorMessages.required },
   sellerName: {
     required: errorMessages.required,
-    validate: (value: SellerType | null) => {
-      return (
-        (value?.name && !!value?.name.trim().length) || errorMessages.required
-      );
+    validate: (value: string | undefined) => {
+      return !!value?.trim().length || errorMessages.required;
     },
   },
   sellerEmail: {
@@ -51,9 +49,8 @@ export const validations = {
     validate: (value: string | undefined, context: FormType) => {
       if (
         !value?.length &&
-        context.seller &&
-        context.seller?.phone &&
-        !context.seller?.phone.length
+        !!context.seller &&
+        !context.seller?.phone?.length
       ) {
         return errorMessages.sellerEmail.required;
       }
@@ -68,9 +65,8 @@ export const validations = {
     validate: (value: string | undefined, context: FormType) => {
       if (
         !value?.length &&
-        context.seller &&
-        context.seller?.email &&
-        !context.seller?.email.length
+        !!context.seller &&
+        !context.seller?.email?.length
       ) {
         return errorMessages.sellerPhone.required;
       }

@@ -16,21 +16,30 @@ export const responseMessages = {
     wrongPassword: 'Wrong password',
     forbidden: 'forbidden',
   },
+
   password: {
     noUser: 'There are no such user',
   },
+
   token: {
     expired: 'Token has expired',
     invalid: 'Invalid token',
   },
+
   server: {
     error: 'Internal server error',
   },
+
   goods: {
+    exist: 'Goods already exist',
     category: {
       noData: 'Invalid input or data is missing',
       exist: 'Category name or uniqueID already exist',
       notExist: 'This category is not exist',
+    },
+
+    seller: {
+      noData: 'Missing email or phone input.',
     },
   },
 };

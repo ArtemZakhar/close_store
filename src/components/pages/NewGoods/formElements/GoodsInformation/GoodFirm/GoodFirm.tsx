@@ -26,6 +26,7 @@ const GoodFirm = ({
   const {
     control,
     formState: { errors },
+    setValue,
   } = form;
   return (
     <Box sx={styles.blockWrapper}>
@@ -51,7 +52,15 @@ const GoodFirm = ({
               options={firmsData || []}
               fullWidth
               freeSolo
-              onChange={(_, newData) => field.onChange(newData)}
+              onChange={(_, newData) => {
+                if (newData && typeof newData !== 'string') {
+                  setValue('goods.firm', newData.name);
+                  setValue('goods.countryOfOrigin', newData.countryOfOrigin);
+                }
+              }}
+              onInputChange={(event, newValue) =>
+                setValue('goods.firm', newValue)
+              }
               getOptionLabel={(option) =>
                 typeof option === 'string' ? option : option.name
               }

@@ -1,5 +1,5 @@
-import { InputAdornment } from '@mui/material';
 import Box from '@mui/material/Box';
+import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 
 import { Controller, UseFormReturn } from 'react-hook-form';

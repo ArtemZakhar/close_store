@@ -32,7 +32,10 @@ export async function POST(request: Request) {
 
   const user = await User.findOne({ email }).lean<UserSchemaType>();
 
-  if (user && user.status === UserStatus.created) {
+  if (
+    user &&
+    (user.status === UserStatus.created || user.status === UserStatus.deleted)
+  ) {
     return NextResponse.json(
       { error: true, message: responseMessages.user.message },
       { status: responseMessages.codes[409] },
@@ -90,10 +93,18 @@ export async function DELETE(request: Request) {
   }
 
   try {
-    await User.findOneAndDelete({ _id: body.id });
+    await User.findOneAndUpdate(
+      { _id: body.id },
+      {
+        $set: {
+          status: UserStatus.deleted,
+        },
+      },
+      { new: true },
+    );
     revalidateTag('users-list');
 
-    return NextResponse.json({ status: responseMessages.codes[200] });
+    return NextResponse.json({ status: responseMessages.codes[201] });
   } catch (error) {
     return NextResponse.json(
       { error: responseMessages.server.error },

@@ -25,6 +25,7 @@ const SellerCity = ({
   const {
     control,
     formState: { errors },
+    setValue,
   } = form;
 
   return (
@@ -51,6 +52,9 @@ const SellerCity = ({
               fullWidth
               freeSolo
               onChange={(_, newData) => field.onChange(newData)}
+              onInputChange={(event, newInputValue) => {
+                setValue('seller.city', newInputValue);
+              }}
               getOptionLabel={(option) =>
                 typeof option === 'string' ? option : option.name
               }
