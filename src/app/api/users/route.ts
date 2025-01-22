@@ -1,4 +1,5 @@
 import { decrypt, encrypt } from '@/helpers/auth';
+import { getSession } from '@/helpers/getSession';
 import { canDelete } from '@/helpers/roleAccess';
 import { connectToDatabase } from '@/lib/mongoDb';
 import User from '@/models/Users';
@@ -19,47 +20,77 @@ import { responseMessages } from '../constants/responseMessages';
 export async function GET() {
   await connectToDatabase();
 
-  const users = await User.find({}, 'name email _id role').exec();
+  const users = await User.find(
+    { status: { $ne: 'deleted' } },
+    'name email _id role',
+  ).exec();
 
   return NextResponse.json(users, { status: responseMessages.codes[200] });
 }
 
 export async function POST(request: Request) {
-  await connectToDatabase();
-  const body: NewUserType = await request.json();
-
-  const email = body.email.toLowerCase();
-
-  const user = await User.findOne({ email }).lean<UserSchemaType>();
-
-  if (
-    user &&
-    (user.status === UserStatus.created || user.status === UserStatus.deleted)
-  ) {
-    return NextResponse.json(
-      { error: true, message: responseMessages.user.message },
-      { status: responseMessages.codes[409] },
-    );
-  }
-
-  const token = await encrypt({ email }, '7d from now');
-
-  const newUser = await User.create({
-    name: body.name,
-    email,
-    role: body.role,
-    status: UserStatus.pending,
-    token,
-  });
-
-  await newUser.save();
-
   try {
+    await connectToDatabase();
+
+    const body: NewUserType = await request.json();
+
+    const session = await getSession();
+
+    if (!session) {
+      return NextResponse.json(
+        { error: true, message: responseMessages.user.forbidden },
+        {
+          status: responseMessages.codes[401],
+        },
+      );
+    }
+
+    const email = body.email.toLowerCase();
+
+    const user = await User.findOne({ email }).lean<UserSchemaType>();
+
+    if (
+      user &&
+      (user.status === UserStatus.created || user.status === UserStatus.deleted)
+    ) {
+      return NextResponse.json(
+        { error: true, message: responseMessages.user.message },
+        { status: responseMessages.codes[409] },
+      );
+    }
+
+    if (user && user.status === UserStatus.pending) {
+      await sendVerificationEmail(email, user.token);
+      revalidateTag('users-list');
+
+      return NextResponse.json(user, { status: responseMessages.codes[201] });
+    }
+
+    const token = await encrypt({ email }, '7d from now');
+
+    const userData = {
+      name: body.name,
+      email,
+      role: body.role,
+      status: UserStatus.pending,
+      token,
+      owner: '',
+    };
+
+    if (session.role === UserRole.owner) {
+      userData.owner = session.id;
+    }
+
+    const newUser = await User.create(userData);
+
+    await newUser.save();
+
     await sendVerificationEmail(email, token);
     revalidateTag('users-list');
 
     return NextResponse.json(newUser, { status: responseMessages.codes[201] });
   } catch (error) {
+    console.log('Failed to create new User.');
     return NextResponse.json(
       { error: responseMessages.user.emailSendingFailed },
       { status: responseMessages.codes[500] },

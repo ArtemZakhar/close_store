@@ -74,7 +74,8 @@ const UserTable = ({
   if (!users?.length)
     return <NoUserDataMessage type={type} canInviteUser={canInvite} />;
 
-  const isDetailsVisible = type === UserRole.buyer || type === UserRole.seller;
+  const isDetailsVisible = false;
+  // const isDetailsVisible = type === UserRole.buyer || type === UserRole.seller;
 
   const headerData = [
     <TableCellHeader width="25%" key="name">

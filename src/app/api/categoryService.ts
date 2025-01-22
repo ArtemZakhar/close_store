@@ -4,8 +4,14 @@ import { client } from '@/utils/client';
 
 import { apiCalls } from './constants/apiCalls';
 
-export const getAllCategories = (): Promise<CategoryType[]> =>
-  client.get({ url: apiCalls.categories });
+export const getAllCategories = (tags?: string[]): Promise<CategoryType[]> => {
+  try {
+    return client.get({ url: apiCalls.categories, tags });
+  } catch (error) {
+    console.log('Fetching categories error', error);
+    throw new Error('Failed to fetch categories');
+  }
+};
 
 export const postNewCategory = async (
   data: Omit<CategoryType, '_id' | 'lastId'>,

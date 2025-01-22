@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongodb';
+
 export enum UserRole {
   admin = 'admin',
   owner = 'owner',
@@ -18,6 +20,7 @@ export type User = {
   email: string;
   status: UserStatus;
   role: UserRole;
+  owner?: ObjectId;
 };
 
 export type NewUserType = {
@@ -30,8 +33,9 @@ export type UserSchemaType = {
   _id: string;
   name: string;
   email: string;
-  password?: string;
   token: string;
   status: UserStatus;
   role: UserRole;
+  owner?: ObjectId;
+  password?: string;
 };

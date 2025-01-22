@@ -21,7 +21,6 @@ export const useShowFetchResultMessage = ({
   useEffect(() => {
     if (isError) {
       toast.dismiss();
-      console.log(error?.message);
 
       if (error?.message === responseMessages.user.noUser) {
         toast.error('Перевірте правильність електронної пошти');

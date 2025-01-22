@@ -11,6 +11,10 @@ const categorySchema = new mongoose.Schema<CategoryType>({
     type: String,
     required: true,
   },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
   uniqueId: {
     type: Number,
     required: true,

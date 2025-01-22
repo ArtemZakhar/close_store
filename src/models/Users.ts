@@ -12,6 +12,9 @@ const userSchema = new mongoose.Schema<UserSchemaType>(
       type: String,
       required: true,
     },
+    owner: {
+      type: mongoose.Schema.Types.ObjectId,
+    },
     password: {
       type: String,
     },

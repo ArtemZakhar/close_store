@@ -10,9 +10,18 @@ export async function GET() {
   try {
     await connectToDatabase();
 
-    const sellers = await Seller.find<SellerType>();
+    const sellers = await Seller.find<SellerType>()
+      .populate('country', 'name')
+      .populate('city', 'name')
+      .lean();
 
-    return NextResponse.json(sellers, {
+    const transformedSellers = sellers.map((seller) => ({
+      ...seller,
+      country: seller.country?.name || '',
+      city: seller.city?.name || '',
+    }));
+
+    return NextResponse.json(transformedSellers, {
       status: responseMessages.codes[200],
     });
   } catch (error) {

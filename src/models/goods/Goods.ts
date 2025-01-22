@@ -1,13 +1,10 @@
-import { GoodType } from '@/types/goods/good';
+import { GoodsSchemaType } from '@/types/goods/good';
 
 import mongoose from 'mongoose';
 
 const goodsQuantityAndCountSchema = new mongoose.Schema({
   size: { type: String, required: true },
-  additionalFields: {
-    type: Map,
-    of: String,
-  },
+  count: { type: Number, required: true },
 });
 
 const goodsDetailsSchema = new mongoose.Schema({
@@ -19,9 +16,10 @@ const goodsDetailsSchema = new mongoose.Schema({
   },
 });
 
-const goodsSchema = new mongoose.Schema<GoodType>({
+const goodsSchema = new mongoose.Schema<GoodsSchemaType>({
   category: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
     required: true,
   },
   code: {
@@ -34,15 +32,17 @@ const goodsSchema = new mongoose.Schema<GoodType>({
     default: [],
   },
   seller: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Seller',
     required: true,
   },
   firm: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Firm',
     required: true,
   },
-  countryOfOrigin: {
-    type: String,
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
   model: {
@@ -72,6 +72,7 @@ const goodsSchema = new mongoose.Schema<GoodType>({
 });
 
 const Goods =
-  mongoose.models.Goods || mongoose.model<GoodType>('Goods', goodsSchema);
+  mongoose.models.Goods ||
+  mongoose.model<GoodsSchemaType>('Goods', goodsSchema);
 
 export default Goods;

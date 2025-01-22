@@ -13,4 +13,5 @@ export const apiCalls = {
   newPassword: '/api/auth/new-password',
   sellers: '/api/goods/sellers',
   users: '/api/users',
+  goods: '/api/goods',
 };

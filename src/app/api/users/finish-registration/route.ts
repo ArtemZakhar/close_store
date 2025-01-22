@@ -12,10 +12,9 @@ import { responseMessages } from '../../constants/responseMessages';
 
 export async function POST(request: Request) {
   await connectToDatabase();
-
-  const body: { data: { token: string; password: string } } =
-    await request.json();
-  const { token, password } = body.data;
+  const body: { token: string; password: string } = await request.json();
+  console.log(body);
+  const { token, password } = body;
 
   const user = await User.findOne({ token }).lean<UserSchemaType>();
 

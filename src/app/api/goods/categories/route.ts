@@ -1,6 +1,8 @@
+import { getSession } from '@/helpers/getSession';
 import { connectToDatabase } from '@/lib/mongoDb';
 import Category from '@/models/goods/Categories';
 import { CategoryType } from '@/types/goods/category';
+import { UserRole } from '@/types/users/userType';
 
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -10,7 +12,15 @@ export async function GET() {
   try {
     await connectToDatabase();
 
-    const categories = await Category.find().lean();
+    const session = await getSession();
+
+    const queryParams: { [key: string]: string } = {};
+
+    if (session && session.role !== UserRole.admin) {
+      queryParams['owner'] = session.id;
+    }
+
+    const categories = await Category.find(queryParams).lean();
 
     return NextResponse.json(categories, {
       status: responseMessages.codes[200],
@@ -28,6 +38,17 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     await connectToDatabase();
+
+    const session = await getSession();
+
+    if (!session) {
+      return NextResponse.json(
+        { error: true, message: responseMessages.user.forbidden },
+        {
+          status: responseMessages.codes[401],
+        },
+      );
+    }
 
     const body: Omit<CategoryType, '_id' | 'lastId'> = await request.json();
 
@@ -55,6 +76,7 @@ export async function POST(request: NextRequest) {
       icon: body.icon,
       lastId: 0,
       url: body.url,
+      owner: session.id,
     });
 
     await newCategory.save();

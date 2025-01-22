@@ -8,12 +8,12 @@ import { redirect } from 'next/navigation';
 import ContainerWithPadding from '@/components/common/ContainerWithPadding';
 import SectionDescriptionStyled from '@/components/common/SectionDescriptionStyled';
 import TitleStyled from '@/components/common/TitleStyled';
-import NewGoods from '@/components/pages/NewGoods';
+import NewGoods from '@/components/pages/goods/NewGoods';
 
 export default async function newGood() {
   const session = await getSession();
 
-  if (session?.role !== UserRole.admin && session?.role !== UserRole.owner) {
+  if (session?.role !== UserRole.owner) {
     redirect(`/${routePaths.goods}`);
   }
 

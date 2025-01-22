@@ -10,10 +10,19 @@ const SellerSchema = new mongoose.Schema<SellerType>({
   phone: String,
   email: String,
   country: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Country',
     required: true,
   },
-  city: String,
+  city: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'City',
+  },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
 });
 
 const Seller =

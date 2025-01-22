@@ -1,8 +1,11 @@
+import { ObjectId } from 'mongodb';
+
 export type SellerType = {
   _id: string;
+  owner: ObjectId;
   name: string;
   phone?: string;
   email?: string;
-  country: string;
-  city?: string;
+  country: ObjectId | string;
+  city?: ObjectId | string;
 };

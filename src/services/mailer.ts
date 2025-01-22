@@ -12,12 +12,14 @@ const transportOptions = {
 
 export async function sendVerificationEmail(email: string, token: string) {
   const transport = nodemailer.createTransport(transportOptions);
+  const verificationLink = `${process.env.NEXT_PUBLIC_BASE_URL}/finish-registration/?token=${token}`;
 
   const mailOptions = {
     from: process.env.MY_EMAIL,
     to: email,
     subject: `Підтвердіть свою електронну поштую`,
-    text: `Для підтвердження електронної адреси перейдіть, будь ласка, за посиланням: ${process.env.BASE_URL}finish-registration/?token=${token}`,
+    text: `Для підтвердження електронної адреси перейдіть, будь ласка, за посиланням: ${verificationLink}`,
+    html: `Для підтвердження електронної адреси перейдіть, будь ласка, за посиланням: <a href="${verificationLink}" target="_blank">Завершити реєстрацію</a>`,
   };
 
   transport.sendMail(mailOptions);

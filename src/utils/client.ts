@@ -7,11 +7,13 @@ const request = <T>({
   tags,
   method = 'GET',
   data = null,
+  noCache,
 }: {
   url: string;
   method?: RequestMethod;
   data?: any;
   tags?: string[];
+  noCache?: boolean;
 }): Promise<T> => {
   const options: RequestInit = {
     method,
@@ -30,6 +32,10 @@ const request = <T>({
     };
   }
 
+  if (noCache) {
+    options.cache = 'no-store';
+  }
+
   return fetch(BASE_URL + url, options).then((res) => {
     if (!res.ok) {
       return Promise.reject(res.json());
@@ -40,8 +46,15 @@ const request = <T>({
 };
 
 export const client = {
-  get: <T>({ url, tags }: { url: string; tags?: string[] }) =>
-    request<T>({ url, tags }),
+  get: <T>({
+    url,
+    tags,
+    noCache,
+  }: {
+    url: string;
+    tags?: string[];
+    noCache?: boolean;
+  }) => request<T>({ url, tags, noCache }),
 
   post: <T>({
     url,

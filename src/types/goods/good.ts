@@ -1,26 +1,27 @@
-import { isObjectIdOrHexString } from 'mongoose';
+import { ObjectId } from 'mongodb';
 
 import { CategoryType } from './category';
+import { FirmType } from './firm';
 import { SellerType } from './seller';
 
 type BaseGoodType = {
-  category: string;
   subCategory: string[];
-  firm: string;
-  countryOfOrigin: string;
   model: string;
   description?: string;
   goodsDetails: GoodsDetails[];
   stored?: string;
   notes?: string;
+  category: string | ObjectId;
   buyDate: string;
 };
 
-export type GoodType = BaseGoodType & {
+export type GoodsSchemaType = BaseGoodType & {
   _id: string;
+  owner: ObjectId;
   code: string;
   season: string;
-  seller: string;
+  seller: ObjectId;
+  firm: ObjectId;
   incomePriceUSD?: number;
   incomePriceGRN?: number;
   outcomePrice?: number;
@@ -31,7 +32,21 @@ export type NewGoodFormType = BaseGoodType & {
   incomePriceUSD?: string;
   incomePriceGRN?: string;
   outcomePrice?: string;
+  seller: Omit<SellerType, '_id'>;
+  firm: Partial<FirmType>;
 };
+
+export type GoodsType = BaseGoodType & {
+  season: SeasonListItemType;
+  incomePriceUSD?: string;
+  owner: ObjectId;
+  incomePriceGRN?: string;
+  outcomePrice?: string;
+  seller: SellerType;
+  firm: FirmType;
+  category: CategoryType;
+};
+
 export type SeasonListItemType = {
   label: string;
   name: SeasonType;
@@ -44,14 +59,14 @@ export type GoodsDetails = {
 
 export type GoodsQuantityAndCount = {
   size: string;
-  [key: string]: string;
+  count: number;
 };
 
 export type PostNewGoodType = {
   category: string;
   subCategory: string[];
   seller: Omit<SellerType, '_id'>;
-  goods: Omit<GoodType, '_id'>;
+  goods: Omit<GoodsSchemaType, '_id'>;
 };
 
 export type SeasonType = 'other' | 'summer' | 'winter';
