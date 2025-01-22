@@ -2,6 +2,8 @@ import { SellerType } from '@/types/goods/seller';
 
 import mongoose from 'mongoose';
 
+import '../Location/Country';
+
 const SellerSchema = new mongoose.Schema<SellerType>({
   name: {
     type: String,

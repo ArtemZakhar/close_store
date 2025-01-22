@@ -34,7 +34,9 @@ const AddNewCategoryModal = ({
   openModal: boolean;
   handleClose: () => void;
   isPending: boolean;
-  confirmFunction: (data: Omit<CategoryType, '_id' | 'lastId'>) => void;
+  confirmFunction: (
+    data: Omit<CategoryType, '_id' | 'lastId' | 'owner'>,
+  ) => void;
 }) => {
   const theme = useTheme();
   const form = useForm<NewCategoryFormType>();

@@ -1,6 +1,6 @@
 'use client';
 
-import { GoodsSchemaType } from '@/types/goods/good';
+import { GoodsSchemaType, GoodsType } from '@/types/goods/good';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
@@ -13,14 +13,12 @@ const GoodsCategoryList = ({
   goods,
   isAdmin,
 }: {
-  goods: GoodsSchemaType[];
+  goods: GoodsType[];
   isAdmin: boolean;
 }) => {
-  const [selectedGoods, setSelectedGoods] = useState<GoodsSchemaType | null>(
-    null,
-  );
+  const [selectedGoods, setSelectedGoods] = useState<GoodsType | null>(null);
 
-  const toggleSelectedGoods = (goods: GoodsSchemaType) => {
+  const toggleSelectedGoods = (goods: GoodsType) => {
     if (selectedGoods?._id === goods._id) {
       setSelectedGoods(null);
 

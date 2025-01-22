@@ -21,7 +21,7 @@ export const usePostCategory = () => {
   return useMutation<
     CategoryType,
     unknown,
-    Omit<CategoryType, '_id' | 'lastId'>
+    Omit<CategoryType, '_id' | 'lastId' | 'owner'>
   >({
     mutationFn: (data) => postNewCategory(data),
     onSuccess: (newCategory) => {

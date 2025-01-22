@@ -1,4 +1,4 @@
-import { GoodsSchemaType } from '@/types/goods/good';
+import { GoodsSchemaType, GoodsType } from '@/types/goods/good';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import Box from '@mui/material/Box';
@@ -16,9 +16,9 @@ const GoodsRow = ({
   toggleSelectedGoods,
   isAdmin,
 }: {
-  item: GoodsSchemaType;
-  selectedGoods: GoodsSchemaType | null;
-  toggleSelectedGoods: (goods: GoodsSchemaType) => void;
+  item: GoodsType;
+  selectedGoods: GoodsType | null;
+  toggleSelectedGoods: (goods: GoodsType) => void;
   isAdmin: boolean;
 }) => {
   const { goodsInCart, saveGoodsInCart, deleteGoodsFromCart } =
@@ -47,7 +47,7 @@ const GoodsRow = ({
       <Box sx={styles.titleWrapper}>
         <Typography width="5rem">{code}</Typography>
 
-        <Typography flexGrow={1}>{firm}</Typography>
+        <Typography flexGrow={1}>{firm.name}</Typography>
 
         <Typography align="center" width="15rem">
           {model}

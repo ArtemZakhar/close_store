@@ -73,7 +73,9 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    const goods = await Goods.find(searchParams).populate('seller');
+    const goods = await Goods.find(searchParams)
+      .populate('seller')
+      .populate('firm');
 
     return NextResponse.json(goods, { status: responseMessages.codes[200] });
   } catch (error) {

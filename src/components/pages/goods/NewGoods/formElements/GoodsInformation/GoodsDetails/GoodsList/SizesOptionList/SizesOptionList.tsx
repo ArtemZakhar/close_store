@@ -11,7 +11,7 @@ import { ControllerRenderProps, UseFormReturn } from 'react-hook-form';
 
 import { count } from 'console';
 
-import { FormType } from '@/components/pages/NewGoods/NewGoods';
+import { FormType } from '@/components/pages/goods/NewGoods/NewGoods';
 
 import { SizesAndCountDataType, sizesData } from '../../sizesData';
 import { styles } from './SizesOptionList.styles';

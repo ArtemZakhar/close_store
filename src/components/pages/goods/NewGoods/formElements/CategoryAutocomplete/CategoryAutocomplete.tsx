@@ -64,7 +64,9 @@ const CategoryAutocomplete = ({
     setAddNewCategoryModalOpen(false);
   };
 
-  const createNewCategory = (data: Omit<CategoryType, '_id' | 'lastId'>) => {
+  const createNewCategory = (
+    data: Omit<CategoryType, '_id' | 'lastId' | 'owner'>,
+  ) => {
     createCategory(data);
   };
 

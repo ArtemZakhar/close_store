@@ -14,7 +14,7 @@ export const getAllCategories = (tags?: string[]): Promise<CategoryType[]> => {
 };
 
 export const postNewCategory = async (
-  data: Omit<CategoryType, '_id' | 'lastId'>,
+  data: Omit<CategoryType, '_id' | 'lastId' | 'owner'>,
 ): Promise<CategoryType> =>
   await client.post({ url: apiCalls.categories, data });
 

@@ -1,5 +1,5 @@
 import { FirmType } from '@/types/goods/firm';
-import { GoodsSchemaType, NewGoodFormType } from '@/types/goods/good';
+import { GoodsType, NewGoodFormType } from '@/types/goods/good';
 
 import { client } from '@/utils/client';
 
@@ -25,7 +25,7 @@ export const getAllGoods = async ({
       url += `?${searchParams}`;
     }
 
-    return client.get<GoodsSchemaType[]>({ url, tags, noCache: true });
+    return client.get<GoodsType[]>({ url, tags, noCache: true });
   } catch (error) {
     console.error('Error during GET goods:', error);
     throw new Error('Error during GET goods');

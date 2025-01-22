@@ -51,7 +51,7 @@ const SellerCountryInput = ({
               popupIcon={
                 <KeyboardArrowDownIcon sx={() => styles.arrow(false)} />
               }
-              value={field.value || ''}
+              value={(field.value as string) || ''}
               options={countriesData || []}
               fullWidth
               freeSolo

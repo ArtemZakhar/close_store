@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 
 import { ControllerRenderProps, UseFormReturn } from 'react-hook-form';
 
-import { FormType } from '@/components/pages/NewGoods/NewGoods';
+import { FormType } from '@/components/pages/goods/NewGoods/NewGoods';
 
 import { SizesAndCountDataType } from '../../sizesData';
 import SizesOptionList from '../SizesOptionList';

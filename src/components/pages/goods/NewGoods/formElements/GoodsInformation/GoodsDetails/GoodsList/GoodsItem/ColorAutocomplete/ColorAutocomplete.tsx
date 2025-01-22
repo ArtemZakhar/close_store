@@ -8,7 +8,7 @@ import { ControllerRenderProps, UseFormReturn } from 'react-hook-form';
 
 import CustomList from '@/components/common/StyledAutocomplete/CustomList';
 import CustomPaper from '@/components/common/StyledAutocomplete/CustomPaper';
-import { FormType } from '@/components/pages/NewGoods/NewGoods';
+import { FormType } from '@/components/pages/goods/NewGoods/NewGoods';
 
 import { styles } from './ColorAutocomplete.styles';
 import { ColorsType, colorList } from './colorList';

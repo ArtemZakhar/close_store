@@ -37,11 +37,13 @@ export type NewGoodFormType = BaseGoodType & {
 };
 
 export type GoodsType = BaseGoodType & {
+  _id: string;
+  code: string;
   season: SeasonListItemType;
-  incomePriceUSD?: string;
+  incomePriceUSD?: number;
   owner: ObjectId;
-  incomePriceGRN?: string;
-  outcomePrice?: string;
+  incomePriceGRN?: number;
+  outcomePrice?: number;
   seller: SellerType;
   firm: FirmType;
   category: CategoryType;
