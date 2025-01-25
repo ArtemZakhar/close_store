@@ -8,6 +8,8 @@ const transportOptions = {
     user: process.env.MY_EMAIL,
     pass: process.env.MY_PASSWORD,
   },
+  logger: true,
+  debug: true,
 };
 
 export async function sendVerificationEmail(email: string, token: string) {
@@ -25,7 +27,7 @@ export async function sendVerificationEmail(email: string, token: string) {
   console.log({ transportOptions, mailOptions });
 
   try {
-    transport.sendMail(mailOptions);
+    await transport.sendMail(mailOptions);
   } catch (e) {
     console.log(e);
   }
@@ -48,7 +50,7 @@ export async function sendPasswordReminder({
   };
 
   try {
-    transport.sendMail(mailOptions);
+    await transport.sendMail(mailOptions);
   } catch (e) {
     console.log(e);
   }
