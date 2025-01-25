@@ -1,14 +1,18 @@
-import { FirmType } from '@/types/goods/firm';
+import { FirmSchemaType } from '@/types/goods/firm';
 
 import mongoose from 'mongoose';
 
-const FirmSchema = new mongoose.Schema<FirmType>({
+import '../Location/City';
+import '../Location/Country';
+
+const FirmSchema = new mongoose.Schema<FirmSchemaType>({
   name: {
     type: String,
     required: true,
   },
   countryOfOrigin: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Country',
     required: true,
   },
 });

@@ -1,8 +1,6 @@
 import { GoodsDetails } from '@/types/goods/good';
 import { CountryType } from '@/types/location/location';
 
-import { ObjectId } from 'mongodb';
-
 import { FormType } from './NewGoods';
 import { errorMessages } from './errorMessages';
 
@@ -77,7 +75,7 @@ export const validations = {
     },
   },
   sellerCountry: {
-    validate: (value: string | ObjectId | CountryType) => {
+    validate: (value: string | CountryType) => {
       if (typeof value === 'string' && !value?.trim().length) {
         return errorMessages.required;
       }
@@ -97,9 +95,13 @@ export const validations = {
     },
 
     countryOfOrigin: {
-      validate: (value: string | ObjectId | undefined) =>
-        (typeof value === 'string' && !!value?.trim().length) ||
-        errorMessages.countryOfOrigin.required,
+      required: errorMessages.countryOfOrigin.required,
+      validate: (value: string | undefined) => {
+        console.log(value);
+        return typeof value === 'string' && !value?.trim().length
+          ? errorMessages.countryOfOrigin.required
+          : true;
+      },
     },
   },
   goodsModel: {

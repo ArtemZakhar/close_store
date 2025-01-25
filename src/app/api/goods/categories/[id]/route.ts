@@ -1,6 +1,6 @@
 import { connectToDatabase } from '@/lib/mongoDb';
 import Category from '@/models/goods/Categories';
-import { CategoryType } from '@/types/goods/category';
+import { CategoryTypeSchema } from '@/types/goods/category';
 
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -15,7 +15,7 @@ export async function PATCH(
 
     const { id } = params;
 
-    const body: Partial<CategoryType> = await request.json();
+    const body: Partial<CategoryTypeSchema> = await request.json();
 
     const { ...propertiesForUpdate } = body;
 
@@ -28,7 +28,7 @@ export async function PATCH(
       );
     }
 
-    const category = await Category.findById<CategoryType>(id);
+    const category = await Category.findById<CategoryTypeSchema>(id);
 
     if (!category) {
       return NextResponse.json(

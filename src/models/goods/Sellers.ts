@@ -1,10 +1,11 @@
-import { SellerType } from '@/types/goods/seller';
+import { SellerSchemaType } from '@/types/goods/seller';
 
 import mongoose from 'mongoose';
 
+import '../Location/City';
 import '../Location/Country';
 
-const SellerSchema = new mongoose.Schema<SellerType>({
+const SellerSchema = new mongoose.Schema<SellerSchemaType>({
   name: {
     type: String,
     required: true,
@@ -28,6 +29,7 @@ const SellerSchema = new mongoose.Schema<SellerType>({
 });
 
 const Seller =
-  mongoose.models.Seller || mongoose.model<SellerType>('Seller', SellerSchema);
+  mongoose.models.Seller ||
+  mongoose.model<SellerSchemaType>('Seller', SellerSchema);
 
 export default Seller;

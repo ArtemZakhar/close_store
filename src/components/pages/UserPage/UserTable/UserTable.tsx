@@ -1,6 +1,6 @@
 'use client';
 
-import { User, UserRole } from '@/types/users/userType';
+import { UserRole, UserType } from '@/types/users/userType';
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import Button from '@mui/material/Button';
 import TableCell from '@mui/material/TableCell';
@@ -24,7 +24,7 @@ const UserTable = ({
   type,
   canDelete,
 }: {
-  users: User[];
+  users: UserType[];
   canInvite: boolean;
   type: UserRole;
   canDelete: boolean;
@@ -33,7 +33,7 @@ const UserTable = ({
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [count, setCount] = useState(0);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
 
   useEffect(() => {
     if (users) {
@@ -55,7 +55,7 @@ const UserTable = ({
     isSuccess: isDeleteUserSuccess,
   } = useDeleteUser();
 
-  const handleOpenDeleteModal = (user: User) => {
+  const handleOpenDeleteModal = (user: UserType) => {
     setOpenModal(true);
     setSelectedUser(user);
   };

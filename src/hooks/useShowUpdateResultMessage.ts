@@ -27,9 +27,14 @@ export const useShowFetchResultMessage = ({
         return;
       }
 
+      console.log(error?.message);
       if (error?.message === responseMessages.user.wrongPassword) {
         toast.error('Не правильний пароль');
+        return;
+      }
 
+      if (error?.message === responseMessages.goods.exist) {
+        toast.error('Ця модель у даного продавця вже існує.');
         return;
       }
 

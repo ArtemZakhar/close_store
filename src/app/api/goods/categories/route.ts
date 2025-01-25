@@ -1,26 +1,45 @@
 import { getSession } from '@/helpers/getSession';
 import { connectToDatabase } from '@/lib/mongoDb';
 import Category from '@/models/goods/Categories';
-import { CategoryType } from '@/types/goods/category';
+import { CategoryTypeSchema } from '@/types/goods/category';
 import { UserRole } from '@/types/users/userType';
 
 import { NextRequest, NextResponse } from 'next/server';
 
 import { responseMessages } from '../../constants/responseMessages';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     await connectToDatabase();
 
-    const session = await getSession();
+    const newUrl = new URL(request.url);
 
-    const queryParams: { [key: string]: string } = {};
+    const queryParams = newUrl.searchParams;
 
-    if (session && session.role !== UserRole.admin) {
-      queryParams['owner'] = session.id;
+    let owner = queryParams.get('owner');
+    let role = queryParams.get('role');
+    let id = queryParams.get('id');
+
+    if (!id) {
+      const session = await getSession();
+
+      if (!session) {
+        return NextResponse.json(
+          { error: true, message: responseMessages.user.forbidden },
+          {
+            status: responseMessages.codes[401],
+          },
+        );
+      }
+
+      id = session.id;
+      role = session.role;
+      owner = session.owner;
     }
 
-    const categories = await Category.find(queryParams).lean();
+    const categoryOwner = role === UserRole.owner ? id : owner;
+
+    const categories = await Category.find({ owner: categoryOwner }).lean();
 
     return NextResponse.json(categories, {
       status: responseMessages.codes[200],
@@ -50,7 +69,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const body: Omit<CategoryType, '_id' | 'lastId'> = await request.json();
+    const body: Omit<CategoryTypeSchema, '_id' | 'lastId'> =
+      await request.json();
 
     if (!body.icon || !body.name || !body.uniqueId || !body.url) {
       return NextResponse.json(

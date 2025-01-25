@@ -11,7 +11,7 @@ const CATEGORY_KEY = 'Category';
 export const useGetAllCategories = () => {
   return useQuery({
     queryKey: [CATEGORY_KEY],
-    queryFn: () => getAllCategories(),
+    queryFn: () => getAllCategories({}),
   });
 };
 

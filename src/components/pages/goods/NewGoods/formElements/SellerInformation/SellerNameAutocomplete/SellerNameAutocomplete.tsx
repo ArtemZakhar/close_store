@@ -1,15 +1,9 @@
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
-import CircularProgress from '@mui/material/CircularProgress';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
 import { Controller, UseFormReturn } from 'react-hook-form';
 
 import StyledAutocomplete from '@/components/common/StyledAutocomplete';
-import CustomList from '@/components/common/StyledAutocomplete/CustomList';
-import CustomPaper from '@/components/common/StyledAutocomplete/CustomPaper';
 
 import { useGetAllSellers } from '@/hooks/api/useSellers';
 

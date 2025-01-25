@@ -17,6 +17,7 @@ const request = <T>({
 }): Promise<T> => {
   const options: RequestInit = {
     method,
+    credentials: 'include',
   };
 
   if (data) {
@@ -36,9 +37,9 @@ const request = <T>({
     options.cache = 'no-store';
   }
 
-  return fetch(BASE_URL + url, options).then((res) => {
+  return fetch(BASE_URL + url, options).then(async (res) => {
     if (!res.ok) {
-      return Promise.reject(res.json());
+      return Promise.reject(await res.json());
     }
 
     return res.json();

@@ -1,13 +1,8 @@
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-import CustomList from '@/components/common/StyledAutocomplete/CustomList';
-import CustomPaper from '@/components/common/StyledAutocomplete/CustomPaper';
+import StyledAutocomplete from '@/components/common/StyledAutocomplete';
 
 import { SizesAndCountDataType, sizesData } from '../sizesData';
-import { styles } from './SizesOptionAutocomplete.styles';
 
 const SizesOptionAutocomplete = ({
   sizeType,
@@ -22,19 +17,10 @@ const SizesOptionAutocomplete = ({
         Тип розміру
       </Typography>
 
-      <Autocomplete
-        PaperComponent={CustomPaper}
-        ListboxComponent={CustomList}
-        popupIcon={<KeyboardArrowDownIcon sx={() => styles.arrow(false)} />}
+      <StyledAutocomplete
         value={sizeType}
         defaultValue={sizeType}
         options={sizesData}
-        fullWidth
-        onClose={(e) => {
-          e.stopPropagation();
-          document.activeElement &&
-            (document.activeElement as HTMLElement).blur();
-        }}
         onChange={(_, newData) => handleSizesOptionChange(newData)}
         getOptionLabel={(option) => option.name}
         renderOption={(props, option) => {
@@ -45,7 +31,6 @@ const SizesOptionAutocomplete = ({
             </li>
           );
         }}
-        renderInput={(params) => <TextField {...params} />}
       />
     </>
   );

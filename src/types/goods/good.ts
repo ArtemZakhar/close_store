@@ -1,8 +1,8 @@
 import { ObjectId } from 'mongodb';
 
-import { CategoryType } from './category';
+import { CategoryType, CategoryTypeSchema } from './category';
 import { FirmType } from './firm';
-import { SellerType } from './seller';
+import { SellerSchemaType, SellerType } from './seller';
 
 type BaseGoodType = {
   subCategory: string[];
@@ -11,7 +11,6 @@ type BaseGoodType = {
   goodsDetails: GoodsDetails[];
   stored?: string;
   notes?: string;
-  category: string | ObjectId;
   buyDate: string;
 };
 
@@ -25,6 +24,7 @@ export type GoodsSchemaType = BaseGoodType & {
   incomePriceUSD?: number;
   incomePriceGRN?: number;
   outcomePrice?: number;
+  category: ObjectId;
 };
 
 export type NewGoodFormType = BaseGoodType & {
@@ -34,6 +34,7 @@ export type NewGoodFormType = BaseGoodType & {
   outcomePrice?: string;
   seller: Omit<SellerType, '_id'>;
   firm: Partial<FirmType>;
+  category: string;
 };
 
 export type GoodsType = BaseGoodType & {
@@ -68,7 +69,7 @@ export type PostNewGoodType = {
   category: string;
   subCategory: string[];
   seller: Omit<SellerType, '_id'>;
-  goods: Omit<GoodsSchemaType, '_id'>;
+  goods: Omit<NewGoodFormType, '_id'>;
 };
 
 export type SeasonType = 'other' | 'summer' | 'winter';

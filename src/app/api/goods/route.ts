@@ -18,25 +18,18 @@ import { handleSellerData } from './helpers/handleSeller';
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getSession();
+    const newUrl = new URL(request.url);
 
-    if (!session) {
-      return NextResponse.json(
-        { error: true, message: responseMessages.user.forbidden },
-        {
-          status: responseMessages.codes[401],
-        },
-      );
-    }
+    const queryParams = newUrl.searchParams;
 
-    let ownerId = new ObjectId(session.id);
+    let id = queryParams.get('id');
+    let owner = queryParams.get('owner');
+    let role = queryParams.get('role');
 
-    if (session.role === UserRole.seller) {
-      const existingSeller = await User.findOne<UserSchemaType>({
-        _id: session.id,
-      });
+    if (!id || !role) {
+      const session = await getSession();
 
-      if (!existingSeller) {
+      if (!session) {
         return NextResponse.json(
           { error: true, message: responseMessages.user.forbidden },
           {
@@ -45,19 +38,19 @@ export async function GET(request: NextRequest) {
         );
       }
 
-      ownerId = existingSeller.owner!;
+      id = session.id;
+      role = session.role;
+      owner = session.owner;
     }
 
-    const url = new URL(request.url);
-
-    const queryParams = new URLSearchParams(url.searchParams);
-
-    const searchParams: { [key: string]: string | string[] | ObjectId } = {
-      owner: ownerId,
-    };
+    const searchParams: { [key: string]: string | string[] | ObjectId } = {};
 
     if (queryParams.toString()) {
       for (const [key, value] of queryParams.entries()) {
+        if (key === 'id' || key === 'role' || key === 'owner') {
+          continue;
+        }
+
         if (key === 'subCategory') {
           searchParams[key] = value.split(',');
           continue;
@@ -73,9 +66,19 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    const goods = await Goods.find(searchParams)
-      .populate('seller')
-      .populate('firm');
+    let goods = [];
+
+    if (role === UserRole.owner) {
+      goods = await Goods.find({ ...searchParams, owner: id })
+        .populate('seller')
+        .populate('firm');
+    }
+
+    if (role === UserRole.seller) {
+      goods = await Goods.find({ ...searchParams, owner })
+        .populate('seller')
+        .populate('firm');
+    }
 
     return NextResponse.json(goods, { status: responseMessages.codes[200] });
   } catch (error) {

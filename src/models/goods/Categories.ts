@@ -1,8 +1,8 @@
-import { CategoryType } from '@/types/goods/category';
+import { CategoryTypeSchema } from '@/types/goods/category';
 
 import mongoose from 'mongoose';
 
-const categorySchema = new mongoose.Schema<CategoryType>({
+const categorySchema = new mongoose.Schema<CategoryTypeSchema>({
   name: {
     type: String,
     required: true,
@@ -36,6 +36,6 @@ const categorySchema = new mongoose.Schema<CategoryType>({
 
 const Category =
   mongoose.models.Category ||
-  mongoose.model<CategoryType>('Category', categorySchema);
+  mongoose.model<CategoryTypeSchema>('Category', categorySchema);
 
 export default Category;

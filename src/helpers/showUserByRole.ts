@@ -1,10 +1,10 @@
-import { User, UserRole } from '@/types/users/userType';
+import { UserRole, UserType } from '@/types/users/userType';
 import { UsersDataType } from '@/types/users/usersData';
 
 import { hasViewRoleAccess } from './roleAccess';
 
 export const showUsersByTheRole = (
-  allUsers: User[],
+  allUsers: UserType[],
   role: UserRole,
 ): UsersDataType | null => {
   if (role === UserRole.buyer || role === UserRole.seller) {

@@ -1,5 +1,5 @@
 import { routePaths } from '@/constants/routePaths';
-import { User, UserRole } from '@/types/users/userType';
+import { UserRole, UserType } from '@/types/users/userType';
 import { UsersDataType } from '@/types/users/usersData';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import WarehouseOutlinedIcon from '@mui/icons-material/WarehouseOutlined';

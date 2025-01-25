@@ -4,9 +4,15 @@ import { client } from '@/utils/client';
 
 import { apiCalls } from './constants/apiCalls';
 
-export const getAllCategories = (tags?: string[]): Promise<CategoryType[]> => {
+export const getAllCategories = ({
+  tags,
+  query,
+}: {
+  tags?: string[];
+  query?: string;
+}): Promise<CategoryType[]> => {
   try {
-    return client.get({ url: apiCalls.categories, tags });
+    return client.get({ url: `${apiCalls.categories}?${query}`, tags });
   } catch (error) {
     console.log('Fetching categories error', error);
     throw new Error('Failed to fetch categories');

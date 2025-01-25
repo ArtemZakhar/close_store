@@ -46,9 +46,18 @@ export async function POST(request: NextRequest) {
 
   const expires = Date.now() + 1000 * 60 * 60 * 12;
 
-  const session = await encrypt({ id: user._id, role: user.role, expires });
+  const session = await encrypt({
+    id: user._id,
+    role: user.role,
+    owner: user.owner,
+    expires,
+  });
 
-  cookies().set('session', session, { expires, httpOnly: true });
+  cookies().set('session', session, {
+    expires,
+    httpOnly: true,
+    secure: false,
+  });
 
   return NextResponse.json({ status: responseMessages.codes[200] });
 }

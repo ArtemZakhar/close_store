@@ -14,13 +14,13 @@ export enum UserStatus {
   deleted = 'deleted',
 }
 
-export type User = {
+export type UserType = {
   _id: string;
   name: string;
   email: string;
   status: UserStatus;
   role: UserRole;
-  owner?: ObjectId;
+  owner: string | null;
 };
 
 export type NewUserType = {
@@ -30,12 +30,12 @@ export type NewUserType = {
 };
 
 export type UserSchemaType = {
-  _id: string;
+  _id: ObjectId;
   name: string;
   email: string;
   token: string;
   status: UserStatus;
   role: UserRole;
-  owner?: ObjectId;
+  owner: ObjectId | null;
   password?: string;
 };

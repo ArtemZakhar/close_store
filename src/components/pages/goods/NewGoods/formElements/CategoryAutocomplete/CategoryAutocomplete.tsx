@@ -1,7 +1,5 @@
 import { CategoryType } from '@/types/goods/category';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -12,8 +10,7 @@ import Typography from '@mui/material/Typography';
 import { useEffect, useState } from 'react';
 import { Controller, UseFormReturn } from 'react-hook-form';
 
-import CustomList from '@/components/common/StyledAutocomplete/CustomList';
-import CustomPaper from '@/components/common/StyledAutocomplete/CustomPaper';
+import StyledAutocomplete from '@/components/common/StyledAutocomplete';
 
 import {
   useGetAllCategories,
@@ -90,33 +87,13 @@ const CategoryAutocomplete = ({
               defaultValue={null}
               rules={validations.category}
               render={({ field }) => (
-                <Autocomplete
+                <StyledAutocomplete
                   {...field}
-                  PaperComponent={CustomPaper}
-                  ListboxComponent={CustomList}
-                  popupIcon={
-                    <KeyboardArrowDownIcon sx={() => styles.arrow(false)} />
-                  }
                   value={field.value || null}
                   options={categoryData || []}
-                  fullWidth
                   onChange={(_, newData) => field.onChange(newData)}
                   getOptionLabel={(option) => option.name}
-                  onClose={(e) => {
-                    e.stopPropagation();
-                    document.activeElement &&
-                      (document.activeElement as HTMLElement).blur();
-                  }}
                   loading={isLoading}
-                  loadingText={
-                    <Box
-                      paddingBlock="1rem"
-                      display="flex"
-                      justifyContent="center"
-                    >
-                      <CircularProgress size="2rem" />
-                    </Box>
-                  }
                   noOptionsText={
                     isError ? (
                       <Box padding="1rem" component="p">
@@ -140,19 +117,14 @@ const CategoryAutocomplete = ({
                       </li>
                     );
                   }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      error={!!errors.category}
-                      helperText={
-                        errors.category &&
-                        typeof errors.category.message === 'string'
-                          ? errors.category.message
-                          : ''
-                      }
-                      placeholder="Оберіть категорію"
-                    />
-                  )}
+                  error={!!errors.category}
+                  helperText={
+                    errors.category &&
+                    typeof errors.category.message === 'string'
+                      ? errors.category.message
+                      : ''
+                  }
+                  placeholder="Оберіть категорію"
                 />
               )}
             />

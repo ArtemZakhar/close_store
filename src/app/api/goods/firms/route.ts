@@ -9,9 +9,14 @@ export async function GET() {
   try {
     await connectToDatabase();
 
-    const firms = await Firm.find();
+    const firms = await Firm.find().populate('countryOfOrigin').lean();
 
-    return NextResponse.json(firms, {
+    const transformedFirms = firms.map((firm) => ({
+      ...firm,
+      countryOfOrigin: firm.countryOfOrigin.name,
+    }));
+
+    return NextResponse.json(transformedFirms, {
       status: responseMessages.codes[200],
     });
   } catch (error) {

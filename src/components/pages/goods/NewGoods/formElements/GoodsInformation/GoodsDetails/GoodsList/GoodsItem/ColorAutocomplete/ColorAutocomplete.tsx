@@ -1,16 +1,11 @@
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
 import { ControllerRenderProps, UseFormReturn } from 'react-hook-form';
 
-import CustomList from '@/components/common/StyledAutocomplete/CustomList';
-import CustomPaper from '@/components/common/StyledAutocomplete/CustomPaper';
+import StyledAutocomplete from '@/components/common/StyledAutocomplete';
 import { FormType } from '@/components/pages/goods/NewGoods/NewGoods';
 
-import { styles } from './ColorAutocomplete.styles';
 import { ColorsType, colorList } from './colorList';
 
 const ColorAutocomplete = ({
@@ -40,18 +35,10 @@ const ColorAutocomplete = ({
         Колір
       </Typography>
 
-      <Autocomplete
-        PaperComponent={CustomPaper}
-        ListboxComponent={CustomList}
-        popupIcon={<KeyboardArrowDownIcon sx={() => styles.arrow(false)} />}
+      <StyledAutocomplete
         options={colorList}
         getOptionLabel={(option) => option.label}
         onChange={(_, newValue) => handleColorChange(newValue)}
-        onClose={(e) => {
-          e.stopPropagation();
-          document.activeElement &&
-            (document.activeElement as HTMLElement).blur();
-        }}
         renderOption={(props, option) => {
           const { key, ...otherProps } = props;
 
@@ -61,9 +48,7 @@ const ColorAutocomplete = ({
             </li>
           );
         }}
-        renderInput={(params) => (
-          <TextField {...params} placeholder="Оберіть колір" />
-        )}
+        placeholder="Оберіть колір"
       />
     </Box>
   );

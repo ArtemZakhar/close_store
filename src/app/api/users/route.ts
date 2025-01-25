@@ -13,17 +13,54 @@ import {
 
 import { revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+
+import mongoose from 'mongoose';
 
 import { responseMessages } from '../constants/responseMessages';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   await connectToDatabase();
 
-  const users = await User.find(
-    { status: { $ne: 'deleted' } },
-    'name email _id role',
-  ).exec();
+  const newUrl = new URL(request.url);
+
+  const query = newUrl.searchParams;
+
+  const role = query.get('role');
+  const id = query.get('id');
+  const owner = query.get('owner');
+
+  let users = [];
+
+  if (role === UserRole.seller) {
+    users = await User.find(
+      {
+        status: { $ne: 'deleted' },
+        role: { $in: [UserRole.buyer] },
+        owner,
+      },
+      'name email _id role',
+    ).exec();
+  }
+
+  if (role === UserRole.owner) {
+    console.log('here');
+    users = await User.find(
+      {
+        status: { $ne: 'deleted' },
+        role: { $in: [UserRole.seller, UserRole.buyer] },
+        owner: id,
+      },
+      'name email _id role',
+    ).exec();
+  }
+
+  if (role === UserRole.admin) {
+    users = await User.find(
+      { status: { $ne: 'deleted' } },
+      'name email _id role',
+    ).exec();
+  }
 
   return NextResponse.json(users, { status: responseMessages.codes[200] });
 }
@@ -74,12 +111,8 @@ export async function POST(request: Request) {
       role: body.role,
       status: UserStatus.pending,
       token,
-      owner: '',
+      owner: session.role === UserRole.owner ? session.id : null,
     };
-
-    if (session.role === UserRole.owner) {
-      userData.owner = session.id;
-    }
 
     const newUser = await User.create(userData);
 

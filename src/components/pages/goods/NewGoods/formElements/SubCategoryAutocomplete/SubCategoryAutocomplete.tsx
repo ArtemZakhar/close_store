@@ -1,17 +1,13 @@
 import { CategoryType } from '@/types/goods/category';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
 import { useEffect, useState } from 'react';
 import { Controller, UseFormReturn } from 'react-hook-form';
 
-import CustomList from '@/components/common/StyledAutocomplete/CustomList';
-import CustomPaper from '@/components/common/StyledAutocomplete/CustomPaper';
+import StyledAutocomplete from '@/components/common/StyledAutocomplete';
 
 import { useUpdateCategory } from '@/hooks/api/useCategories';
 import { useShowFetchResultMessage } from '@/hooks/useShowUpdateResultMessage';
@@ -103,14 +99,9 @@ const SubCategoryAutocomplete = ({
               control={control}
               defaultValue={[]}
               render={({ field }) => (
-                <Autocomplete
+                <StyledAutocomplete
                   {...field}
-                  PaperComponent={CustomPaper}
-                  ListboxComponent={CustomList}
                   multiple
-                  popupIcon={
-                    <KeyboardArrowDownIcon sx={() => styles.arrow(false)} />
-                  }
                   value={field.value}
                   sx={styles.autocomplete}
                   options={selectedCategory.subCategory}
@@ -119,11 +110,6 @@ const SubCategoryAutocomplete = ({
                   renderTags={(value) => (
                     <AutocompleteTags value={value} field={field} />
                   )}
-                  onClose={(e) => {
-                    e.stopPropagation();
-                    document.activeElement &&
-                      (document.activeElement as HTMLElement).blur();
-                  }}
                   noOptionsText={
                     <Button
                       onClick={handleOpenAddNewSubcategoryModal}
@@ -140,20 +126,14 @@ const SubCategoryAutocomplete = ({
                       </li>
                     );
                   }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      error={!!errors.subCategory}
-                      sx={styles.input}
-                      helperText={
-                        errors.subCategory &&
-                        typeof errors.subCategory.message === 'string'
-                          ? errors.subCategory.message
-                          : ''
-                      }
-                      placeholder="Оберіть категорію"
-                    />
-                  )}
+                  error={!!errors.subCategory}
+                  helperText={
+                    errors.subCategory &&
+                    typeof errors.subCategory.message === 'string'
+                      ? errors.subCategory.message
+                      : ''
+                  }
+                  placeholder="Оберіть категорію"
                 />
               )}
             />

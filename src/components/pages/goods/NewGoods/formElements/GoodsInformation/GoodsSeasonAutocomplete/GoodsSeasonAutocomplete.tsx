@@ -1,17 +1,11 @@
-import { SeasonType } from '@/types/goods/good';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
 import { Controller, UseFormReturn } from 'react-hook-form';
 
-import CustomList from '@/components/common/StyledAutocomplete/CustomList';
-import CustomPaper from '@/components/common/StyledAutocomplete/CustomPaper';
+import StyledAutocomplete from '@/components/common/StyledAutocomplete';
 
 import { FormType } from '../../../NewGoods';
-import { styles } from './GoodsSeasonAutocomplete.styles';
 import { seasonList } from './seasonList';
 
 const GoodsSeasonAutocomplete = ({
@@ -32,12 +26,8 @@ const GoodsSeasonAutocomplete = ({
         name="goods.season"
         defaultValue={seasonList[0]}
         render={({ field }) => (
-          <Autocomplete
+          <StyledAutocomplete
             {...field}
-            fullWidth
-            PaperComponent={CustomPaper}
-            ListboxComponent={CustomList}
-            popupIcon={<KeyboardArrowDownIcon sx={() => styles.arrow(false)} />}
             options={seasonList}
             getOptionLabel={(option) => option.label}
             renderOption={(props, option) => {
@@ -52,7 +42,7 @@ const GoodsSeasonAutocomplete = ({
             onChange={(_, newValue) => {
               field.onChange(newValue);
             }}
-            renderInput={(params) => <TextField {...params} />}
+            placeholder="Оберіть сезон"
           />
         )}
       />

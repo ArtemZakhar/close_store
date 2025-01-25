@@ -1,15 +1,15 @@
 'use client';
 
-import { GoodsSchemaType, GoodsType } from '@/types/goods/good';
+import { GoodsType } from '@/types/goods/good';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import { useState } from 'react';
 
-import { styles } from './GoodsCategoryList.styles';
+import { styles } from './CategoryGoodsList.styles';
 import GoodsRow from './GoodsRow';
 
-const GoodsCategoryList = ({
+const CategoryGoodsList = ({
   goods,
   isAdmin,
 }: {
@@ -69,4 +69,4 @@ const GoodsCategoryList = ({
   );
 };
 
-export default GoodsCategoryList;
+export default CategoryGoodsList;

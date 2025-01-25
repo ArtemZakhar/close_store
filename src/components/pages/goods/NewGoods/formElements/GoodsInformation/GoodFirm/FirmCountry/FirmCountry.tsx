@@ -1,16 +1,11 @@
 import { CountryType } from '@/types/location/location';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
-import CircularProgress from '@mui/material/CircularProgress';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { UseQueryResult } from '@tanstack/react-query';
 
 import { Controller, UseFormReturn } from 'react-hook-form';
 
-import CustomList from '@/components/common/StyledAutocomplete/CustomList';
-import CustomPaper from '@/components/common/StyledAutocomplete/CustomPaper';
+import StyledAutocomplete from '@/components/common/StyledAutocomplete';
 
 import { FormType } from '../../../../NewGoods';
 import { validations } from '../../../../formValidations';
@@ -46,38 +41,19 @@ const FirmCountry = ({
           control={control}
           rules={validations.goodsFirm.countryOfOrigin}
           render={({ field }) => (
-            <Autocomplete
+            <StyledAutocomplete
               {...field}
-              PaperComponent={CustomPaper}
-              ListboxComponent={CustomList}
-              popupIcon={
-                <KeyboardArrowDownIcon sx={() => styles.arrow(false)} />
-              }
-              value={(field.value as string) ?? ''}
+              value={field.value ?? ''}
               options={countriesData || []}
-              fullWidth
               freeSolo
-              onChange={(_, newData) =>
-                typeof newData === 'string' &&
-                setValue('goods.firm.countryOfOrigin', newData)
-              }
+              onChange={(_, newValue) => field.onChange(newValue)}
               onInputChange={(event, newInputValue) => {
                 setValue('goods.firm.countryOfOrigin', newInputValue);
               }}
               getOptionLabel={(option) =>
                 typeof option === 'string' ? option : option.name
               }
-              onClose={(e) => {
-                e.stopPropagation();
-                document.activeElement &&
-                  (document.activeElement as HTMLElement).blur();
-              }}
               loading={isLoading}
-              loadingText={
-                <Box paddingBlock="1rem" display="flex" justifyContent="center">
-                  <CircularProgress size="2rem" />
-                </Box>
-              }
               noOptionsText={
                 isError && (
                   <Box padding="1rem" component="p">
@@ -94,18 +70,13 @@ const FirmCountry = ({
                   </li>
                 );
               }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  error={!!isErrorMessage}
-                  helperText={
-                    isErrorMessage
-                      ? errors?.goods?.firm?.countryOfOrigin?.message
-                      : ''
-                  }
-                  placeholder="Зазначте країну"
-                />
-              )}
+              error={!!isErrorMessage}
+              helperText={
+                isErrorMessage
+                  ? errors?.goods?.firm?.countryOfOrigin?.message
+                  : ''
+              }
+              placeholder="Зазначте країну"
             />
           )}
         />

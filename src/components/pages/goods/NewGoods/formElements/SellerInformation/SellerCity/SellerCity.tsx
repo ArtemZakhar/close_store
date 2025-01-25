@@ -1,14 +1,9 @@
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
-import CircularProgress from '@mui/material/CircularProgress';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
 import { Controller, UseFormReturn } from 'react-hook-form';
 
-import CustomList from '@/components/common/StyledAutocomplete/CustomList';
-import CustomPaper from '@/components/common/StyledAutocomplete/CustomPaper';
+import StyledAutocomplete from '@/components/common/StyledAutocomplete';
 
 import { useGetAllCities } from '@/hooks/api/useLocation';
 
@@ -40,16 +35,10 @@ const SellerCity = ({
           control={control}
           defaultValue=""
           render={({ field }) => (
-            <Autocomplete
+            <StyledAutocomplete
               {...field}
-              PaperComponent={CustomPaper}
-              ListboxComponent={CustomList}
-              popupIcon={
-                <KeyboardArrowDownIcon sx={() => styles.arrow(false)} />
-              }
-              value={(field.value as string) || ''}
+              value={field.value || ''}
               options={citiesData || []}
-              fullWidth
               freeSolo
               onChange={(_, newData) => field.onChange(newData)}
               onInputChange={(event, newInputValue) => {
@@ -58,17 +47,7 @@ const SellerCity = ({
               getOptionLabel={(option) =>
                 typeof option === 'string' ? option : option.name
               }
-              onClose={(e) => {
-                e.stopPropagation();
-                document.activeElement &&
-                  (document.activeElement as HTMLElement).blur();
-              }}
               loading={isLoading}
-              loadingText={
-                <Box paddingBlock="1rem" display="flex" justifyContent="center">
-                  <CircularProgress size="2rem" />
-                </Box>
-              }
               noOptionsText={
                 isError && (
                   <Box padding="1rem" component="p">
@@ -85,20 +64,15 @@ const SellerCity = ({
                   </li>
                 );
               }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  error={!!(errors.seller && errors.seller.city)}
-                  helperText={
-                    errors.seller &&
-                    errors.seller.city &&
-                    typeof errors.seller.city.message === 'string'
-                      ? errors.seller.city.message
-                      : ''
-                  }
-                  placeholder="Зазначте місто"
-                />
-              )}
+              error={!!(errors.seller && errors.seller.city)}
+              helperText={
+                errors.seller &&
+                errors.seller.city &&
+                typeof errors.seller.city.message === 'string'
+                  ? errors.seller.city.message
+                  : ''
+              }
+              placeholder="Зазначте місто"
             />
           )}
         />

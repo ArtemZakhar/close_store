@@ -1,6 +1,6 @@
 import { getSession } from '@/helpers/getSession';
 import { showUsersByTheRole } from '@/helpers/showUserByRole';
-import { User, UserRole } from '@/types/users/userType';
+import { UserRole, UserType } from '@/types/users/userType';
 import Box from '@mui/material/Box';
 
 import { Suspense } from 'react';
@@ -24,10 +24,15 @@ export default async function Users() {
 
   if (!session) return;
 
-  let allUsers: User[] = [];
+  const { role, id, owner } = session;
+
+  let allUsers: UserType[] = [];
 
   try {
-    allUsers = await getAllUsers({ tags: ['users-list'] });
+    allUsers = await getAllUsers({
+      tags: ['users-list'],
+      query: `role=${role}&id=${id}&owner=${owner}`,
+    });
   } catch (error) {
     console.log({ error });
     throw new Error('Failed to fetch users');

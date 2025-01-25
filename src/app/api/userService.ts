@@ -1,12 +1,21 @@
-import { NewUserType, User, UserRole } from '@/types/users/userType';
+import { NewUserType, UserRole, UserType } from '@/types/users/userType';
 
 import { client } from '@/utils/client';
 
 import { apiCalls } from './constants/apiCalls';
 
-export const getAllUsers = async ({ tags }: { tags: string[] }) => {
+export const getAllUsers = async ({
+  tags,
+  query,
+}: {
+  tags: string[];
+  query: string;
+}) => {
   try {
-    return await client.get<User[]>({ url: apiCalls.users, tags });
+    return await client.get<UserType[]>({
+      url: `${apiCalls.users}?${query}`,
+      tags,
+    });
   } catch (error) {
     console.log('Fetching users error', error);
     throw new Error('Failed to fetch users');

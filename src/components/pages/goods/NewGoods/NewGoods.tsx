@@ -42,33 +42,11 @@ const NewGood = () => {
     isError: isCreateNewGoodsError,
     isPending: isCreateNewGoodsPending,
     isSuccess: isCreateNewGoodsSuccess,
+    error,
   } = usePostNewGoods();
 
   const onSubmit = ({ category, subCategory, goods, seller }: FormType) => {
     if (!category || !seller) return;
-
-    console.log(
-      JSON.stringify(
-        {
-          category: category._id,
-          subCategory,
-          firm: goods.firm,
-          model: goods.model,
-          description: goods.description,
-          goodsDetails: goods.goodsDetails,
-          stored: goods.stored,
-          notes: goods.notes,
-          buyDate: goods.buyDate,
-          season: goods.season,
-          seller,
-          incomePriceGRN: goods.incomePriceGRN,
-          incomePriceUSD: goods.incomePriceUSD,
-          outcomePrice: goods.outcomePrice,
-        },
-        null,
-        2,
-      ),
-    );
 
     createNewGoods({
       category: category._id,
@@ -92,6 +70,7 @@ const NewGood = () => {
     isError: isCreateNewGoodsError,
     isSuccess: isCreateNewGoodsSuccess,
     closeFunction: () => router.push(`/${routePaths.goods}`),
+    error,
   });
 
   return (

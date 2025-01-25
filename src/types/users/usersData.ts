@@ -1,5 +1,5 @@
-import { User, UserRole } from './userType';
+import { UserRole, UserType } from './userType';
 
 export type UsersDataType = {
-  [key in UserRole]?: { users: User[]; canInvite: boolean };
+  [key in UserRole]?: { users: UserType[]; canInvite: boolean };
 };

@@ -1,16 +1,11 @@
 import { CountryType } from '@/types/location/location';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
-import CircularProgress from '@mui/material/CircularProgress';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { UseQueryResult } from '@tanstack/react-query';
 
 import { Controller, UseFormReturn } from 'react-hook-form';
 
-import CustomList from '@/components/common/StyledAutocomplete/CustomList';
-import CustomPaper from '@/components/common/StyledAutocomplete/CustomPaper';
+import StyledAutocomplete from '@/components/common/StyledAutocomplete';
 
 import { FormType } from '../../../NewGoods';
 import { validations } from '../../../formValidations';
@@ -44,16 +39,10 @@ const SellerCountryInput = ({
           rules={validations.sellerCountry}
           defaultValue=""
           render={({ field }) => (
-            <Autocomplete
+            <StyledAutocomplete
               {...field}
-              PaperComponent={CustomPaper}
-              ListboxComponent={CustomList}
-              popupIcon={
-                <KeyboardArrowDownIcon sx={() => styles.arrow(false)} />
-              }
-              value={(field.value as string) || ''}
+              value={field.value || ''}
               options={countriesData || []}
-              fullWidth
               freeSolo
               onChange={(_, newData) => field.onChange(newData)}
               getOptionLabel={(option) =>
@@ -62,17 +51,7 @@ const SellerCountryInput = ({
               onInputChange={(event, newInputValue) => {
                 setValue('seller.country', newInputValue);
               }}
-              onClose={(e) => {
-                e.stopPropagation();
-                document.activeElement &&
-                  (document.activeElement as HTMLElement).blur();
-              }}
               loading={isLoading}
-              loadingText={
-                <Box paddingBlock="1rem" display="flex" justifyContent="center">
-                  <CircularProgress size="2rem" />
-                </Box>
-              }
               noOptionsText={
                 isError && (
                   <Box padding="1rem" component="p">
@@ -89,20 +68,15 @@ const SellerCountryInput = ({
                   </li>
                 );
               }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  error={!!(errors.seller && errors.seller.country)}
-                  helperText={
-                    errors.seller &&
-                    errors.seller.country &&
-                    typeof errors.seller.country.message === 'string'
-                      ? errors.seller.country.message
-                      : ''
-                  }
-                  placeholder="Зазначте країну"
-                />
-              )}
+              error={!!(errors.seller && errors.seller.country)}
+              helperText={
+                errors.seller &&
+                errors.seller.country &&
+                typeof errors.seller.country.message === 'string'
+                  ? errors.seller.country.message
+                  : ''
+              }
+              placeholder="Зазначте країну"
             />
           )}
         />

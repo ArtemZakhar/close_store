@@ -1,5 +1,5 @@
 import { deleteUser, postNewUser } from '@/app/api/userService';
-import { NewUserType, User, UserRole } from '@/types/users/userType';
+import { NewUserType, UserRole, UserType } from '@/types/users/userType';
 import { useMutation } from '@tanstack/react-query';
 
 import { useRouter } from 'next/navigation';

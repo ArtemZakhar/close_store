@@ -29,5 +29,6 @@ export const usePostNewGoods = () => {
         queryKey: [QUERY_COUNTRIES],
       });
     },
+    onError: (error) => error,
   });
 };

@@ -1,6 +1,6 @@
 import { connectToDatabase } from '@/lib/mongoDb';
 import Seller from '@/models/goods/Sellers';
-import { SellerType } from '@/types/goods/seller';
+import { SellerSchemaType } from '@/types/goods/seller';
 
 import { NextResponse } from 'next/server';
 
@@ -10,7 +10,7 @@ export async function GET() {
   try {
     await connectToDatabase();
 
-    const sellers = await Seller.find<SellerType>()
+    const sellers = await Seller.find<SellerSchemaType>()
       .populate('country', 'name')
       .populate('city', 'name')
       .lean();

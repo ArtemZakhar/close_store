@@ -6,7 +6,7 @@ import { Suspense } from 'react';
 
 import ContainerWithPadding from '@/components/common/ContainerWithPadding';
 import Loading from '@/components/common/Loading';
-import GoodsCategoryList from '@/components/pages/goods/GoodsCategoryList';
+import CategoryGoodsList from '@/components/pages/goods/CategoryGoodsList';
 
 export const dynamic = 'force-dynamic';
 export const dynamicParams = true;
@@ -21,8 +21,10 @@ export default async function CategoryPage({
 
   if (!session) return;
 
+  const { id, role, owner } = session;
+
   const goods = await getAllGoods({
-    searchParams: `category=${category}`,
+    searchParams: `category=${category}&id=${id}&role=${role}&owner=${owner}`,
     tags: ['goods-quantity'],
   });
 
@@ -32,7 +34,7 @@ export default async function CategoryPage({
   return (
     <ContainerWithPadding>
       <Suspense fallback={<Loading />}>
-        <GoodsCategoryList goods={goods} isAdmin={isAdmin} />
+        <CategoryGoodsList goods={goods} isAdmin={isAdmin} />
       </Suspense>
     </ContainerWithPadding>
   );
