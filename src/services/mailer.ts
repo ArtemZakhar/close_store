@@ -22,7 +22,13 @@ export async function sendVerificationEmail(email: string, token: string) {
     html: `Для підтвердження електронної адреси перейдіть, будь ласка, за посиланням: <a href="${verificationLink}" target="_blank">Завершити реєстрацію</a>`,
   };
 
-  transport.sendMail(mailOptions);
+  console.log({ transportOptions, mailOptions });
+
+  try {
+    transport.sendMail(mailOptions);
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 export async function sendPasswordReminder({
@@ -41,5 +47,9 @@ export async function sendPasswordReminder({
     text: `Для створення нового паролю перейдіть, будь ласка, за посиланням: ${process.env.BASE_URL}new-password/?token=${token}`,
   };
 
-  transport.sendMail(mailOptions);
+  try {
+    transport.sendMail(mailOptions);
+  } catch (e) {
+    console.log(e);
+  }
 }
