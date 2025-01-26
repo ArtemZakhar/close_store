@@ -28,13 +28,12 @@ export default async function CategoryPage({
     tags: ['goods-quantity'],
   });
 
-  const isAdmin =
-    session.role === UserRole.admin || session.role === UserRole.buyer;
+  const canModify = session.role === UserRole.owner;
 
   return (
     <ContainerWithPadding>
       <Suspense fallback={<Loading />}>
-        <CategoryGoodsList goods={goods} isAdmin={isAdmin} />
+        <CategoryGoodsList goods={goods} canModify={canModify} />
       </Suspense>
     </ContainerWithPadding>
   );

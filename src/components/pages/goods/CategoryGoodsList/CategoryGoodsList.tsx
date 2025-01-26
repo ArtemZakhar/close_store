@@ -11,10 +11,10 @@ import GoodsRow from './GoodsRow';
 
 const CategoryGoodsList = ({
   goods,
-  isAdmin,
+  canModify,
 }: {
   goods: GoodsType[];
-  isAdmin: boolean;
+  canModify: boolean;
 }) => {
   const [selectedGoods, setSelectedGoods] = useState<GoodsType | null>(null);
 
@@ -60,7 +60,7 @@ const CategoryGoodsList = ({
               item={item}
               toggleSelectedGoods={toggleSelectedGoods}
               selectedGoods={selectedGoods}
-              isAdmin={isAdmin}
+              canModify={canModify}
             />
           ))}
         </Box>

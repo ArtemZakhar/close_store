@@ -8,8 +8,8 @@ const transportOptions = {
     user: process.env.MY_EMAIL,
     pass: process.env.MY_PASSWORD,
   },
-  logger: true,
-  debug: true,
+  // logger: true,
+  // debug: true,
 };
 
 export async function sendVerificationEmail(email: string, token: string) {
@@ -19,12 +19,10 @@ export async function sendVerificationEmail(email: string, token: string) {
   const mailOptions = {
     from: process.env.MY_EMAIL,
     to: email,
-    subject: `Підтвердіть свою електронну поштую`,
+    subject: `Підтвердіть свою електронну пошту.`,
     text: `Для підтвердження електронної адреси перейдіть, будь ласка, за посиланням: ${verificationLink}`,
     html: `Для підтвердження електронної адреси перейдіть, будь ласка, за посиланням: <a href="${verificationLink}" target="_blank">Завершити реєстрацію</a>`,
   };
-
-  console.log({ transportOptions, mailOptions });
 
   try {
     await transport.sendMail(mailOptions);

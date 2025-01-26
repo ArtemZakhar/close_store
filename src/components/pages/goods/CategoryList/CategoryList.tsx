@@ -20,7 +20,7 @@ const CategoryList = ({ categories }: { categories: CategoryType[] }) => {
             key={_id}
             color="inherit"
             variant="text"
-            href={`${routePaths.goods}/${url}`}
+            href={`${routePaths.goods.root}/${url}`}
             component={Link}
             sx={styles.button}
             disableRipple

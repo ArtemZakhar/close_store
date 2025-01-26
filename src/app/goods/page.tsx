@@ -59,7 +59,7 @@ export default async function Goods() {
           {canAddGoods && (
             <Button
               component={Link}
-              href={routePaths.newGoods}
+              href={routePaths.goods.new}
               variant="contained"
             >
               Додати новий товар

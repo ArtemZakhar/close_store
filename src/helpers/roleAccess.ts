@@ -19,11 +19,6 @@ export const roleAccess = {
       label: 'Користувачі',
       icon: PersonOutlineOutlinedIcon,
     },
-    {
-      href: routePaths.goods,
-      label: 'Товари',
-      icon: WarehouseOutlinedIcon,
-    },
   ],
   [UserRole.owner]: [
     {
@@ -32,21 +27,21 @@ export const roleAccess = {
       icon: PersonOutlineOutlinedIcon,
     },
     {
-      href: routePaths.goods,
+      href: routePaths.goods.root,
       label: 'Товари',
       icon: WarehouseOutlinedIcon,
     },
   ],
   [UserRole.seller]: [
     {
-      href: routePaths.goods,
+      href: routePaths.goods.root,
       label: 'Товари',
       icon: WarehouseOutlinedIcon,
     },
   ],
   [UserRole.buyer]: [
     {
-      href: routePaths.goods,
+      href: routePaths.goods.root,
       label: 'Товари',
       icon: WarehouseOutlinedIcon,
     },

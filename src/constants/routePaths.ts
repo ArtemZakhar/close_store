@@ -3,6 +3,9 @@ export const routePaths = {
   login: 'login',
   forgotPassword: 'forgot-password',
   users: 'users',
-  goods: 'goods',
-  newGoods: 'goods/new',
+  goods: {
+    root: 'goods',
+    new: 'goods/new',
+    edit: 'goods/edit',
+  },
 };

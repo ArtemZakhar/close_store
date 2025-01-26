@@ -1,21 +1,26 @@
+import { routePaths } from '@/constants/routePaths';
 import { GoodsDetails } from '@/types/goods/good';
 import { GoodsInCartType } from '@/types/localStorage/goods';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
+import Link from 'next/link';
+
 import { styles } from './GoodsDetailsItem.styles';
 import HandleCartButton from './HandleCartButton';
 
 const GoodsDetailsItem = ({
   goods,
-  isAdmin,
+  canModify,
   goodsInCart,
   addGoodsInCart,
   removeGoodsFromCart,
+  showConfirmationRemoveModal,
+  selectedGoodsId,
 }: {
   goods: GoodsDetails;
-  isAdmin: boolean;
+  canModify: boolean;
   goodsInCart: GoodsInCartType[] | undefined;
   addGoodsInCart: ({ color, size }: { color: string; size: string }) => void;
   removeGoodsFromCart: ({
@@ -25,14 +30,30 @@ const GoodsDetailsItem = ({
     color: string;
     size: string;
   }) => void;
+  showConfirmationRemoveModal: () => void;
+  selectedGoodsId: string;
 }) => {
   const { color, countAndSizes } = goods;
 
   return (
     <Box sx={styles.container}>
-      {isAdmin && (
-        <Box>
-          <Button>Редагування</Button>
+      {canModify && (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box>
+            <Link href={`/${routePaths.goods.edit}/${selectedGoodsId}`}>
+              <Button>Редагування</Button>
+            </Link>
+          </Box>
+
+          <Box>
+            <Link href={`/${routePaths.goods.new}?id=${selectedGoodsId}`}>
+              <Button>Створити копію</Button>
+            </Link>
+          </Box>
+
+          <Box>
+            <Button onClick={showConfirmationRemoveModal}>Видалення</Button>
+          </Box>
         </Box>
       )}
 

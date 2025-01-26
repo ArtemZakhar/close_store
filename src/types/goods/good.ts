@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb';
 
 import { CategoryType, CategoryTypeSchema } from './category';
 import { FirmType } from './firm';
-import { SellerSchemaType, SellerType } from './seller';
+import { SellerType } from './seller';
 
 type BaseGoodType = {
   subCategory: string[];

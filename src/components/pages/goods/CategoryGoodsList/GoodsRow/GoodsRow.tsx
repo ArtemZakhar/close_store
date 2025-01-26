@@ -5,7 +5,9 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-import useLocalStorageService from '@/hooks/useLocalStorageService';
+import { useState } from 'react';
+
+import useGoodsInCartService from '@/hooks/useGoodsInCartService';
 
 import GoodsDetailsItem from './GoodsDetailsItem';
 import { styles } from './GoodsRow.styles';
@@ -14,22 +16,25 @@ const GoodsRow = ({
   item,
   selectedGoods,
   toggleSelectedGoods,
-  isAdmin,
+  canModify,
 }: {
   item: GoodsType;
   selectedGoods: GoodsType | null;
   toggleSelectedGoods: (goods: GoodsType) => void;
-  isAdmin: boolean;
+  canModify: boolean;
 }) => {
-  const { goodsInCart, saveGoodsInCart, deleteGoodsFromCart } =
-    useLocalStorageService();
+  const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
+
+  const { goodsInCart, saveInCart, removeFromCart } = useGoodsInCartService();
 
   const { _id, firm, model, outcomePrice, code, goodsDetails } = item;
 
   const goodsInCartFiltered = goodsInCart.filter((item) => item._id === _id);
 
   const addGoodsInCart = ({ color, size }: { color: string; size: string }) => {
-    saveGoodsInCart({ _id, color, size });
+    if (!selectedGoods) return;
+
+    saveInCart({ _id: selectedGoods._id, color, size });
   };
 
   const removeGoodsFromCart = ({
@@ -39,7 +44,17 @@ const GoodsRow = ({
     color: string;
     size: string;
   }) => {
-    deleteGoodsFromCart({ _id, color, size });
+    if (!selectedGoods) return;
+
+    removeFromCart({ _id: selectedGoods._id, color, size });
+  };
+
+  const showConfirmationRemoveModal = () => {
+    setIsRemoveModalOpen(true);
+  };
+
+  const hideConfirmationRemoveModal = () => {
+    setIsRemoveModalOpen(false);
   };
 
   return (
@@ -76,10 +91,12 @@ const GoodsRow = ({
           <GoodsDetailsItem
             key={goods.color}
             goods={goods}
-            isAdmin={isAdmin}
+            canModify={canModify}
             goodsInCart={goodsInCartFiltered}
             addGoodsInCart={addGoodsInCart}
             removeGoodsFromCart={removeGoodsFromCart}
+            showConfirmationRemoveModal={showConfirmationRemoveModal}
+            selectedGoodsId={selectedGoods._id}
           />
         ))}
     </Box>
