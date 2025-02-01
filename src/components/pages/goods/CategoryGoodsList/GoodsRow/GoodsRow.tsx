@@ -1,33 +1,73 @@
-import { GoodsSchemaType, GoodsType } from '@/types/goods/good';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
+import { responseMessages } from '@/app/api/constants/responseMessages';
+import { GoodsType } from '@/types/goods/good';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import Tooltip from '@mui/material/Tooltip';
 
 import { useState } from 'react';
 
+import ConfirmationModal from '@/components/common/ConfirmationModal';
+
+import { useDeleteGoods } from '@/hooks/api/useGoods';
 import useGoodsInCartService from '@/hooks/useGoodsInCartService';
+import { useShowFetchResultMessage } from '@/hooks/useShowUpdateResultMessage';
 
 import GoodsDetailsItem from './GoodsDetailsItem';
 import { styles } from './GoodsRow.styles';
+import TableHeader from './TableHeader';
 
 const GoodsRow = ({
   item,
   selectedGoods,
   toggleSelectedGoods,
   canModify,
+  startMode,
 }: {
   item: GoodsType;
   selectedGoods: GoodsType | null;
   toggleSelectedGoods: (goods: GoodsType) => void;
   canModify: boolean;
+  startMode: (mode?: 'editing') => void;
 }) => {
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
 
   const { goodsInCart, saveInCart, removeFromCart } = useGoodsInCartService();
 
-  const { _id, firm, model, outcomePrice, code, goodsDetails } = item;
+  const {
+    mutate: deleteGoods,
+    isError: isDeleteGoodsError,
+    isPending: isDeleteGoodsPending,
+    isSuccess: isDeleteGoodsSuccess,
+    error: deleteGoodsError,
+  } = useDeleteGoods();
+
+  const { _id, goodsDetails } = item;
+
+  const showConfirmationRemoveModal = () => {
+    setIsRemoveModalOpen(true);
+  };
+
+  const hideConfirmationRemoveModal = () => {
+    setIsRemoveModalOpen(false);
+  };
+
+  useShowFetchResultMessage({
+    isError: isDeleteGoodsError,
+    isSuccess: isDeleteGoodsSuccess,
+    error: deleteGoodsError,
+    closeFunction: hideConfirmationRemoveModal,
+    customErrorMessage: [
+      {
+        errorType: responseMessages.user.forbidden,
+        message: 'Заборонена операція',
+      },
+      {
+        errorType: responseMessages.server.error,
+        message:
+          'Помилка на стороні сервера при видалені товару. Спробуйте пізніше.',
+      },
+    ],
+  });
 
   const goodsInCartFiltered = goodsInCart.filter((item) => item._id === _id);
 
@@ -49,57 +89,62 @@ const GoodsRow = ({
     removeFromCart({ _id: selectedGoods._id, color, size });
   };
 
-  const showConfirmationRemoveModal = () => {
-    setIsRemoveModalOpen(true);
-  };
-
-  const hideConfirmationRemoveModal = () => {
-    setIsRemoveModalOpen(false);
-  };
-
   return (
-    <Box sx={styles.row}>
-      <Box sx={styles.titleWrapper}>
-        <Typography width="5rem">{code}</Typography>
+    <Tooltip title={selectedGoods?._id === _id ? '' : item.description} arrow>
+      <Box sx={styles.row} onDoubleClick={() => toggleSelectedGoods(item)}>
+        <TableHeader
+          item={item}
+          toggleSelectedGoods={toggleSelectedGoods}
+          selectedGoods={selectedGoods}
+        />
 
-        <Typography flexGrow={1}>{firm.name}</Typography>
+        {selectedGoods?._id === _id && (
+          <>
+            {canModify && (
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box>
+                  <Button onClick={() => startMode('editing')}>
+                    Редагування
+                  </Button>
+                </Box>
 
-        <Typography align="center" width="15rem">
-          {model}
-        </Typography>
+                <Box>
+                  <Button onClick={() => startMode()}>Створити копію</Button>
+                </Box>
 
-        <Typography align="center" width="15rem">
-          {outcomePrice?.toFixed(2) ?? 'Не встановлено'}
-        </Typography>
-
-        <Box width="2rem">
-          <Button
-            onClick={() => toggleSelectedGoods(item)}
-            sx={styles.toggleButton}
-          >
-            {selectedGoods?._id === _id ? (
-              <KeyboardArrowUp />
-            ) : (
-              <KeyboardArrowDownIcon />
+                <Box>
+                  <Button onClick={showConfirmationRemoveModal}>
+                    Видалення
+                  </Button>
+                </Box>
+              </Box>
             )}
-          </Button>
-        </Box>
-      </Box>
+          </>
+        )}
 
-      {selectedGoods?._id === _id &&
-        goodsDetails.map((goods) => (
-          <GoodsDetailsItem
-            key={goods.color}
-            goods={goods}
-            canModify={canModify}
-            goodsInCart={goodsInCartFiltered}
-            addGoodsInCart={addGoodsInCart}
-            removeGoodsFromCart={removeGoodsFromCart}
-            showConfirmationRemoveModal={showConfirmationRemoveModal}
-            selectedGoodsId={selectedGoods._id}
+        {selectedGoods?._id === _id &&
+          goodsDetails.map((goods) => (
+            <GoodsDetailsItem
+              key={goods.color}
+              goods={goods}
+              goodsInCart={goodsInCartFiltered}
+              addGoodsInCart={addGoodsInCart}
+              removeGoodsFromCart={removeGoodsFromCart}
+            />
+          ))}
+
+        {isRemoveModalOpen && (
+          <ConfirmationModal
+            openModal={isRemoveModalOpen}
+            handleClose={hideConfirmationRemoveModal}
+            title="Видалення товару"
+            subTitle={`Ви збираєтесь видалити товар (код: ${selectedGoods?.code}, модель: ${selectedGoods?.model}). Цю операцію не можна буде скасувати. Ви впевненні?`}
+            isPending={isDeleteGoodsPending}
+            confirmFunction={() => deleteGoods(selectedGoods?._id!)}
           />
-        ))}
-    </Box>
+        )}
+      </Box>
+    </Tooltip>
   );
 };
 

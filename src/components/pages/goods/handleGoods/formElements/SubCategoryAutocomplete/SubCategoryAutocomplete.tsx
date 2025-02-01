@@ -12,7 +12,7 @@ import StyledAutocomplete from '@/components/common/StyledAutocomplete';
 import { useUpdateCategory } from '@/hooks/api/useCategories';
 import { useShowFetchResultMessage } from '@/hooks/useShowUpdateResultMessage';
 
-import { FormType } from '../../NewGoods/NewGoods';
+import { FormType } from '../../HandleGoods';
 import AddNewSubcategoryModal from './AddNewSubcategoryModal';
 import AutocompleteTags from './AutocompleteTags';
 import { styles } from './SubCategoryAutocomplete.styles';

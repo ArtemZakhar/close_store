@@ -8,10 +8,11 @@ type BaseGoodType = {
   subCategory: string[];
   model: string;
   description?: string;
+  sizeType: 'clothes' | 'jackets' | 'jeans';
   goodsDetails: GoodsDetails[];
   stored?: string;
   notes?: string;
-  buyDate: string;
+  buyDate?: string;
 };
 
 export type GoodsSchemaType = BaseGoodType & {
@@ -21,17 +22,11 @@ export type GoodsSchemaType = BaseGoodType & {
   season: string;
   seller: ObjectId;
   firm: ObjectId;
-  incomePriceUSD?: number;
-  incomePriceGRN?: number;
-  outcomePrice?: number;
   category: ObjectId;
 };
 
 export type NewGoodFormType = BaseGoodType & {
   season: SeasonListItemType;
-  incomePriceUSD?: string;
-  incomePriceGRN?: string;
-  outcomePrice?: string;
   seller: Omit<SellerType, '_id'>;
   firm: Partial<FirmType>;
   category: string;
@@ -41,10 +36,7 @@ export type GoodsType = BaseGoodType & {
   _id: string;
   code: string;
   season: SeasonListItemType;
-  incomePriceUSD?: number;
-  owner: ObjectId;
-  incomePriceGRN?: number;
-  outcomePrice?: number;
+  owner: string;
   seller: SellerType;
   firm: FirmType;
   category: CategoryType;
@@ -57,6 +49,9 @@ export type SeasonListItemType = {
 
 export type GoodsDetails = {
   color: string;
+  incomePriceUSD?: number;
+  incomePriceGRN?: number;
+  outcomePrice?: number;
   countAndSizes: GoodsQuantityAndCount[];
 };
 

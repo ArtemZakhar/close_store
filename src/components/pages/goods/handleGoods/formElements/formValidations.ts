@@ -1,7 +1,7 @@
 import { GoodsDetails } from '@/types/goods/good';
 import { CountryType } from '@/types/location/location';
 
-import { FormType } from './NewGoods/NewGoods';
+import { FormType } from '../HandleGoods';
 import { errorMessages } from './errorMessages';
 
 export const onlyDigitsRegExp = /[-\s\D]+/gi;
@@ -97,7 +97,6 @@ export const validations = {
     countryOfOrigin: {
       required: errorMessages.countryOfOrigin.required,
       validate: (value: string | undefined) => {
-        console.log(value);
         return typeof value === 'string' && !value?.trim().length
           ? errorMessages.countryOfOrigin.required
           : true;

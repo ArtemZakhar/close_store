@@ -15,33 +15,21 @@ export const useShowFetchResultMessage = ({
   isSuccess: boolean;
   closeFunction?: () => void;
   error?: Error | null;
-  customErrorMessage?: string;
+  customErrorMessage?: { errorType: string; message: string }[];
   customMessage?: string;
 }) => {
   useEffect(() => {
     if (isError) {
       toast.dismiss();
 
-      if (error?.message === responseMessages.user.noUser) {
-        toast.error('Перевірте правильність електронної пошти');
-        return;
-      }
+      if (error && customErrorMessage) {
+        for (const message of customErrorMessage) {
+          if (message.errorType === error.message) {
+            toast.error(message.message);
 
-      console.log(error?.message);
-      if (error?.message === responseMessages.user.wrongPassword) {
-        toast.error('Не правильний пароль');
-        return;
-      }
-
-      if (error?.message === responseMessages.goods.exist) {
-        toast.error('Ця модель у даного продавця вже існує.');
-        return;
-      }
-
-      if (customErrorMessage) {
-        toast.error(customErrorMessage);
-
-        return;
+            return;
+          }
+        }
       }
 
       toast.error('Щось пішло не так, спробуйте пізніше.');

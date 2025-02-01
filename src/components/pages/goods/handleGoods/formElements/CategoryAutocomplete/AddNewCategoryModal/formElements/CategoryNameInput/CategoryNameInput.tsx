@@ -3,8 +3,7 @@ import Typography from '@mui/material/Typography';
 
 import { Controller, UseFormReturn } from 'react-hook-form';
 
-import { validations } from '@/components/pages/goods/handleGoods/formValidations';
-
+import { validations } from '../../../../formValidations';
 import { NewCategoryFormType } from '../../AddNewCategoryModal';
 
 const CategoryNameInput = ({

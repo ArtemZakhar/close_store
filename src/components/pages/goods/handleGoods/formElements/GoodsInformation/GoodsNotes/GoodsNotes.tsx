@@ -2,7 +2,7 @@ import TextField from '@mui/material/TextField';
 
 import { Controller, UseFormReturn } from 'react-hook-form';
 
-import { FormType } from '../../../NewGoods/NewGoods';
+import { FormType } from '../../../HandleGoods';
 import { styles } from './GoodsNotes.styles';
 
 const GoodsNotes = ({

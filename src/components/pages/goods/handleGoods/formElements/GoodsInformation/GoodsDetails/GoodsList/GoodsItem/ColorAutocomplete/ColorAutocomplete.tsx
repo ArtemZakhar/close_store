@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import { ControllerRenderProps, UseFormReturn } from 'react-hook-form';
 
 import StyledAutocomplete from '@/components/common/StyledAutocomplete';
-import { FormType } from '@/components/pages/goods/handleGoods/NewGoods/NewGoods';
+import { FormType } from '@/components/pages/goods/HandleGoods/HandleGoods';
 
 import { ColorsType, colorList } from './colorList';
 

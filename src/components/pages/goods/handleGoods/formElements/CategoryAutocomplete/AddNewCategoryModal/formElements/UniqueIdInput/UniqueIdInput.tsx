@@ -3,11 +3,7 @@ import Typography from '@mui/material/Typography';
 
 import { Controller, UseFormReturn } from 'react-hook-form';
 
-import {
-  onlyDigitsRegExp,
-  validations,
-} from '@/components/pages/goods/handleGoods/formValidations';
-
+import { onlyDigitsRegExp, validations } from '../../../../formValidations';
 import { NewCategoryFormType } from '../../AddNewCategoryModal';
 
 const UniqueIdInput = ({

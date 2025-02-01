@@ -2,15 +2,15 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useEffect } from 'react';
 import {
   Controller,
   ControllerRenderProps,
   UseFormReturn,
 } from 'react-hook-form';
 
-import { FormType } from '../../../NewGoods/NewGoods';
-import { validations } from '../../../formValidations';
+import { FormType } from '../../../HandleGoods';
+import { validations } from '../../formValidations';
 import { styles } from './SellerEmailInput.styles';
 
 const SellerEmailInput = ({
@@ -23,6 +23,14 @@ const SellerEmailInput = ({
     clearErrors,
     formState: { errors },
   } = form;
+
+  const seller = form.watch('seller');
+
+  useEffect(() => {
+    if (seller && seller.email) {
+      form.setValue('seller.email', seller.email);
+    }
+  }, [seller?.email]);
 
   const handleEmailChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,

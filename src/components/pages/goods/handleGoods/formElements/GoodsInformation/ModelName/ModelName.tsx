@@ -4,8 +4,8 @@ import Typography from '@mui/material/Typography';
 
 import { Controller, UseFormReturn } from 'react-hook-form';
 
-import { FormType } from '../../../NewGoods/NewGoods';
-import { validations } from '../../../formValidations';
+import { FormType } from '../../../HandleGoods';
+import { validations } from '../../formValidations';
 import { styles } from './ModelName.styles';
 
 const ModelName = ({

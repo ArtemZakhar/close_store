@@ -77,6 +77,6 @@ export const client = {
     tags?: string[];
   }) => request<T>({ url, method: 'PATCH', data, tags }),
 
-  delete: ({ url, data, tags }: { url: string; data: any; tags?: string[] }) =>
+  delete: ({ url, data, tags }: { url: string; data?: any; tags?: string[] }) =>
     request({ url, method: 'DELETE', data, tags }),
 };

@@ -13,4 +13,9 @@ export const styles = {
     top: '0',
   },
   removeButton: { fontSize: '1.25rem' },
+  sectionWrapper: {
+    display: 'flex',
+    gap: '3rem',
+    marginTop: '1rem',
+  },
 };

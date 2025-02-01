@@ -2,15 +2,15 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-import { ChangeEvent, useRef } from 'react';
+import { ChangeEvent, useEffect, useRef } from 'react';
 import {
   Controller,
   ControllerRenderProps,
   UseFormReturn,
 } from 'react-hook-form';
 
-import { FormType } from '../../../NewGoods/NewGoods';
-import { validations } from '../../../formValidations';
+import { FormType } from '../../../HandleGoods';
+import { validations } from '../../formValidations';
 import { usePhoneMask } from './usePhoneMask';
 
 const SellerPhoneInput = ({
@@ -25,6 +25,14 @@ const SellerPhoneInput = ({
   } = form;
   const inputRef = useRef<HTMLInputElement | null>(null);
   const createMask = usePhoneMask();
+
+  const seller = form.watch('seller');
+
+  useEffect(() => {
+    if (seller && seller.phone) {
+      form.setValue('seller.phone', seller.phone);
+    }
+  }, [seller?.phone]);
 
   const handlePhoneChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,

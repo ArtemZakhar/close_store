@@ -21,19 +21,12 @@ export default async function CategoryPage({
 
   if (!session) return;
 
-  const { id, role, owner } = session;
-
-  const goods = await getAllGoods({
-    searchParams: `category=${category}&id=${id}&role=${role}&owner=${owner}`,
-    tags: ['goods-quantity'],
-  });
-
   const canModify = session.role === UserRole.owner;
 
   return (
     <ContainerWithPadding>
       <Suspense fallback={<Loading />}>
-        <CategoryGoodsList goods={goods} canModify={canModify} />
+        <CategoryGoodsList canModify={canModify} category={category} />
       </Suspense>
     </ContainerWithPadding>
   );

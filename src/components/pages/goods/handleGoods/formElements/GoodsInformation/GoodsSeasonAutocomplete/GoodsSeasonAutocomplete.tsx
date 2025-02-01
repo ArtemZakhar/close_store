@@ -5,7 +5,7 @@ import { Controller, UseFormReturn } from 'react-hook-form';
 
 import StyledAutocomplete from '@/components/common/StyledAutocomplete';
 
-import { FormType } from '../../../NewGoods/NewGoods';
+import { FormType } from '../../../HandleGoods';
 import { seasonList } from './seasonList';
 
 const GoodsSeasonAutocomplete = ({

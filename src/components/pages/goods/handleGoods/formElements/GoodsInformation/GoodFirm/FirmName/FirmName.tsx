@@ -4,6 +4,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import { UseQueryResult } from '@tanstack/react-query';
 
+import { useEffect } from 'react';
 import {
   Controller,
   ControllerRenderProps,
@@ -12,16 +13,18 @@ import {
 
 import StyledAutocomplete from '@/components/common/StyledAutocomplete';
 
-import { FormType } from '../../../../NewGoods/NewGoods';
-import { validations } from '../../../../formValidations';
+import { FormType } from '../../../../HandleGoods';
+import { validations } from '../../../formValidations';
 import { styles } from './FirmName.styles';
 
 const FirmName = ({
   firmDataRequest,
   form,
+  selectedFirm,
 }: {
   firmDataRequest: UseQueryResult<FirmType[], Error>;
   form: UseFormReturn<FormType, any, undefined>;
+  selectedFirm?: string;
 }) => {
   const { data: firmsData, isLoading, isError } = firmDataRequest;
 
@@ -30,6 +33,16 @@ const FirmName = ({
     formState: { errors },
     setValue,
   } = form;
+
+  useEffect(() => {
+    if (selectedFirm && firmsData) {
+      const firm = firmsData.find((item) => item._id === selectedFirm);
+
+      if (firm) {
+        setValue('goods.firm', firm);
+      }
+    }
+  }, [isLoading]);
 
   const isErrorMessage =
     errors.goods && errors.goods.firm && errors.goods.firm.name;

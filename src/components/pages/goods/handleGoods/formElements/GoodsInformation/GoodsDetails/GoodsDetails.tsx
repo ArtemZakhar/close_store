@@ -1,10 +1,11 @@
+import { GoodsType } from '@/types/goods/good';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import { useEffect, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 
-import { FormType } from '../../../NewGoods/NewGoods';
+import { FormType } from '../../../HandleGoods';
 import { styles } from './GoodsDetails.styles';
 import GoodsList from './GoodsList';
 import SizesOptionAutocomplete from './SizesOptionAutocomplete';
@@ -12,10 +13,23 @@ import { SizesAndCountDataType, sizesData } from './sizesData';
 
 const GoodsDetails = ({
   form,
+  selectedGoods,
+  isEditing,
 }: {
   form: UseFormReturn<FormType, any, undefined>;
+  selectedGoods?: GoodsType | null | undefined;
+  isEditing?: boolean;
 }) => {
-  const [sizeType, setSizeType] = useState<SizesAndCountDataType>(sizesData[0]);
+  const sizeAndTypeInitialState = selectedGoods
+    ? sizesData.find((item) => item.label === selectedGoods.sizeType) ||
+      sizesData[0]
+    : sizesData[0];
+
+  const [sizeType, setSizeType] = useState<SizesAndCountDataType>(
+    sizeAndTypeInitialState,
+  );
+
+  console.log(form.getValues('goods.goodsDetails'));
 
   const {
     setValue,
@@ -28,10 +42,15 @@ const GoodsDetails = ({
 
     if (!prevState) {
       setValue('goods.goodsDetails', [
-        { color: '', countAndSizes: sizeType.sizesAndCount },
+        {
+          color: '',
+          countAndSizes: sizeType.sizesAndCount,
+        },
       ]);
     }
-  }, []);
+
+    setValue('goods.sizeType', sizeType.label);
+  }, [sizeType.label]);
 
   const handleSizesOptionChange = (newData: SizesAndCountDataType | null) => {
     if (!newData) {
@@ -58,15 +77,21 @@ const GoodsDetails = ({
           Деталі по товару
         </Typography>
 
-        <Box width="25rem">
-          <SizesOptionAutocomplete
-            sizeType={sizeType}
-            handleSizesOptionChange={handleSizesOptionChange}
-          />
-        </Box>
+        {!isEditing && (
+          <Box width="25rem">
+            <SizesOptionAutocomplete
+              sizeType={sizeType}
+              handleSizesOptionChange={handleSizesOptionChange}
+            />
+          </Box>
+        )}
       </Box>
 
-      <GoodsList form={form} sizeType={sizeType} />
+      <GoodsList
+        form={form}
+        sizeType={sizeType}
+        selectedGoods={selectedGoods}
+      />
 
       <Box height="1.25rem">
         {isError && (

@@ -1,5 +1,6 @@
 'use client';
 
+import { responseMessages } from '@/app/api/constants/responseMessages';
 import { routePaths } from '@/constants/routePaths';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -50,6 +51,16 @@ export const LoginForm = () => {
     isSuccess,
     closeFunction: () => {},
     error,
+    customErrorMessage: [
+      {
+        errorType: responseMessages.user.noUser,
+        message: 'Перевірте правильність електронної пошти',
+      },
+      {
+        errorType: responseMessages.user.wrongPassword,
+        message: 'Не правильний пароль',
+      },
+    ],
   });
 
   const handleClickShowPassword = () => {

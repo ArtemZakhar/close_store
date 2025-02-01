@@ -1,8 +1,9 @@
 'use client';
 
+import { responseMessages } from '@/app/api/constants/responseMessages';
 import { routePaths } from '@/constants/routePaths';
 import { CategoryType } from '@/types/goods/category';
-import { NewGoodFormType } from '@/types/goods/good';
+import { GoodsType, NewGoodFormType } from '@/types/goods/good';
 import { SellerType } from '@/types/goods/seller';
 import Box from '@mui/material/Box';
 
@@ -17,10 +18,12 @@ import { usePostNewGoods } from '@/hooks/api/useGoods';
 import { useGetAllCountries } from '@/hooks/api/useLocation';
 import { useShowFetchResultMessage } from '@/hooks/useShowUpdateResultMessage';
 
-import CategoryAutocomplete from '../formElements/CategoryAutocomplete';
-import GoodsInformation from '../formElements/GoodsInformation';
-import SellerInformation from '../formElements/SellerInformation';
-import SubCategoryAutocomplete from '../formElements/SubCategoryAutocomplete';
+import { styles } from './HandleGoods.styles';
+import CategoryAutocomplete from './formElements/CategoryAutocomplete';
+import GoodsInformation from './formElements/GoodsInformation';
+import SellerInformation from './formElements/SellerInformation';
+import SubCategoryAutocomplete from './formElements/SubCategoryAutocomplete';
+import { useUpdateFormState } from './hooks/useUpdateFormState';
 
 export type FormType = {
   category: CategoryType | null;
@@ -29,13 +32,23 @@ export type FormType = {
   goods: NewGoodFormType;
 };
 
-const NewGood = () => {
+const HandleGoods = ({
+  finishMode = () => {},
+  selectedGoods,
+  isEditing,
+}: {
+  finishMode?: (mode?: 'editing') => void;
+  selectedGoods?: GoodsType | null;
+  isEditing?: boolean;
+}) => {
   const form = useForm<FormType>();
   const router = useRouter();
 
   const selectedCategory = form.watch('category');
 
   const fetchCountriesData = useGetAllCountries();
+
+  useUpdateFormState({ isEditing, form, selectedGoods });
 
   const {
     mutate: createNewGoods,
@@ -48,7 +61,7 @@ const NewGood = () => {
   const onSubmit = ({ category, subCategory, goods, seller }: FormType) => {
     if (!category || !seller) return;
 
-    createNewGoods({
+    console.log({
       category: category._id,
       subCategory,
       firm: goods.firm,
@@ -60,13 +73,37 @@ const NewGood = () => {
       })),
       stored: goods.stored,
       notes: goods.notes,
-      buyDate: goods.buyDate,
+      buyDate: goods.buyDate ?? '',
       season: goods.season,
       seller,
-      incomePriceGRN: goods.incomePriceGRN,
-      incomePriceUSD: goods.incomePriceUSD,
-      outcomePrice: goods.outcomePrice,
+      sizeType: goods.sizeType,
     });
+
+    // createNewGoods({
+    //   category: category._id,
+    //   subCategory,
+    //   firm: goods.firm,
+    //   model: goods.model,
+    //   description: goods.description,
+    //   goodsDetails: goods.goodsDetails.map((good) => ({
+    //     ...good,
+    //     countAndSizes: good.countAndSizes.filter((item) => item.count > 0),
+    //   })),
+    //   stored: goods.stored,
+    //   notes: goods.notes,
+    //   buyDate: goods.buyDate ?? '',
+    //   season: goods.season,
+    //   seller,
+    //   sizeType: goods.sizeType,
+    // });
+
+    // if (selectedGoods) {
+    //   if (isEditing) {
+    //     finishMode('editing');
+    //   } else {
+    //     finishMode();
+    //   }
+    // }
   };
 
   useShowFetchResultMessage({
@@ -74,6 +111,12 @@ const NewGood = () => {
     isSuccess: isCreateNewGoodsSuccess,
     closeFunction: () => router.push(`/${routePaths.goods.root}`),
     error,
+    customErrorMessage: [
+      {
+        errorType: responseMessages.goods.exist,
+        message: 'Ця модель у даного продавця вже існує',
+      },
+    ],
   });
 
   return (
@@ -94,27 +137,28 @@ const NewGood = () => {
           <SellerInformation
             fetchCountriesData={fetchCountriesData}
             form={form}
+            selectedSeller={selectedGoods?.seller._id}
           />
 
           <GoodsInformation
             form={form}
             fetchCountriesData={fetchCountriesData}
+            selectedGoods={selectedGoods}
+            isEditing={isEditing}
           />
 
-          <Box
-            sx={{
-              display: 'flex',
-              gap: '2rem',
-              justifyContent: 'end',
-              marginBlock: '2rem',
-            }}
-          >
-            <BackButton />
+          <Box sx={styles.buttonsWrapper}>
+            <BackButton
+              {...(selectedGoods && {
+                onBack: () =>
+                  isEditing ? finishMode('editing') : finishMode(),
+              })}
+            />
 
             <LoadingButton
               isLoading={isCreateNewGoodsPending}
               sx={{ width: '13rem' }}
-              label="Створити"
+              label={isEditing ? 'Оновити' : 'Створити'}
             />
           </Box>
         </>
@@ -123,4 +167,4 @@ const NewGood = () => {
   );
 };
 
-export default NewGood;
+export default HandleGoods;

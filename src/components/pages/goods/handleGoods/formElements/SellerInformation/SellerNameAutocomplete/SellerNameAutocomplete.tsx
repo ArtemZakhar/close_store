@@ -1,20 +1,23 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import { useEffect } from 'react';
 import { Controller, UseFormReturn } from 'react-hook-form';
 
 import StyledAutocomplete from '@/components/common/StyledAutocomplete';
 
 import { useGetAllSellers } from '@/hooks/api/useSellers';
 
-import { FormType } from '../../../NewGoods/NewGoods';
-import { validations } from '../../../formValidations';
+import { FormType } from '../../../HandleGoods';
+import { validations } from '../../formValidations';
 import { styles } from './SellerNameAutocomplete.styles';
 
 const SellerNameAutocomplete = ({
   form,
+  selectedSeller,
 }: {
   form: UseFormReturn<FormType, any, undefined>;
+  selectedSeller?: string;
 }) => {
   const { data: sellerData, isError, isLoading } = useGetAllSellers();
 
@@ -23,6 +26,16 @@ const SellerNameAutocomplete = ({
     formState: { errors },
     setValue,
   } = form;
+
+  useEffect(() => {
+    if (selectedSeller && sellerData) {
+      const seller = sellerData.find((item) => item._id === selectedSeller);
+
+      if (seller) {
+        setValue('seller', seller, { shouldValidate: true });
+      }
+    }
+  }, [isLoading]);
 
   return (
     <Box sx={styles.blockWrapper}>

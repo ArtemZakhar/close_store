@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 
 import { Controller, UseFormReturn } from 'react-hook-form';
 
-import { FormType } from '../../../NewGoods/NewGoods';
+import { FormType } from '../../../HandleGoods';
 import { styles } from './BuyDate.styles';
 
 const BuyDate = ({

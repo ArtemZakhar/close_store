@@ -1,7 +1,7 @@
-import City from '@/models/Location/City';
-import Country from '@/models/Location/Country';
-
 import { ObjectId } from 'mongodb';
+
+import { findCityAndUpdate } from '../../cities/cities.serivce';
+import { findCountryAndUpdate } from '../../countries/countries.service';
 
 export const handleLocationUpdate = async ({
   sellerCountry,
@@ -13,38 +13,35 @@ export const handleLocationUpdate = async ({
   sellerCity?: string | ObjectId;
 }) => {
   if (sellerCity && typeof sellerCity === 'string') {
-    await City.findOneAndUpdate(
-      {
+    await findCityAndUpdate({
+      searchParams: {
         name: sellerCity,
       },
-      {
+      dataToUpdate: {
         $setOnInsert: { name: sellerCity },
       },
-      { upsert: true },
-    );
+    });
   }
 
   if (typeof sellerCountry === 'string') {
-    await Country.findOneAndUpdate(
-      {
+    await findCountryAndUpdate({
+      searchParams: {
         name: sellerCountry,
       },
-      {
+      dataToUpdate: {
         $setOnInsert: { name: sellerCountry },
       },
-      { upsert: true },
-    );
+    });
   }
 
   if (firmCountry && typeof firmCountry === 'string') {
-    await Country.updateOne(
-      {
+    await findCountryAndUpdate({
+      searchParams: {
         name: firmCountry,
       },
-      {
+      dataToUpdate: {
         $setOnInsert: { name: firmCountry },
       },
-      { upsert: true },
-    );
+    });
   }
 };

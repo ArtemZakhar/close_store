@@ -1,14 +1,21 @@
-import { GoodsSchemaType } from '@/types/goods/good';
+import {
+  GoodsDetails,
+  GoodsQuantityAndCount,
+  GoodsSchemaType,
+} from '@/types/goods/good';
 
 import mongoose from 'mongoose';
 
-const goodsQuantityAndCountSchema = new mongoose.Schema({
+const goodsQuantityAndCountSchema = new mongoose.Schema<GoodsQuantityAndCount>({
   size: { type: String, required: true },
   count: { type: Number, required: true },
 });
 
-const goodsDetailsSchema = new mongoose.Schema({
+const goodsDetailsSchema = new mongoose.Schema<GoodsDetails>({
   color: { type: String, required: true },
+  incomePriceUSD: Number,
+  incomePriceGRN: Number,
+  outcomePrice: Number,
   countAndSizes: {
     type: [goodsQuantityAndCountSchema],
     required: true,
@@ -55,15 +62,14 @@ const goodsSchema = new mongoose.Schema<GoodsSchemaType>({
     required: true,
     default: [],
   },
-  stored: String,
-  notes: String,
-  buyDate: {
+  sizeType: {
     type: String,
     required: true,
+    enum: ['clothes', 'jackets', 'jeans'],
   },
-  incomePriceUSD: Number,
-  incomePriceGRN: Number,
-  outcomePrice: Number,
+  stored: String,
+  notes: String,
+  buyDate: String,
   season: {
     type: String,
     required: true,

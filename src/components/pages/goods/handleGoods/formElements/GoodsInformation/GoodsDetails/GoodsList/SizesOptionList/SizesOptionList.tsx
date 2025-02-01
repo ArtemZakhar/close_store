@@ -9,9 +9,9 @@ import Typography from '@mui/material/Typography';
 import { ChangeEvent } from 'react';
 import { ControllerRenderProps, UseFormReturn } from 'react-hook-form';
 
-import { FormType } from '@/components/pages/goods/handleGoods/NewGoods/NewGoods';
+import { FormType } from '@/components/pages/goods/HandleGoods/HandleGoods';
 
-import { SizesAndCountDataType, sizesData } from '../../sizesData';
+import { SizesAndCountDataType } from '../../sizesData';
 import { styles } from './SizesOptionList.styles';
 
 const SizesOptionList = ({
@@ -79,6 +79,8 @@ const SizesOptionList = ({
 
     field.onChange(newState);
   };
+
+  console.log(field);
 
   const decreaseCount = ({ size, i }: { size: string; i: number }) => {
     const prevState = getValues('goods.goodsDetails');

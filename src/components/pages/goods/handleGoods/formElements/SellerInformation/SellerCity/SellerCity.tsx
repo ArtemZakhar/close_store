@@ -1,13 +1,14 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import { useEffect } from 'react';
 import { Controller, UseFormReturn } from 'react-hook-form';
 
 import StyledAutocomplete from '@/components/common/StyledAutocomplete';
 
 import { useGetAllCities } from '@/hooks/api/useLocation';
 
-import { FormType } from '../../../NewGoods/NewGoods';
+import { FormType } from '../../../HandleGoods';
 import { styles } from './SellerCity.styles';
 
 const SellerCity = ({
@@ -22,6 +23,14 @@ const SellerCity = ({
     formState: { errors },
     setValue,
   } = form;
+
+  const seller = form.watch('seller');
+
+  useEffect(() => {
+    if (seller && seller.city) {
+      form.setValue('seller.city', seller.city);
+    }
+  }, [seller?.city]);
 
   return (
     <Box sx={styles.blockWrapper}>

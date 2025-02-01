@@ -1,3 +1,4 @@
+import { GoodsType } from '@/types/goods/good';
 import { CountryType } from '@/types/location/location';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -5,30 +6,38 @@ import { UseQueryResult } from '@tanstack/react-query';
 
 import { UseFormReturn } from 'react-hook-form';
 
-import { FormType } from '../../NewGoods/NewGoods';
+import { FormType } from '../../HandleGoods';
 import BuyDate from './BuyDate';
 import GoodFirm from './GoodFirm';
 import GoodsDescription from './GoodsDescription';
 import GoodsDetails from './GoodsDetails';
+import GoodsPrice from './GoodsDetails/GoodsList/GoodsItem/GoodsPrice';
 import { styles } from './GoodsInformation.styles';
 import GoodsNotes from './GoodsNotes';
 import GoodsSeasonAutocomplete from './GoodsSeasonAutocomplete';
-import InputTypeNumber from './InputTypeNumber';
 import ModelName from './ModelName';
 
 const GoodsInformation = ({
   form,
   fetchCountriesData,
+  selectedGoods,
+  isEditing,
 }: {
   form: UseFormReturn<FormType, any, undefined>;
   fetchCountriesData: UseQueryResult<CountryType[], Error>;
+  selectedGoods?: GoodsType | null | undefined;
+  isEditing?: boolean;
 }) => {
   return (
     <Box sx={(theme) => styles.container(theme.palette.action.disabled)}>
       <Typography variant="h3">Інфорація про товар</Typography>
 
       <Box sx={styles.sectionWrapper}>
-        <GoodFirm form={form} fetchCountriesData={fetchCountriesData} />
+        <GoodFirm
+          form={form}
+          fetchCountriesData={fetchCountriesData}
+          selectedFirm={selectedGoods?.firm._id}
+        />
 
         <GoodsDescription form={form} />
       </Box>
@@ -37,33 +46,11 @@ const GoodsInformation = ({
         <ModelName form={form} />
       </Box>
 
-      <GoodsDetails form={form} />
-
-      <Box sx={styles.sectionWrapper}>
-        <Box>
-          <Typography marginBottom="1rem" variant="h4">
-            Вартість в доларах (вхідна)
-          </Typography>
-
-          <InputTypeNumber form={form} name="incomePriceUSD" />
-        </Box>
-
-        <Box>
-          <Typography marginBottom="1rem" variant="h4">
-            Вартість в гривні (вхідна)
-          </Typography>
-
-          <InputTypeNumber form={form} name="incomePriceGRN" />
-        </Box>
-
-        <Box>
-          <Typography marginBottom="1rem" variant="h4">
-            Вартість в гривні (вихідна)
-          </Typography>
-
-          <InputTypeNumber form={form} name="outcomePrice" />
-        </Box>
-      </Box>
+      <GoodsDetails
+        form={form}
+        selectedGoods={selectedGoods}
+        isEditing={isEditing}
+      />
 
       <Box sx={styles.sectionWrapper}>
         <GoodsSeasonAutocomplete form={form} />

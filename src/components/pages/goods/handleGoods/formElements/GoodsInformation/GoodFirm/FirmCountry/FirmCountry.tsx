@@ -3,12 +3,13 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { UseQueryResult } from '@tanstack/react-query';
 
+import { useEffect } from 'react';
 import { Controller, UseFormReturn } from 'react-hook-form';
 
 import StyledAutocomplete from '@/components/common/StyledAutocomplete';
 
-import { FormType } from '../../../../NewGoods/NewGoods';
-import { validations } from '../../../../formValidations';
+import { FormType } from '../../../../HandleGoods';
+import { validations } from '../../../formValidations';
 import { styles } from './FirmCountry.styles';
 
 const FirmCountry = ({
@@ -25,6 +26,14 @@ const FirmCountry = ({
   } = form;
 
   const { data: countriesData, isError, isLoading } = fetchCountriesData;
+
+  const firm = form.watch('goods.firm');
+
+  useEffect(() => {
+    if (firm && firm.countryOfOrigin) {
+      form.setValue('goods.firm.countryOfOrigin', firm.countryOfOrigin);
+    }
+  }, [firm?.countryOfOrigin]);
 
   const isErrorMessage =
     errors.goods && errors.goods.firm && errors.goods.firm.countryOfOrigin;

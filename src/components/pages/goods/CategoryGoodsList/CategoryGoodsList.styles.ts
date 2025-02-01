@@ -12,4 +12,12 @@ export const styles = {
     borderBottom: `1px solid ${color}`,
   }),
   goodsWrapper: { paddingInline: '1rem' },
+  noGoodsWrapper: {
+    minHeight: '50vh',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column',
+    gap: '1rem',
+  },
 };

@@ -3,12 +3,13 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { UseQueryResult } from '@tanstack/react-query';
 
+import { useEffect } from 'react';
 import { Controller, UseFormReturn } from 'react-hook-form';
 
 import StyledAutocomplete from '@/components/common/StyledAutocomplete';
 
-import { FormType } from '../../../NewGoods/NewGoods';
-import { validations } from '../../../formValidations';
+import { FormType } from '../../../HandleGoods';
+import { validations } from '../../formValidations';
 import { styles } from './SellerCountryInput.styles';
 
 const SellerCountryInput = ({
@@ -25,6 +26,14 @@ const SellerCountryInput = ({
   } = form;
 
   const { data: countriesData, isError, isLoading } = fetchCountriesData;
+
+  const seller = form.watch('seller');
+
+  useEffect(() => {
+    if (seller && seller.country) {
+      form.setValue('seller.country', seller.country);
+    }
+  }, [seller?.country]);
 
   return (
     <Box sx={styles.blockWrapper}>

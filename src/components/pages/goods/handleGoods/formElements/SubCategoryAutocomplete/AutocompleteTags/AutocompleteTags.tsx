@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import { ReactNode } from 'react';
 import { ControllerRenderProps } from 'react-hook-form';
 
-import { FormType } from '../../../NewGoods/NewGoods';
+import { FormType } from '../../../HandleGoods';
 
 const AutocompleteTags = ({
   value,

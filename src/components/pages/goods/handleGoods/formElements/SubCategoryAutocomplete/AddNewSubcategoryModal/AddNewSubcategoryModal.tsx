@@ -11,7 +11,7 @@ import { Controller, useForm } from 'react-hook-form';
 
 import LoadingButton from '@/components/common/LoadingButton';
 
-import { validations } from '../../../formValidations';
+import { validations } from '../../formValidations';
 import { styles } from './AddNewSubcategoryModal.styles';
 
 const AddNewSubcategoryModal = ({

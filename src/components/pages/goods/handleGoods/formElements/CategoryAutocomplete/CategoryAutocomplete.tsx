@@ -18,8 +18,8 @@ import {
 } from '@/hooks/api/useCategories';
 import { useShowFetchResultMessage } from '@/hooks/useShowUpdateResultMessage';
 
-import { FormType } from '../../NewGoods/NewGoods';
-import { validations } from '../../formValidations';
+import { FormType } from '../../HandleGoods';
+import { validations } from '../formValidations';
 import AddNewCategoryModal from './AddNewCategoryModal';
 import { styles } from './CategoryAutocomplete.styles';
 

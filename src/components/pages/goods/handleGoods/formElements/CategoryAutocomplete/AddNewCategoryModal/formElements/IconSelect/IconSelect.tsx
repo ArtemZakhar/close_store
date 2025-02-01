@@ -5,8 +5,8 @@ import Typography from '@mui/material/Typography';
 import { Controller, UseFormReturn } from 'react-hook-form';
 
 import StyledAutocomplete from '@/components/common/StyledAutocomplete';
-import { validations } from '@/components/pages/goods/handleGoods/formValidations';
 
+import { validations } from '../../../../formValidations';
 import { NewCategoryFormType } from '../../AddNewCategoryModal';
 import { styles } from './IconSelect.styles';
 

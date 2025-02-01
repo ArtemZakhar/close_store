@@ -31,3 +31,12 @@ export const getAllGoods = async ({
     throw new Error('Error during GET goods');
   }
 };
+
+export const deleteGoods = async (id: string) => {
+  try {
+    client.delete({ url: `${apiCalls.goods}/${id}` });
+  } catch (error) {
+    console.error('Error during DELETE goods:', error);
+    throw new Error('Error during GET goods');
+  }
+};

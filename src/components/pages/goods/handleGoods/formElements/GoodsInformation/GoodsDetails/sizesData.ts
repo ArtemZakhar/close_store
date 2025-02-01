@@ -2,7 +2,7 @@ import { GoodsQuantityAndCount } from '@/types/goods/good';
 
 export type SizesAndCountDataType = {
   name: string;
-  label: string;
+  label: 'clothes' | 'jackets' | 'jeans';
   sizesAndCount: GoodsQuantityAndCount[];
 };
 
