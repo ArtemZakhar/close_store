@@ -6,146 +6,141 @@ import FormGroup from '@mui/material/FormGroup';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-import { ChangeEvent } from 'react';
-import { ControllerRenderProps, UseFormReturn } from 'react-hook-form';
+import {
+  Controller,
+  ControllerRenderProps,
+  useFormContext,
+} from 'react-hook-form';
 
 import { FormType } from '@/components/pages/goods/HandleGoods/HandleGoods';
 
+import { validations } from '../../../../formValidations';
 import { SizesAndCountDataType } from '../../sizesData';
 import { styles } from './SizesOptionList.styles';
 
 const SizesOptionList = ({
-  form,
   sizeType,
-  index,
-  field,
+  id,
 }: {
-  form: UseFormReturn<FormType, any, undefined>;
   sizeType: SizesAndCountDataType;
-  index: number;
-  field: ControllerRenderProps<FormType, 'goods.goodsDetails'>;
+  id: string;
 }) => {
   const {
     getValues,
     formState: { errors },
-  } = form;
+    setValue,
+    control,
+  } = useFormContext<FormType>();
 
   const handleQuantityChange = ({
-    i,
-    size,
-    event,
+    input,
+    sizeIndex,
+    field,
   }: {
-    i: number;
-    size: string;
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
+    input: string;
+    sizeIndex: number;
+    field: ControllerRenderProps<
+      FormType,
+      `goods.goodsDetails.${string}.countAndSizes`
+    >;
   }) => {
-    const value = Number(event.target.value ?? 0);
-    const newValue = value < 0 ? 0 : value;
-    const prevState = getValues('goods.goodsDetails');
+    const value = Number(input ?? 0);
+    const normalizedValue = value < 0 ? 0 : value;
+    const prevState = getValues(`goods.goodsDetails.${id}.countAndSizes`);
 
-    const newState = prevState.map((item, itemIndex) => {
-      if (itemIndex === index) {
-        return {
-          ...item,
-          countAndSizes: item.countAndSizes.map((sizeItem, sizeIndex) =>
-            sizeIndex === i ? { ...sizeItem, count: newValue } : sizeItem,
-          ),
-        };
-      } else {
-        return item;
-      }
-    });
+    const newState = prevState.map((item, index) =>
+      sizeIndex === index ? { ...item, count: normalizedValue } : item,
+    );
 
     field.onChange(newState);
   };
 
-  const increaseCount = ({ size, i }: { size: string; i: number }) => {
-    const prevState = getValues('goods.goodsDetails');
+  const increaseCount = (index: number) => {
+    const prevState = getValues(`goods.goodsDetails.${id}.countAndSizes`);
 
-    const newState = prevState.map((item, itemIndex) => {
-      if (itemIndex === index) {
+    const newState = prevState.map((sizeItem, sizeIndex) =>
+      sizeIndex === index
+        ? { ...sizeItem, count: sizeItem.count + 1 }
+        : sizeItem,
+    );
+
+    setValue(`goods.goodsDetails.${id}.countAndSizes`, newState);
+  };
+
+  const decreaseCount = (index: number) => {
+    const prevState = getValues(`goods.goodsDetails.${id}.countAndSizes`);
+
+    const newState = prevState.map((sizeItem, sizeIndex) => {
+      if (sizeIndex === index) {
+        const newValue = sizeItem.count - 1;
         return {
-          ...item,
-          countAndSizes: item.countAndSizes.map((sizeItem, sizeIndex) =>
-            sizeIndex === i
-              ? { ...sizeItem, count: sizeItem.count + 1 }
-              : sizeItem,
-          ),
+          ...sizeItem,
+          count: newValue < 0 ? 0 : newValue,
         };
       } else {
-        return item;
+        return sizeItem;
       }
     });
 
-    field.onChange(newState);
+    setValue(`goods.goodsDetails.${id}.countAndSizes`, newState);
   };
 
-  console.log(field);
-
-  const decreaseCount = ({ size, i }: { size: string; i: number }) => {
-    const prevState = getValues('goods.goodsDetails');
-
-    const newState = prevState.map((item, itemIndex) => {
-      if (itemIndex === index) {
-        return {
-          ...item,
-          countAndSizes: item.countAndSizes.map((sizeItem, sizeIndex) => {
-            if (sizeIndex === i) {
-              const newValue = sizeItem.count - 1;
-              return {
-                ...sizeItem,
-                count: newValue < 0 ? 0 : newValue,
-              };
-            } else {
-              return sizeItem;
-            }
-          }),
-        };
-      } else {
-        return item;
-      }
-    });
-
-    field.onChange(newState);
-  };
+  const error =
+    errors.goods &&
+    errors.goods.goodsDetails &&
+    errors.goods.goodsDetails[id] &&
+    errors.goods.goodsDetails[id].countAndSizes;
 
   return (
-    <FormGroup>
-      <Box sx={styles.container}>
-        {sizeType.sizesAndCount.map(({ size }, sizeIndex) => {
-          return (
-            <Box key={size} sx={styles.itemWrapper}>
-              <Box sx={styles.sizeWrapper}>
-                <Button onClick={() => decreaseCount({ i: sizeIndex, size })}>
-                  <RemoveCircleOutlineIcon fontSize="small" />
-                </Button>
+    <Controller
+      control={control}
+      name={`goods.goodsDetails.${id}.countAndSizes`}
+      rules={validations.sizeAndCounts}
+      render={({ field }) => (
+        <FormGroup>
+          <Box sx={styles.container}>
+            {sizeType.sizesAndCount.map(({ size }, sizeIndex) => {
+              return (
+                <Box key={size} sx={styles.itemWrapper}>
+                  <Box sx={styles.sizeWrapper}>
+                    <Button onClick={() => decreaseCount(sizeIndex)}>
+                      <RemoveCircleOutlineIcon fontSize="small" />
+                    </Button>
 
-                <Typography align="center">{size}</Typography>
+                    <Typography align="center">{size}</Typography>
 
-                <Button onClick={() => increaseCount({ i: sizeIndex, size })}>
-                  <ControlPointIcon fontSize="small" />
-                </Button>
-              </Box>
+                    <Button onClick={() => increaseCount(sizeIndex)}>
+                      <ControlPointIcon fontSize="small" />
+                    </Button>
+                  </Box>
 
-              <TextField
-                type="number"
-                sx={styles.input}
-                value={
-                  field.value &&
-                  field.value[index].countAndSizes[sizeIndex].count !== 0
-                    ? String(field.value[index].countAndSizes[sizeIndex].count)
-                    : ''
-                }
-                onChange={(event) =>
-                  handleQuantityChange({ event, size, i: sizeIndex })
-                }
-                placeholder="0"
-              />
-            </Box>
-          );
-        })}
-      </Box>
-    </FormGroup>
+                  <TextField
+                    {...field}
+                    sx={styles.input}
+                    value={field.value[sizeIndex].count}
+                    onChange={(event) =>
+                      handleQuantityChange({
+                        input: event.target.value.replace(
+                          /[^\d.]+|(?<=\..*)\./g,
+                          '',
+                        ),
+                        sizeIndex,
+                        field,
+                      })
+                    }
+                    error={!!error}
+                    placeholder="0"
+                  />
+                </Box>
+              );
+            })}
+          </Box>
+          <Typography align="center" variant="caption" color="error">
+            {error ? error.message : ''}
+          </Typography>
+        </FormGroup>
+      )}
+    />
   );
 };
 

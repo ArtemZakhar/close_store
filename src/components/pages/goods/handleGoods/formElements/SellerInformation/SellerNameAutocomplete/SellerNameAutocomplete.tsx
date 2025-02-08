@@ -2,9 +2,9 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import { useEffect } from 'react';
-import { Controller, UseFormReturn } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
-import StyledAutocomplete from '@/components/common/StyledAutocomplete';
+import AutocompleteStyled from '@/components/common/FormComponentsStyled/AutocompleteStyled';
 
 import { useGetAllSellers } from '@/hooks/api/useSellers';
 
@@ -13,10 +13,8 @@ import { validations } from '../../formValidations';
 import { styles } from './SellerNameAutocomplete.styles';
 
 const SellerNameAutocomplete = ({
-  form,
   selectedSeller,
 }: {
-  form: UseFormReturn<FormType, any, undefined>;
   selectedSeller?: string;
 }) => {
   const { data: sellerData, isError, isLoading } = useGetAllSellers();
@@ -25,7 +23,7 @@ const SellerNameAutocomplete = ({
     control,
     formState: { errors },
     setValue,
-  } = form;
+  } = useFormContext<FormType>();
 
   useEffect(() => {
     if (selectedSeller && sellerData) {
@@ -50,7 +48,7 @@ const SellerNameAutocomplete = ({
           defaultValue={''}
           rules={validations.sellerName}
           render={({ field }) => (
-            <StyledAutocomplete
+            <AutocompleteStyled
               {...field}
               options={sellerData || []}
               value={field.value || null}

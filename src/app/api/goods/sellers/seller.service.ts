@@ -3,6 +3,9 @@ import { SellerType } from '@/types/goods/seller';
 
 import { ObjectId } from 'mongodb';
 
+import { findCityAndUpdate } from '../../cities/cities.serivce';
+import { findCountryAndUpdate } from '../../countries/countries.service';
+
 export const createSeller = async (
   seller: Omit<SellerType, '_id'>,
   ownerId: string,
@@ -54,6 +57,32 @@ export const handleSellerData = async ({
   let sellerId: ObjectId;
 
   if (!existingSeller) {
+    const { city, country } = seller;
+
+    if (city) {
+      const existingCity = ObjectId.isValid(city);
+
+      if (!existingCity) {
+        const newCity = await findCityAndUpdate({
+          searchParams: { name: city },
+          dataToUpdate: { $setOnInsert: { name: city } },
+        });
+
+        seller.city = newCity._id;
+      }
+    }
+
+    const existingCountry = ObjectId.isValid(country);
+
+    if (!existingCountry) {
+      const newCountry = await findCountryAndUpdate({
+        searchParams: { name: country },
+        dataToUpdate: { name: country },
+      });
+
+      seller.country = newCountry._id;
+    }
+
     const newSeller = await createSeller(seller, ownerId);
 
     sellerId = newSeller._id;

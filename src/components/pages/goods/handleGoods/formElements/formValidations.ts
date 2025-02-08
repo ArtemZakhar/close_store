@@ -1,4 +1,4 @@
-import { GoodsDetails } from '@/types/goods/good';
+import { GoodsDetails, GoodsQuantityAndCount } from '@/types/goods/good';
 import { CountryType } from '@/types/location/location';
 
 import { FormType } from '../HandleGoods';
@@ -109,23 +109,31 @@ export const validations = {
       return !!value?.trim().length || errorMessages.required;
     },
   },
-  goodsDetails: {
-    validate: (value: GoodsDetails[]) => {
-      if (!value) {
-        return "Поле обов'язкове для заповнення.";
-      }
+  color: { required: errorMessages.color.required },
+  price(id: string) {
+    return {
+      validate: (value: number | undefined, context: FormType) => {
+        const root = context.goods?.goodsDetails;
+        if (root) {
+          const incomeValue = root[id] && root[id].incomePriceGRN;
+          const outcomeValue = root[id] && root[id].outcomePrice;
 
-      if (value.some((item) => !item.color.length)) {
-        return 'Відсутній колір товару. Перевірте внесені дані.';
-      }
-
-      if (
-        value.some((item) =>
-          item.countAndSizes.every((sizeItem) => !sizeItem.count),
-        )
-      ) {
-        return 'Відсутні розміри по товару. Перевірте внесені дані.';
-      }
+          if (outcomeValue && incomeValue) {
+            if (Number(outcomeValue) < Number(incomeValue)) {
+              return errorMessages.price.validate;
+            } else {
+              return true;
+            }
+          }
+        } else {
+          return true;
+        }
+      },
+    };
+  },
+  sizeAndCounts: {
+    validate: (data: GoodsQuantityAndCount[]) => {
+      return data.some((item) => item.count !== 0) || 'Зазначте кількість';
     },
   },
 };

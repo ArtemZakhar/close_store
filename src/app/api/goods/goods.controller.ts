@@ -1,6 +1,12 @@
 import { getSession } from '@/helpers/getSession';
 import { connectToDatabase } from '@/lib/mongoDb';
-import { NewGoodFormType } from '@/types/goods/good';
+import {
+  GoodsDetails,
+  GoodsDetailsItemType,
+  NewGoodFormType,
+  UpdateGoodsFormType,
+} from '@/types/goods/good';
+import { SellerType } from '@/types/goods/seller';
 import { UserRole } from '@/types/users/userType';
 
 import { revalidateTag } from 'next/cache';
@@ -8,7 +14,9 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { ObjectId } from 'mongodb';
 
+import { findCityAndUpdate } from '../cities/cities.serivce';
 import { responseMessages } from '../constants/responseMessages';
+import { findCountryAndUpdate } from '../countries/countries.service';
 import { findCategoryAndUpdate } from './categories/category.sevice';
 import { createFirm, findFirm } from './firms/frim.service';
 import {
@@ -19,7 +27,7 @@ import {
 } from './goods.service';
 import { handleLocationUpdate } from './helpers/handleLocation';
 import { handleSearchParams } from './helpers/handleSearchParams';
-import { handleSellerData } from './sellers/seller.service';
+import { handleSellerData, updateSeller } from './sellers/seller.service';
 
 export const httpGetGoods = async (request: NextRequest) => {
   try {
@@ -96,6 +104,7 @@ export const httpPostNewGoods = async (request: NextRequest) => {
       model,
       goodsDetails,
       buyDate,
+      arrivalDate,
       season,
       sizeType,
       description,
@@ -170,7 +179,21 @@ export const httpPostNewGoods = async (request: NextRequest) => {
       firmID = existFirm._id;
     }
 
-    console.log(sizeType);
+    const normalizedGoodsDetails: GoodsDetails = {};
+
+    for (const color in goodsDetails) {
+      const value = goodsDetails[color];
+
+      const newValue: GoodsDetailsItemType = {
+        color: value.color,
+        incomePriceGRN: value.incomePriceGRN,
+        incomePriceUSD: value.incomePriceUSD,
+        outcomePrice: value.outcomePrice,
+        countAndSizes: value.countAndSizes.filter((item) => item.count > 0),
+      };
+
+      normalizedGoodsDetails[color] = newValue;
+    }
 
     const newGoods = await createNewGoods({
       category: updatedCategory._id,
@@ -182,11 +205,12 @@ export const httpPostNewGoods = async (request: NextRequest) => {
       description: description ?? '',
       owner: new ObjectId(session.id),
       season: season.name,
-      goodsDetails: goodsDetails,
+      goodsDetails: normalizedGoodsDetails,
       stored: stored ?? '',
       notes: notes ?? '',
       buyDate: buyDate ?? '',
       sizeType: sizeType,
+      arrivalDate: arrivalDate ?? '',
     });
 
     await newGoods.save();
@@ -228,6 +252,68 @@ export const httpDeleteGoods = async (
     });
   } catch (error) {
     console.error('Error during DELETE goods:', error);
+    return NextResponse.json(
+      { error: responseMessages.server.error },
+      { status: responseMessages.codes[500] },
+    );
+  }
+};
+
+export const httpUpdateGoods = async (request: NextRequest) => {
+  try {
+    // const session = await getSession();
+    // if (!session) {
+    //   return NextResponse.json(
+    //     { error: true, message: responseMessages.user.forbidden },
+    //     {
+    //       status: responseMessages.codes[401],
+    //     },
+    //   );
+    // }
+    await connectToDatabase();
+
+    const body: Partial<UpdateGoodsFormType> = await request.json();
+
+    if (body.seller) {
+      const { _id, phone, email, city, country } = body.seller;
+
+      const dataToUpdate: Partial<SellerType> = {};
+
+      if (phone) {
+        dataToUpdate['phone'] = phone;
+      }
+
+      if (email) {
+        dataToUpdate['email'] = email;
+      }
+
+      if (city) {
+        const newCity = await findCityAndUpdate({
+          searchParams: { name: city },
+          dataToUpdate: { name: city },
+        });
+
+        dataToUpdate['city'] = newCity._id;
+      }
+
+      if (country) {
+        const newCountry = await findCountryAndUpdate({
+          searchParams: { name: country },
+          dataToUpdate: { name: country },
+        });
+
+        dataToUpdate['country'] = newCountry._id;
+      }
+
+      await updateSeller({
+        searchParam: { _id },
+        dataToUpdate: { $set: dataToUpdate },
+      });
+    }
+
+    return NextResponse.json({ status: responseMessages.codes[200] });
+  } catch (error) {
+    console.error('Error during PATCH goods:', error);
     return NextResponse.json(
       { error: responseMessages.server.error },
       { status: responseMessages.codes[500] },

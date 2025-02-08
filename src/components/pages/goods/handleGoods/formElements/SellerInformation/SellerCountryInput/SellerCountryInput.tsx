@@ -1,39 +1,45 @@
+import { SellerType } from '@/types/goods/seller';
 import { CountryType } from '@/types/location/location';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { UseQueryResult } from '@tanstack/react-query';
 
 import { useEffect } from 'react';
-import { Controller, UseFormReturn } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
-import StyledAutocomplete from '@/components/common/StyledAutocomplete';
+import AutocompleteStyled from '@/components/common/FormComponentsStyled/AutocompleteStyled';
 
 import { FormType } from '../../../HandleGoods';
 import { validations } from '../../formValidations';
 import { styles } from './SellerCountryInput.styles';
 
 const SellerCountryInput = ({
-  form,
   fetchCountriesData,
+  selectedSeller,
 }: {
-  form: UseFormReturn<FormType, any, undefined>;
   fetchCountriesData: UseQueryResult<CountryType[], Error>;
+  selectedSeller: SellerType | undefined;
 }) => {
   const {
     control,
     formState: { errors },
     setValue,
-  } = form;
+  } = useFormContext<FormType>();
 
   const { data: countriesData, isError, isLoading } = fetchCountriesData;
 
-  const seller = form.watch('seller');
+  console.log('render Seller country');
 
   useEffect(() => {
-    if (seller && seller.country) {
-      form.setValue('seller.country', seller.country);
+    if (selectedSeller && countriesData) {
+      const existingCountry = countriesData.find(
+        (country) => country._id === selectedSeller.country,
+      );
+      if (existingCountry) {
+        setValue('seller.country', existingCountry.name);
+      }
     }
-  }, [seller?.country]);
+  }, []);
 
   return (
     <Box sx={styles.blockWrapper}>
@@ -48,7 +54,7 @@ const SellerCountryInput = ({
           rules={validations.sellerCountry}
           defaultValue=""
           render={({ field }) => (
-            <StyledAutocomplete
+            <AutocompleteStyled
               {...field}
               value={field.value || ''}
               options={countriesData || []}
@@ -58,7 +64,9 @@ const SellerCountryInput = ({
                 typeof option === 'string' ? option : option.name
               }
               onInputChange={(event, newInputValue) => {
-                setValue('seller.country', newInputValue);
+                setValue('seller.country', newInputValue, {
+                  shouldDirty: true,
+                });
               }}
               loading={isLoading}
               noOptionsText={

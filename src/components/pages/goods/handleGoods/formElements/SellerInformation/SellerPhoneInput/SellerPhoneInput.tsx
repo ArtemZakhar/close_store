@@ -7,30 +7,29 @@ import {
   Controller,
   ControllerRenderProps,
   UseFormReturn,
+  useFormContext,
 } from 'react-hook-form';
 
 import { FormType } from '../../../HandleGoods';
 import { validations } from '../../formValidations';
 import { usePhoneMask } from './usePhoneMask';
 
-const SellerPhoneInput = ({
-  form,
-}: {
-  form: UseFormReturn<FormType, any, undefined>;
-}) => {
+const SellerPhoneInput = () => {
   const {
     control,
     clearErrors,
     formState: { errors },
-  } = form;
+    watch,
+    setValue,
+  } = useFormContext<FormType>();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const createMask = usePhoneMask();
 
-  const seller = form.watch('seller');
+  const seller = watch('seller');
 
   useEffect(() => {
     if (seller && seller.phone) {
-      form.setValue('seller.phone', seller.phone);
+      setValue('seller.phone', seller.phone);
     }
   }, [seller?.phone]);
 

@@ -1,11 +1,9 @@
-import { CityType, CountryType } from '@/types/location/location';
+import { SellerType } from '@/types/goods/seller';
+import { CountryType } from '@/types/location/location';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { UseQueryResult } from '@tanstack/react-query';
 
-import { UseFormReturn } from 'react-hook-form';
-
-import { FormType } from '../../HandleGoods';
 import SellerCity from './SellerCity';
 import SellerCountryInput from './SellerCountryInput';
 import SellerEmailInput from './SellerEmailInput';
@@ -14,32 +12,30 @@ import SellerNameAutocomplete from './SellerNameAutocomplete';
 import SellerPhoneInput from './SellerPhoneInput';
 
 const SellerInformation = ({
-  form,
   fetchCountriesData,
   selectedSeller,
 }: {
-  form: UseFormReturn<FormType, any, undefined>;
   fetchCountriesData: UseQueryResult<CountryType[], Error>;
-  selectedSeller?: string;
+  selectedSeller?: SellerType | undefined;
 }) => {
   return (
     <Box sx={(theme) => styles.container(theme.palette.action.disabled)}>
       <Typography variant="h3">Інфорація про продавця</Typography>
 
-      <SellerNameAutocomplete form={form} selectedSeller={selectedSeller} />
+      <SellerNameAutocomplete selectedSeller={selectedSeller?._id} />
 
       <Box sx={styles.sectionWrapper}>
-        <SellerPhoneInput form={form} />
+        <SellerPhoneInput />
 
-        <SellerEmailInput form={form} />
+        <SellerEmailInput />
       </Box>
 
       <Box sx={styles.sectionWrapper}>
-        <SellerCity form={form} />
+        <SellerCity />
 
         <SellerCountryInput
-          form={form}
           fetchCountriesData={fetchCountriesData}
+          selectedSeller={selectedSeller}
         />
       </Box>
     </Box>

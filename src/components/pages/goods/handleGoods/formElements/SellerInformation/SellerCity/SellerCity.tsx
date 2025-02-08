@@ -2,33 +2,30 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import { useEffect } from 'react';
-import { Controller, UseFormReturn } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
-import StyledAutocomplete from '@/components/common/StyledAutocomplete';
+import AutocompleteStyled from '@/components/common/FormComponentsStyled/AutocompleteStyled';
 
 import { useGetAllCities } from '@/hooks/api/useLocation';
 
 import { FormType } from '../../../HandleGoods';
 import { styles } from './SellerCity.styles';
 
-const SellerCity = ({
-  form,
-}: {
-  form: UseFormReturn<FormType, any, undefined>;
-}) => {
+const SellerCity = () => {
   const { data: citiesData, isError, isLoading } = useGetAllCities();
 
   const {
     control,
     formState: { errors },
     setValue,
-  } = form;
+    watch,
+  } = useFormContext<FormType>();
 
-  const seller = form.watch('seller');
+  const seller = watch('seller');
 
   useEffect(() => {
     if (seller && seller.city) {
-      form.setValue('seller.city', seller.city);
+      setValue('seller.city', seller.city);
     }
   }, [seller?.city]);
 
@@ -44,7 +41,7 @@ const SellerCity = ({
           control={control}
           defaultValue=""
           render={({ field }) => (
-            <StyledAutocomplete
+            <AutocompleteStyled
               {...field}
               value={field.value || ''}
               options={citiesData || []}

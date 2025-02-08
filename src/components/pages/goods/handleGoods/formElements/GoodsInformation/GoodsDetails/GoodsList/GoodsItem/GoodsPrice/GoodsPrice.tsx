@@ -1,16 +1,9 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-import { UseFormReturn } from 'react-hook-form';
-
-import { FormType } from '../../../../../../HandleGoods';
 import InputTypeNumber from '../InputTypeNumber';
 
-const GoodsPrice = ({
-  form,
-}: {
-  form: UseFormReturn<FormType, any, undefined>;
-}) => {
+const GoodsPrice = ({ id }: { id: string }) => {
   return (
     <>
       <Box>
@@ -18,7 +11,7 @@ const GoodsPrice = ({
           Вартість в доларах (вхідна)
         </Typography>
 
-        <InputTypeNumber form={form} name="incomePriceUSD" />
+        <InputTypeNumber id={id} name="incomePriceUSD" />
       </Box>
 
       <Box>
@@ -26,7 +19,7 @@ const GoodsPrice = ({
           Вартість в гривні (вхідна)
         </Typography>
 
-        <InputTypeNumber form={form} name="incomePriceGRN" />
+        <InputTypeNumber id={id} name="incomePriceGRN" />
       </Box>
 
       <Box>
@@ -34,7 +27,7 @@ const GoodsPrice = ({
           Вартість в гривні (вихідна)
         </Typography>
 
-        <InputTypeNumber form={form} name="outcomePrice" />
+        <InputTypeNumber id={id} name="outcomePrice" />
       </Box>
     </>
   );

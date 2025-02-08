@@ -2,21 +2,17 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-import { Controller, UseFormReturn } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import { FormType } from '../../../HandleGoods';
 import { validations } from '../../formValidations';
 import { styles } from './ModelName.styles';
 
-const ModelName = ({
-  form,
-}: {
-  form: UseFormReturn<FormType, any, undefined>;
-}) => {
+const ModelName = () => {
   const {
     control,
     formState: { errors },
-  } = form;
+  } = useFormContext<FormType>();
 
   return (
     <Box sx={styles.blockWrapper}>

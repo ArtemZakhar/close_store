@@ -1,6 +1,6 @@
 import Typography from '@mui/material/Typography';
 
-import StyledAutocomplete from '@/components/common/StyledAutocomplete';
+import AutocompleteStyled from '@/components/common/FormComponentsStyled/AutocompleteStyled';
 
 import { SizesAndCountDataType, sizesData } from '../sizesData';
 
@@ -17,7 +17,7 @@ const SizesOptionAutocomplete = ({
         Тип розміру
       </Typography>
 
-      <StyledAutocomplete
+      <AutocompleteStyled
         value={sizeType}
         defaultValue={sizeType}
         options={sizesData}

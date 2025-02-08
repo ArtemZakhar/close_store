@@ -1,20 +1,18 @@
 import TextField from '@mui/material/TextField';
 
-import { Controller, UseFormReturn } from 'react-hook-form';
+import { Controller, UseFormReturn, useFormContext } from 'react-hook-form';
 
 import { FormType } from '../../../HandleGoods';
 import { styles } from './GoodsNotes.styles';
 
 const GoodsNotes = ({
   name,
-  form,
   rows = 3,
 }: {
-  form: UseFormReturn<FormType, any, undefined>;
   name: 'stored' | 'notes';
   rows?: number;
 }) => {
-  const { control } = form;
+  const { control } = useFormContext<FormType>();
   return (
     <Controller
       control={control}

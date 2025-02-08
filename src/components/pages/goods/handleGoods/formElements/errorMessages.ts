@@ -16,4 +16,13 @@ export const errorMessages = {
   countryOfOrigin: {
     required: 'Необхідно зазначити країну.',
   },
+  color: {
+    required: 'Оберіть колір',
+  },
+  price: {
+    validate: 'Вихідна ціна не може бути меншою за вхідну',
+  },
+  sizeAndCounts: {
+    validate: 'Зазначте кількість',
+  },
 };

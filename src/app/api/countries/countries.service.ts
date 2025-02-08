@@ -11,5 +11,7 @@ export const findCountryAndUpdate = async ({
     $if?: Partial<Record<keyof CountryType, any>>;
   };
 }) => {
-  await Country.findOneAndUpdate(searchParams, dataToUpdate, { upsert: true });
+  return await Country.findOneAndUpdate(searchParams, dataToUpdate, {
+    upsert: true,
+  });
 };

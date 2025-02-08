@@ -90,7 +90,7 @@ const GoodsRow = ({
   };
 
   return (
-    <Tooltip title={selectedGoods?._id === _id ? '' : item.description} arrow>
+    <Tooltip title={selectedGoods?._id === _id ? '' : item.stored} arrow>
       <Box sx={styles.row} onDoubleClick={() => toggleSelectedGoods(item)}>
         <TableHeader
           item={item}
@@ -123,9 +123,9 @@ const GoodsRow = ({
         )}
 
         {selectedGoods?._id === _id &&
-          goodsDetails.map((goods) => (
+          Object.entries(goodsDetails).map(([key, goods]) => (
             <GoodsDetailsItem
-              key={goods.color}
+              key={key}
               goods={goods}
               goodsInCart={goodsInCartFiltered}
               addGoodsInCart={addGoodsInCart}

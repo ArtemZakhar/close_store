@@ -7,18 +7,17 @@ import DateInputStyled from '@/components/common/FormComponentsStyled/DateInputS
 
 import { FormType } from '../../../HandleGoods';
 
-const BuyDate = () => {
+const ArrivalDate = () => {
   const { control } = useFormContext<FormType>();
-
   return (
     <Box width="15rem">
       <Typography marginBottom="1rem" variant="h4">
-        Дата придбання
+        Дата надходження
       </Typography>
 
       <Controller
         control={control}
-        name="goods.buyDate"
+        name="goods.arrivalDate"
         defaultValue=""
         render={({ field }) => <DateInputStyled {...field} />}
       />
@@ -26,4 +25,4 @@ const BuyDate = () => {
   );
 };
 
-export default BuyDate;
+export default ArrivalDate;

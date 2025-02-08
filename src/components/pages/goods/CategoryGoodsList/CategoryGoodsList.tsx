@@ -120,7 +120,7 @@ const CategoryGoodsList = ({
           </Typography>
 
           <Typography variant="h4" align="center" width="15rem">
-            Ціна вихідна (грн.)
+            Опис
           </Typography>
 
           <Typography variant="h4" width="2rem"></Typography>

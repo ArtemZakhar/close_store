@@ -2,7 +2,7 @@ import Chip from '@mui/material/Chip';
 import Typography from '@mui/material/Typography';
 
 import { ReactNode } from 'react';
-import { ControllerRenderProps } from 'react-hook-form';
+import { ControllerRenderProps, FieldValues } from 'react-hook-form';
 
 import { FormType } from '../../../HandleGoods';
 

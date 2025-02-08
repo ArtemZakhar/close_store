@@ -9,9 +9,10 @@ import {
   Controller,
   ControllerRenderProps,
   UseFormReturn,
+  useFormContext,
 } from 'react-hook-form';
 
-import StyledAutocomplete from '@/components/common/StyledAutocomplete';
+import AutocompleteStyled from '@/components/common/FormComponentsStyled/AutocompleteStyled';
 
 import { FormType } from '../../../../HandleGoods';
 import { validations } from '../../../formValidations';
@@ -19,11 +20,9 @@ import { styles } from './FirmName.styles';
 
 const FirmName = ({
   firmDataRequest,
-  form,
   selectedFirm,
 }: {
   firmDataRequest: UseQueryResult<FirmType[], Error>;
-  form: UseFormReturn<FormType, any, undefined>;
   selectedFirm?: string;
 }) => {
   const { data: firmsData, isLoading, isError } = firmDataRequest;
@@ -32,7 +31,7 @@ const FirmName = ({
     control,
     formState: { errors },
     setValue,
-  } = form;
+  } = useFormContext<FormType>();
 
   useEffect(() => {
     if (selectedFirm && firmsData) {
@@ -70,7 +69,7 @@ const FirmName = ({
           control={control}
           rules={validations.goodsFirm.name}
           render={({ field }) => (
-            <StyledAutocomplete
+            <AutocompleteStyled
               {...field}
               defaultValue={null}
               value={field.value ?? ''}

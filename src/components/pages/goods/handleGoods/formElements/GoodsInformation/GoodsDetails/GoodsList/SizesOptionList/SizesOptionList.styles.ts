@@ -3,6 +3,7 @@ export const styles = {
     display: 'flex',
     gap: '1rem',
     marginTop: '1rem',
+    minHeight: '4.25rem',
     flexWrap: 'wrap',
   },
   itemWrapper: {

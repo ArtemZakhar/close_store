@@ -5,9 +5,9 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 import { useEffect, useState } from 'react';
-import { Controller, UseFormReturn } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
-import StyledAutocomplete from '@/components/common/StyledAutocomplete';
+import AutocompleteStyled from '@/components/common/FormComponentsStyled/AutocompleteStyled';
 
 import { useUpdateCategory } from '@/hooks/api/useCategories';
 import { useShowFetchResultMessage } from '@/hooks/useShowUpdateResultMessage';
@@ -18,10 +18,8 @@ import AutocompleteTags from './AutocompleteTags';
 import { styles } from './SubCategoryAutocomplete.styles';
 
 const SubCategoryAutocomplete = ({
-  form,
   selectedCategory,
 }: {
-  form: UseFormReturn<FormType, any, undefined>;
   selectedCategory: CategoryType;
 }) => {
   const [addNewSubcategoryModalOpen, setAddNewSubcategoryModalOpen] =
@@ -32,7 +30,7 @@ const SubCategoryAutocomplete = ({
     formState: { errors },
     getValues,
     setValue,
-  } = form;
+  } = useFormContext<FormType>();
 
   const {
     data,
@@ -99,7 +97,7 @@ const SubCategoryAutocomplete = ({
               control={control}
               defaultValue={[]}
               render={({ field }) => (
-                <StyledAutocomplete
+                <AutocompleteStyled
                   {...field}
                   multiple
                   value={field.value}

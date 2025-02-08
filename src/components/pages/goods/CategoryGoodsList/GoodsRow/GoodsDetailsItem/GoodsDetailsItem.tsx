@@ -1,4 +1,4 @@
-import { GoodsDetails } from '@/types/goods/good';
+import { GoodsDetailsItemType } from '@/types/goods/good';
 import { GoodsInCartType } from '@/types/localStorage/goods';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -12,7 +12,7 @@ const GoodsDetailsItem = ({
   addGoodsInCart,
   removeGoodsFromCart,
 }: {
-  goods: GoodsDetails;
+  goods: GoodsDetailsItemType;
   goodsInCart: GoodsInCartType[] | undefined;
   addGoodsInCart: ({ color, size }: { color: string; size: string }) => void;
   removeGoodsFromCart: ({

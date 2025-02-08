@@ -1,5 +1,9 @@
 import { FirmType } from '@/types/goods/firm';
-import { GoodsType, NewGoodFormType } from '@/types/goods/good';
+import {
+  GoodsType,
+  NewGoodFormType,
+  UpdateGoodsFormType,
+} from '@/types/goods/good';
 
 import { client } from '@/utils/client';
 
@@ -10,6 +14,9 @@ export const getAllFirms = async () =>
 
 export const postNewGoods = async (data: NewGoodFormType) =>
   await client.post({ url: apiCalls.goods, data, tags: ['goods-category'] });
+
+export const patchGoods = async (data: Partial<UpdateGoodsFormType>) =>
+  await client.patch({ url: apiCalls.goods, data });
 
 export const getAllGoods = async ({
   searchParams,

@@ -1,16 +1,16 @@
 import { GoodsType } from '@/types/goods/good';
 
 import { useEffect } from 'react';
-import { UseFormReturn, UseFormSetValue } from 'react-hook-form';
+import { UseFormReturn } from 'react-hook-form';
 
-import { FormType } from '../HandleGoods';
+import { FormType, UpdateFormType } from '../HandleGoods';
 
 export const useUpdateFormState = ({
   form,
   isEditing,
   selectedGoods,
 }: {
-  form: UseFormReturn<FormType, any, undefined>;
+  form: UseFormReturn<FormType | UpdateFormType, any, undefined>;
   isEditing: boolean | undefined;
   selectedGoods: GoodsType | null | undefined;
 }) => {
@@ -21,6 +21,7 @@ export const useUpdateFormState = ({
         setValue('category', selectedGoods.category);
         setValue('category.lastId', selectedGoods.category.lastId - 1);
         setValue('goods.buyDate', selectedGoods.buyDate);
+        setValue('goods.arrivalDate', selectedGoods.arrivalDate);
         setValue('goods.description', selectedGoods.description);
         setValue('subCategory', selectedGoods.subCategory);
         setValue('goods.model', selectedGoods.model);
@@ -30,6 +31,7 @@ export const useUpdateFormState = ({
         setValue('category', selectedGoods.category);
         setValue('category.lastId', selectedGoods.category.lastId);
         setValue('goods.buyDate', selectedGoods.buyDate);
+        setValue('goods.arrivalDate', selectedGoods.arrivalDate);
         setValue('subCategory', selectedGoods.subCategory);
         setValue('goods.model', `${selectedGoods.model} (копія)`);
       }

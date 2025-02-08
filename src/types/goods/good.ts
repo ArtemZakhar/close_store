@@ -9,10 +9,11 @@ type BaseGoodType = {
   model: string;
   description?: string;
   sizeType: 'clothes' | 'jackets' | 'jeans';
-  goodsDetails: GoodsDetails[];
+  goodsDetails: GoodsDetails;
   stored?: string;
   notes?: string;
   buyDate?: string;
+  arrivalDate?: string;
 };
 
 export type GoodsSchemaType = BaseGoodType & {
@@ -28,6 +29,13 @@ export type GoodsSchemaType = BaseGoodType & {
 export type NewGoodFormType = BaseGoodType & {
   season: SeasonListItemType;
   seller: Omit<SellerType, '_id'>;
+  firm: Partial<FirmType>;
+  category: string;
+};
+
+export type UpdateGoodsFormType = BaseGoodType & {
+  season: SeasonListItemType;
+  seller: SellerType;
   firm: Partial<FirmType>;
   category: string;
 };
@@ -48,6 +56,10 @@ export type SeasonListItemType = {
 };
 
 export type GoodsDetails = {
+  [key: string]: GoodsDetailsItemType;
+};
+
+export type GoodsDetailsItemType = {
   color: string;
   incomePriceUSD?: number;
   incomePriceGRN?: number;

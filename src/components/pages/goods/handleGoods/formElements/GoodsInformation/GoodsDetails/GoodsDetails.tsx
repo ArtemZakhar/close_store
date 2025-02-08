@@ -1,9 +1,13 @@
-import { GoodsType } from '@/types/goods/good';
+import {
+  GoodsDetails as GoodsDetailsType,
+  GoodsQuantityAndCount,
+  GoodsType,
+} from '@/types/goods/good';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import { useEffect, useState } from 'react';
-import { UseFormReturn } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 
 import { FormType } from '../../../HandleGoods';
 import { styles } from './GoodsDetails.styles';
@@ -11,12 +15,12 @@ import GoodsList from './GoodsList';
 import SizesOptionAutocomplete from './SizesOptionAutocomplete';
 import { SizesAndCountDataType, sizesData } from './sizesData';
 
+export const NEW_PROPERTY_IN_GOODS_OBJECT = 'new';
+
 const GoodsDetails = ({
-  form,
   selectedGoods,
   isEditing,
 }: {
-  form: UseFormReturn<FormType, any, undefined>;
   selectedGoods?: GoodsType | null | undefined;
   isEditing?: boolean;
 }) => {
@@ -29,43 +33,76 @@ const GoodsDetails = ({
     sizeAndTypeInitialState,
   );
 
-  console.log(form.getValues('goods.goodsDetails'));
-
   const {
     setValue,
-    getValues,
     formState: { errors },
-  } = form;
+  } = useFormContext<FormType>();
 
   useEffect(() => {
-    const prevState = getValues('goods.goodsDetails');
+    if (isEditing) {
+      if (!selectedGoods) return;
 
-    if (!prevState) {
-      setValue('goods.goodsDetails', [
-        {
+      const newSizeState = sizesData.find(
+        (item) => item.label === selectedGoods.sizeType,
+      );
+
+      if (newSizeState) {
+        setSizeType(newSizeState);
+
+        const newGoodsDetailsValue: GoodsDetailsType = {};
+
+        for (const color in selectedGoods.goodsDetails) {
+          const value = selectedGoods.goodsDetails[color];
+          const newCountAndSizes: GoodsQuantityAndCount[] =
+            newSizeState.sizesAndCount.map((size) => {
+              const countValue = value.countAndSizes.find(
+                (item) => item.size === size.size,
+              );
+
+              if (countValue) {
+                return countValue;
+              }
+
+              return size;
+            });
+
+          newGoodsDetailsValue[color] = {
+            color: value.color,
+            incomePriceGRN: value.incomePriceGRN,
+            outcomePrice: value.outcomePrice,
+            incomePriceUSD: value.incomePriceUSD,
+            countAndSizes: newCountAndSizes,
+          };
+        }
+
+        setValue('goods.goodsDetails', newGoodsDetailsValue);
+      }
+    } else {
+      setValue('goods.goodsDetails', {
+        [NEW_PROPERTY_IN_GOODS_OBJECT]: {
           color: '',
           countAndSizes: sizeType.sizesAndCount,
         },
-      ]);
+      });
     }
-
-    setValue('goods.sizeType', sizeType.label);
-  }, [sizeType.label]);
+  }, []);
 
   const handleSizesOptionChange = (newData: SizesAndCountDataType | null) => {
     if (!newData) {
       return;
     }
 
-    const prevState = getValues('goods.goodsDetails');
+    const updatedSizeType = newData || sizesData[0];
+    setSizeType(updatedSizeType);
 
-    const newState = prevState.map((item) => ({
-      ...item,
-      countAndSizes: newData.sizesAndCount,
-    }));
+    setValue('goods.sizeType', updatedSizeType.label);
 
-    setSizeType(newData || sizesData[0]);
-    setValue('goods.goodsDetails', newState);
+    setValue('goods.goodsDetails', {
+      [NEW_PROPERTY_IN_GOODS_OBJECT]: {
+        color: '',
+        countAndSizes: newData.sizesAndCount || sizesData[0].sizesAndCount,
+      },
+    });
   };
 
   const isError = !!errors.goods && !!errors.goods.goodsDetails;
@@ -87,19 +124,7 @@ const GoodsDetails = ({
         )}
       </Box>
 
-      <GoodsList
-        form={form}
-        sizeType={sizeType}
-        selectedGoods={selectedGoods}
-      />
-
-      <Box height="1.25rem">
-        {isError && (
-          <Typography variant="caption" color="error" margin="0.5rem 0 0 1rem">
-            {errors.goods?.goodsDetails?.message}
-          </Typography>
-        )}
-      </Box>
+      <GoodsList sizeType={sizeType} selectedGoods={selectedGoods} />
     </Box>
   );
 };

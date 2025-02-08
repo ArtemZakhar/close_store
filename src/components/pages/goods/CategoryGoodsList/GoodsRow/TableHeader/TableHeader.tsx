@@ -17,7 +17,7 @@ const TableHeader = ({
   selectedGoods: GoodsType | null;
   item: GoodsType;
 }) => {
-  const { _id, firm, model, outcomePrice, code } = item;
+  const { _id, firm, model, description, code } = item;
   return (
     <Box sx={styles.titleWrapper}>
       <Typography width="5rem">{code}</Typography>
@@ -29,7 +29,7 @@ const TableHeader = ({
       </Typography>
 
       <Typography align="center" width="15rem">
-        {outcomePrice?.toFixed(2) ?? 'Не встановлено'}
+        {description ?? ''}
       </Typography>
 
       <Box width="2rem">

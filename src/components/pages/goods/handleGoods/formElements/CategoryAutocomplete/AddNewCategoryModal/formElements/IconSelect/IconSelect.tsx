@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 
 import { Controller, UseFormReturn } from 'react-hook-form';
 
-import StyledAutocomplete from '@/components/common/StyledAutocomplete';
+import AutocompleteStyled from '@/components/common/FormComponentsStyled/AutocompleteStyled';
 
 import { validations } from '../../../../formValidations';
 import { NewCategoryFormType } from '../../AddNewCategoryModal';
@@ -39,7 +39,7 @@ const IconSelect = ({
           defaultValue={null}
           rules={validations.icon}
           render={({ field }) => (
-            <StyledAutocomplete
+            <AutocompleteStyled
               {...field}
               options={iconsArray}
               value={field.value || null}

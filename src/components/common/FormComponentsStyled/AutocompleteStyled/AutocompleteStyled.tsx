@@ -8,9 +8,9 @@ import TextField from '@mui/material/TextField';
 import { forwardRef } from 'react';
 import React, { useRef } from 'react';
 
+import { styles } from './AutocompleteStyled.styles';
 import CustomList from './CustomList';
 import CustomPaper from './CustomPaper';
-import { styles } from './StyledAutocomplete.styles';
 
 type SelectStyledProps<
   T,
@@ -22,7 +22,7 @@ type SelectStyledProps<
   error?: boolean;
 };
 
-const StyledAutocomplete = forwardRef<
+const AutocompleteStyled = forwardRef<
   HTMLDivElement,
   SelectStyledProps<any, boolean | undefined, boolean | undefined>
 >(function StyledAutocomplete(
@@ -64,4 +64,4 @@ const StyledAutocomplete = forwardRef<
   );
 });
 
-export default StyledAutocomplete;
+export default AutocompleteStyled;

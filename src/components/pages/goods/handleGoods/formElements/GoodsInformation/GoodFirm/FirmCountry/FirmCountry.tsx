@@ -4,34 +4,33 @@ import Typography from '@mui/material/Typography';
 import { UseQueryResult } from '@tanstack/react-query';
 
 import { useEffect } from 'react';
-import { Controller, UseFormReturn } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
-import StyledAutocomplete from '@/components/common/StyledAutocomplete';
+import AutocompleteStyled from '@/components/common/FormComponentsStyled/AutocompleteStyled';
 
 import { FormType } from '../../../../HandleGoods';
 import { validations } from '../../../formValidations';
 import { styles } from './FirmCountry.styles';
 
 const FirmCountry = ({
-  form,
   fetchCountriesData,
 }: {
-  form: UseFormReturn<FormType, any, undefined>;
   fetchCountriesData: UseQueryResult<CountryType[], Error>;
 }) => {
   const {
     control,
     formState: { errors },
     setValue,
-  } = form;
+    watch,
+  } = useFormContext<FormType>();
 
   const { data: countriesData, isError, isLoading } = fetchCountriesData;
 
-  const firm = form.watch('goods.firm');
+  const firm = watch('goods.firm');
 
   useEffect(() => {
     if (firm && firm.countryOfOrigin) {
-      form.setValue('goods.firm.countryOfOrigin', firm.countryOfOrigin);
+      setValue('goods.firm.countryOfOrigin', firm.countryOfOrigin);
     }
   }, [firm?.countryOfOrigin]);
 
@@ -50,12 +49,14 @@ const FirmCountry = ({
           control={control}
           rules={validations.goodsFirm.countryOfOrigin}
           render={({ field }) => (
-            <StyledAutocomplete
+            <AutocompleteStyled
               {...field}
               value={field.value ?? ''}
               options={countriesData || []}
               freeSolo
-              onChange={(_, newValue) => field.onChange(newValue)}
+              onChange={(_, newValue) =>
+                setValue('goods.firm.countryOfOrigin', newValue)
+              }
               onInputChange={(event, newInputValue) => {
                 setValue('goods.firm.countryOfOrigin', newInputValue);
               }}

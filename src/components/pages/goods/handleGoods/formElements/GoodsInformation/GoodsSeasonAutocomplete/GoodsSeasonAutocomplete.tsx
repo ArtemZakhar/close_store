@@ -1,19 +1,15 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-import { Controller, UseFormReturn } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
-import StyledAutocomplete from '@/components/common/StyledAutocomplete';
+import AutocompleteStyled from '@/components/common/FormComponentsStyled/AutocompleteStyled';
 
 import { FormType } from '../../../HandleGoods';
 import { seasonList } from './seasonList';
 
-const GoodsSeasonAutocomplete = ({
-  form,
-}: {
-  form: UseFormReturn<FormType, any, undefined>;
-}) => {
-  const { control } = form;
+const GoodsSeasonAutocomplete = () => {
+  const { control } = useFormContext<FormType>();
 
   return (
     <Box width="15rem">
@@ -26,7 +22,7 @@ const GoodsSeasonAutocomplete = ({
         name="goods.season"
         defaultValue={seasonList[0]}
         render={({ field }) => (
-          <StyledAutocomplete
+          <AutocompleteStyled
             {...field}
             options={seasonList}
             getOptionLabel={(option) => option.label}

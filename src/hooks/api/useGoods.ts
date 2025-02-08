@@ -2,9 +2,10 @@ import {
   deleteGoods,
   getAllFirms,
   getAllGoods,
+  patchGoods,
   postNewGoods,
 } from '@/app/api/goodsService';
-import { NewGoodFormType } from '@/types/goods/good';
+import { NewGoodFormType, UpdateGoodsFormType } from '@/types/goods/good';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { QUERY_CITIES, QUERY_COUNTRIES } from './useLocation';
@@ -24,6 +25,29 @@ export const usePostNewGoods = () => {
 
   return useMutation({
     mutationFn: (data: NewGoodFormType) => postNewGoods(data),
+    onSuccess: () => {
+      client.invalidateQueries({
+        queryKey: [QUERY_FIRM],
+      });
+      client.invalidateQueries({
+        queryKey: [QUERY_CITIES],
+      });
+      client.invalidateQueries({
+        queryKey: [QUERY_COUNTRIES],
+      });
+      client.invalidateQueries({
+        queryKey: [QUERY_GOODS],
+      });
+    },
+    onError: (error) => error,
+  });
+};
+
+export const useUpdateGoods = () => {
+  const client = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: Partial<UpdateGoodsFormType>) => patchGoods(data),
     onSuccess: () => {
       client.invalidateQueries({
         queryKey: [QUERY_FIRM],

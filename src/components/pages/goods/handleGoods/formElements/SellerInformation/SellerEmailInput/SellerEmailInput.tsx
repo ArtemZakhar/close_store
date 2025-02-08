@@ -7,28 +7,27 @@ import {
   Controller,
   ControllerRenderProps,
   UseFormReturn,
+  useFormContext,
 } from 'react-hook-form';
 
 import { FormType } from '../../../HandleGoods';
 import { validations } from '../../formValidations';
 import { styles } from './SellerEmailInput.styles';
 
-const SellerEmailInput = ({
-  form,
-}: {
-  form: UseFormReturn<FormType, any, undefined>;
-}) => {
+const SellerEmailInput = () => {
   const {
     control,
     clearErrors,
     formState: { errors },
-  } = form;
+    watch,
+    setValue,
+  } = useFormContext<FormType>();
 
-  const seller = form.watch('seller');
+  const seller = watch('seller');
 
   useEffect(() => {
     if (seller && seller.email) {
-      form.setValue('seller.email', seller.email);
+      setValue('seller.email', seller.email);
     }
   }, [seller?.email]);
 

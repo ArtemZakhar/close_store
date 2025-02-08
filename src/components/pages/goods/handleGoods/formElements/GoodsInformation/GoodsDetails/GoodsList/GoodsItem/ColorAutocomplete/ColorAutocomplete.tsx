@@ -1,54 +1,108 @@
+import { GoodsDetails } from '@/types/goods/good';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-import { ControllerRenderProps, UseFormReturn } from 'react-hook-form';
+import {
+  Controller,
+  ControllerRenderProps,
+  useFormContext,
+} from 'react-hook-form';
 
-import StyledAutocomplete from '@/components/common/StyledAutocomplete';
+import AutocompleteStyled from '@/components/common/FormComponentsStyled/AutocompleteStyled';
 import { FormType } from '@/components/pages/goods/HandleGoods/HandleGoods';
 
+import { validations } from '../../../../../formValidations';
+import { NEW_PROPERTY_IN_GOODS_OBJECT } from '../../../GoodsDetails';
 import { ColorsType, colorList } from './colorList';
 
-const ColorAutocomplete = ({
-  form,
-  index,
-  field,
-}: {
-  form: UseFormReturn<FormType, any, undefined>;
-  index: number;
-  field: ControllerRenderProps<FormType, 'goods.goodsDetails'>;
-}) => {
-  const { getValues } = form;
+const ColorAutocomplete = ({ id }: { id: string }) => {
+  const {
+    getValues,
+    control,
+    setValue,
+    formState: { errors },
+  } = useFormContext<FormType>();
 
-  const handleColorChange = (value: ColorsType | null) => {
+  const handleColorChange = (
+    value: ColorsType | null,
+    field: ControllerRenderProps<
+      FormType,
+      `goods.goodsDetails.${string}.color`
+    >,
+  ) => {
+    if (!value) {
+      field.onChange(value);
+      return;
+    }
     const prevState = getValues('goods.goodsDetails');
 
-    field.onChange(
-      prevState.map((item, i) =>
-        index === i ? { ...item, color: value?.label || null } : item,
-      ),
-    );
+    const newState: GoodsDetails = {};
+
+    for (const [key, oldValue] of Object.entries(prevState)) {
+      if (key === NEW_PROPERTY_IN_GOODS_OBJECT) {
+        newState[value.name] = {
+          ...oldValue,
+          color: value.label,
+        };
+        continue;
+      }
+
+      if (key === id) {
+        newState[value.name] = {
+          ...oldValue,
+          color: value.label,
+        };
+        continue;
+      }
+
+      newState[key] = { ...oldValue };
+    }
+
+    setValue('goods.goodsDetails', newState);
   };
 
+  const error =
+    errors.goods &&
+    errors.goods.goodsDetails &&
+    errors.goods.goodsDetails[id] &&
+    errors.goods.goodsDetails[id].color;
+
   return (
-    <Box width="15rem">
+    <Box width="15rem" minHeight="6rem">
       <Typography marginBottom="1rem" variant="h4">
         Колір
       </Typography>
 
-      <StyledAutocomplete
-        options={colorList}
-        getOptionLabel={(option) => option.label}
-        onChange={(_, newValue) => handleColorChange(newValue)}
-        renderOption={(props, option) => {
-          const { key, ...otherProps } = props;
+      <Controller
+        control={control}
+        name={`goods.goodsDetails.${id}.color`}
+        rules={validations.color}
+        render={({ field }) => (
+          <AutocompleteStyled
+            {...field}
+            options={colorList}
+            value={field.value ?? ''}
+            getOptionLabel={(option) => {
+              if (typeof option === 'string') {
+                return option;
+              }
+              return option.label;
+            }}
+            onChange={(_, newValue) => handleColorChange(newValue, field)}
+            renderOption={(props, option) => {
+              const { key, ...otherProps } = props;
 
-          return (
-            <li key={option.id} {...otherProps}>
-              {option.label}
-            </li>
-          );
-        }}
-        placeholder="Оберіть колір"
+              return (
+                <li key={option.id} {...otherProps}>
+                  {option.label}
+                </li>
+              );
+            }}
+            placeholder="Оберіть колір"
+            error={!!error}
+            helperText={error ? error.message : ''}
+          />
+        )}
       />
     </Box>
   );

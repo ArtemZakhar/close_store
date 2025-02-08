@@ -2,15 +2,14 @@ import { CategoryType } from '@/types/goods/category';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
 import { useEffect, useState } from 'react';
-import { Controller, UseFormReturn } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
-import StyledAutocomplete from '@/components/common/StyledAutocomplete';
+import AutocompleteStyled from '@/components/common/FormComponentsStyled/AutocompleteStyled';
 
 import {
   useGetAllCategories,
@@ -24,11 +23,11 @@ import AddNewCategoryModal from './AddNewCategoryModal';
 import { styles } from './CategoryAutocomplete.styles';
 
 const CategoryAutocomplete = ({
-  form,
   selectedCategory,
+  onCategoryChange,
 }: {
-  form: UseFormReturn<FormType, any, undefined>;
   selectedCategory: CategoryType | null;
+  onCategoryChange: (data: CategoryType | null) => void;
 }) => {
   const [addNewCategoryModalOpen, setAddNewCategoryModalOpen] = useState(false);
 
@@ -45,11 +44,13 @@ const CategoryAutocomplete = ({
   const {
     control,
     formState: { errors },
-  } = form;
+    setValue,
+  } = useFormContext<FormType>();
 
   useEffect(() => {
     if (isCreateUserSuccess) {
-      form.setValue('category', data, { shouldValidate: true });
+      setValue('category', data, { shouldValidate: true });
+      onCategoryChange(data);
     }
   }, [isCreateUserSuccess]);
 
@@ -87,11 +88,14 @@ const CategoryAutocomplete = ({
               defaultValue={null}
               rules={validations.category}
               render={({ field }) => (
-                <StyledAutocomplete
+                <AutocompleteStyled
                   {...field}
                   value={field.value || null}
                   options={categoryData || []}
-                  onChange={(_, newData) => field.onChange(newData)}
+                  onChange={(_, newData) => {
+                    field.onChange(newData);
+                    onCategoryChange(newData);
+                  }}
                   getOptionLabel={(option) => option.name}
                   loading={isLoading}
                   noOptionsText={

@@ -7,23 +7,21 @@ import { UseQueryResult } from '@tanstack/react-query';
 import { UseFormReturn } from 'react-hook-form';
 
 import { FormType } from '../../HandleGoods';
+import ArrivalDate from './ArrivalDate';
 import BuyDate from './BuyDate';
 import GoodFirm from './GoodFirm';
 import GoodsDescription from './GoodsDescription';
 import GoodsDetails from './GoodsDetails';
-import GoodsPrice from './GoodsDetails/GoodsList/GoodsItem/GoodsPrice';
 import { styles } from './GoodsInformation.styles';
 import GoodsNotes from './GoodsNotes';
 import GoodsSeasonAutocomplete from './GoodsSeasonAutocomplete';
 import ModelName from './ModelName';
 
 const GoodsInformation = ({
-  form,
   fetchCountriesData,
   selectedGoods,
   isEditing,
 }: {
-  form: UseFormReturn<FormType, any, undefined>;
   fetchCountriesData: UseQueryResult<CountryType[], Error>;
   selectedGoods?: GoodsType | null | undefined;
   isEditing?: boolean;
@@ -34,30 +32,27 @@ const GoodsInformation = ({
 
       <Box sx={styles.sectionWrapper}>
         <GoodFirm
-          form={form}
           fetchCountriesData={fetchCountriesData}
           selectedFirm={selectedGoods?.firm._id}
         />
 
-        <GoodsDescription form={form} />
+        <GoodsDescription />
       </Box>
 
       <Box sx={styles.sectionWrapper}>
-        <ModelName form={form} />
+        <ModelName />
       </Box>
 
-      <GoodsDetails
-        form={form}
-        selectedGoods={selectedGoods}
-        isEditing={isEditing}
-      />
+      <GoodsDetails selectedGoods={selectedGoods} isEditing={isEditing} />
 
       <Box sx={styles.sectionWrapper}>
-        <GoodsSeasonAutocomplete form={form} />
+        <GoodsSeasonAutocomplete />
       </Box>
 
       <Box sx={styles.sectionWrapper}>
-        <BuyDate form={form} />
+        <BuyDate />
+
+        <ArrivalDate />
       </Box>
 
       <Box sx={styles.sectionWrapper}>
@@ -66,7 +61,7 @@ const GoodsInformation = ({
             Нотатки
           </Typography>
 
-          <GoodsNotes form={form} name="notes" rows={5} />
+          <GoodsNotes name="notes" rows={5} />
         </Box>
 
         <Box width="15rem">
@@ -74,7 +69,7 @@ const GoodsInformation = ({
             Де зберігається
           </Typography>
 
-          <GoodsNotes form={form} name="stored" />
+          <GoodsNotes name="stored" />
         </Box>
       </Box>
     </Box>
