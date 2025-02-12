@@ -102,7 +102,7 @@ const CategoryGoodsList = ({
           href={`/${routePaths.goods.new}`}
           variant="contained"
         >
-          Додати новий товар
+          Додати новий товар?
         </Button>
       </Box>
     );
