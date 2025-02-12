@@ -31,7 +31,7 @@ const SellerInformation = ({
       </Box>
 
       <Box sx={styles.sectionWrapper}>
-        <SellerCity />
+        <SellerCity selectedSeller={selectedSeller} />
 
         <SellerCountryInput
           fetchCountriesData={fetchCountriesData}

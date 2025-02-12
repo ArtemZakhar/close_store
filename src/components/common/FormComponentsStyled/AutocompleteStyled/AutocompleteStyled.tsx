@@ -40,6 +40,7 @@ const AutocompleteStyled = forwardRef<
       PaperComponent={CustomPaper}
       ListboxComponent={CustomList}
       disableClearable
+      disabled={disabled}
       loadingText={
         <Box paddingBlock="1rem" display="flex" justifyContent="center">
           <CircularProgress size="2rem" />

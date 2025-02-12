@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import Link from 'next/link';
 
@@ -41,18 +41,23 @@ const CategoryGoodsList = ({
       setIsEditingMode(true);
       return;
     }
-
     setIsCopyingMode(true);
   };
 
-  const finishMode = (mode?: 'editing') => {
-    if (mode === 'editing') {
-      setIsEditingMode(false);
-      return;
-    }
+  const finishMode = useCallback(
+    (mode?: 'editing') => {
+      setSelectedGoods(null);
+      if (mode === 'editing') {
+        setSelectedGoods(null);
+        setIsEditingMode(false);
+        return;
+      }
 
-    setIsCopyingMode(false);
-  };
+      setSelectedGoods(null);
+      setIsCopyingMode(false);
+    },
+    [isEditingMode, isCopyingMode],
+  );
 
   const toggleSelectedGoods = (goods: GoodsType) => {
     if (selectedGoods?._id === goods._id) {
@@ -70,6 +75,7 @@ const CategoryGoodsList = ({
         selectedGoods={selectedGoods}
         finishMode={finishMode}
         isEditing
+        category={category}
         key={selectedGoods?._id}
       />
     );
@@ -80,6 +86,7 @@ const CategoryGoodsList = ({
       <HandleGoods
         selectedGoods={selectedGoods}
         key={selectedGoods?._id}
+        category={category}
         finishMode={finishMode}
       />
     );

@@ -4,9 +4,6 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { UseQueryResult } from '@tanstack/react-query';
 
-import { UseFormReturn } from 'react-hook-form';
-
-import { FormType } from '../../HandleGoods';
 import ArrivalDate from './ArrivalDate';
 import BuyDate from './BuyDate';
 import GoodFirm from './GoodFirm';
@@ -33,7 +30,7 @@ const GoodsInformation = ({
       <Box sx={styles.sectionWrapper}>
         <GoodFirm
           fetchCountriesData={fetchCountriesData}
-          selectedFirm={selectedGoods?.firm._id}
+          selectedFirm={selectedGoods?.firm}
         />
 
         <GoodsDescription />
@@ -46,7 +43,7 @@ const GoodsInformation = ({
       <GoodsDetails selectedGoods={selectedGoods} isEditing={isEditing} />
 
       <Box sx={styles.sectionWrapper}>
-        <GoodsSeasonAutocomplete />
+        <GoodsSeasonAutocomplete selectedGoods={selectedGoods} />
       </Box>
 
       <Box sx={styles.sectionWrapper}>

@@ -7,6 +7,7 @@ import {
   ControllerRenderProps,
   useFormContext,
 } from 'react-hook-form';
+import toast from 'react-hot-toast';
 
 import AutocompleteStyled from '@/components/common/FormComponentsStyled/AutocompleteStyled';
 import { FormType } from '@/components/pages/goods/HandleGoods/HandleGoods';
@@ -35,6 +36,16 @@ const ColorAutocomplete = ({ id }: { id: string }) => {
       return;
     }
     const prevState = getValues('goods.goodsDetails');
+
+    if (prevState[value.name]) {
+      toast.dismiss();
+      toast('Цей колір вже присутній в списку', {
+        icon: '💩',
+      });
+      return;
+    }
+
+    console.log(prevState[value.name], prevState);
 
     const newState: GoodsDetails = {};
 

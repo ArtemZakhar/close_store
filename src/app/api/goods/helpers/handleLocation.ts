@@ -1,3 +1,5 @@
+import { CountryType } from '@/types/location/location';
+
 import { ObjectId } from 'mongodb';
 
 import { findCityAndUpdate } from '../../cities/cities.serivce';
@@ -9,7 +11,7 @@ export const handleLocationUpdate = async ({
   sellerCity,
 }: {
   sellerCountry: string | ObjectId;
-  firmCountry?: string | ObjectId;
+  firmCountry?: CountryType | string;
   sellerCity?: string | ObjectId;
 }) => {
   if (sellerCity && typeof sellerCity === 'string') {

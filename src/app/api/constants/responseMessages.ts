@@ -41,5 +41,8 @@ export const responseMessages = {
     seller: {
       noData: 'Missing email or phone input.',
     },
+    firm: {
+      noData: 'Missing name or country of goods firm.',
+    },
   },
 };

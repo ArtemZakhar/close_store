@@ -64,7 +64,9 @@ const SizesOptionList = ({
         : sizeItem,
     );
 
-    setValue(`goods.goodsDetails.${id}.countAndSizes`, newState);
+    setValue(`goods.goodsDetails.${id}.countAndSizes`, newState, {
+      shouldDirty: true,
+    });
   };
 
   const decreaseCount = (index: number) => {
@@ -82,7 +84,9 @@ const SizesOptionList = ({
       }
     });
 
-    setValue(`goods.goodsDetails.${id}.countAndSizes`, newState);
+    setValue(`goods.goodsDetails.${id}.countAndSizes`, newState, {
+      shouldDirty: true,
+    });
   };
 
   const error =

@@ -23,7 +23,7 @@ const FirmName = ({
   selectedFirm,
 }: {
   firmDataRequest: UseQueryResult<FirmType[], Error>;
-  selectedFirm?: string;
+  selectedFirm?: FirmType;
 }) => {
   const { data: firmsData, isLoading, isError } = firmDataRequest;
 
@@ -31,14 +31,25 @@ const FirmName = ({
     control,
     formState: { errors },
     setValue,
+    resetField,
+    getValues,
   } = useFormContext<FormType>();
 
   useEffect(() => {
     if (selectedFirm && firmsData) {
-      const firm = firmsData.find((item) => item._id === selectedFirm);
+      const existingData = getValues('goods.firm');
 
-      if (firm) {
-        setValue('goods.firm', firm);
+      if (existingData) {
+        resetField('goods.firm', {
+          defaultValue: {
+            ...selectedFirm,
+            countryOfOrigin: existingData.countryOfOrigin,
+          },
+        });
+      } else {
+        resetField('goods.firm', {
+          defaultValue: selectedFirm,
+        });
       }
     }
   }, [isLoading]);
@@ -76,9 +87,7 @@ const FirmName = ({
               options={firmsData || []}
               freeSolo
               onChange={(_, newData) => handleFirmChange(field, newData)}
-              onInputChange={(event, newValue) =>
-                setValue('goods.firm.name', newValue)
-              }
+              onInputChange={(event, newValue) => field.onChange(newValue)}
               getOptionLabel={(option) =>
                 typeof option === 'string' ? option : option.name
               }

@@ -96,7 +96,7 @@ export const validations = {
 
     countryOfOrigin: {
       required: errorMessages.countryOfOrigin.required,
-      validate: (value: string | undefined) => {
+      validate: (value: CountryType | string | undefined) => {
         return typeof value === 'string' && !value?.trim().length
           ? errorMessages.countryOfOrigin.required
           : true;

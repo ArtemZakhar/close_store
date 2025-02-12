@@ -1,3 +1,4 @@
+import { FirmType } from '@/types/goods/firm';
 import { CountryType } from '@/types/location/location';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -14,25 +15,32 @@ import { styles } from './FirmCountry.styles';
 
 const FirmCountry = ({
   fetchCountriesData,
+  selectedFirm,
 }: {
   fetchCountriesData: UseQueryResult<CountryType[], Error>;
+  selectedFirm?: FirmType;
 }) => {
   const {
     control,
     formState: { errors },
-    setValue,
-    watch,
+    resetField,
   } = useFormContext<FormType>();
 
   const { data: countriesData, isError, isLoading } = fetchCountriesData;
 
-  const firm = watch('goods.firm');
-
   useEffect(() => {
-    if (firm && firm.countryOfOrigin) {
-      setValue('goods.firm.countryOfOrigin', firm.countryOfOrigin);
+    if (selectedFirm && countriesData) {
+      const existingCountry = countriesData.find(
+        (country) => country._id === selectedFirm.countryOfOrigin,
+      );
+
+      if (existingCountry) {
+        resetField('goods.firm.countryOfOrigin', {
+          defaultValue: existingCountry.name,
+        });
+      }
     }
-  }, [firm?.countryOfOrigin]);
+  }, [isLoading]);
 
   const isErrorMessage =
     errors.goods && errors.goods.firm && errors.goods.firm.countryOfOrigin;
@@ -54,11 +62,9 @@ const FirmCountry = ({
               value={field.value ?? ''}
               options={countriesData || []}
               freeSolo
-              onChange={(_, newValue) =>
-                setValue('goods.firm.countryOfOrigin', newValue)
-              }
+              onChange={(_, newValue) => field.onChange(newValue)}
               onInputChange={(event, newInputValue) => {
-                setValue('goods.firm.countryOfOrigin', newInputValue);
+                field.onChange(newInputValue);
               }}
               getOptionLabel={(option) =>
                 typeof option === 'string' ? option : option.name

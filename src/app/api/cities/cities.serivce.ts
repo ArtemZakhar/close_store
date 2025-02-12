@@ -10,7 +10,7 @@ export const findCityAndUpdate = async ({
     $setOnInsert?: Partial<CityType>;
     $if?: Partial<Record<keyof CityType, any>>;
   };
-}) => {
+}): Promise<CityType | null> => {
   return await City.findOneAndUpdate(searchParams, dataToUpdate, {
     upsert: true,
   });

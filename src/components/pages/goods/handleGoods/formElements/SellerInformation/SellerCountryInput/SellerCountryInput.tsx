@@ -24,11 +24,10 @@ const SellerCountryInput = ({
     control,
     formState: { errors },
     setValue,
+    resetField,
   } = useFormContext<FormType>();
 
   const { data: countriesData, isError, isLoading } = fetchCountriesData;
-
-  console.log('render Seller country');
 
   useEffect(() => {
     if (selectedSeller && countriesData) {
@@ -36,10 +35,10 @@ const SellerCountryInput = ({
         (country) => country._id === selectedSeller.country,
       );
       if (existingCountry) {
-        setValue('seller.country', existingCountry.name);
+        resetField('seller.country', { defaultValue: existingCountry.name });
       }
     }
-  }, []);
+  }, [isLoading]);
 
   return (
     <Box sx={styles.blockWrapper}>
@@ -52,7 +51,6 @@ const SellerCountryInput = ({
           name="seller.country"
           control={control}
           rules={validations.sellerCountry}
-          defaultValue=""
           render={({ field }) => (
             <AutocompleteStyled
               {...field}

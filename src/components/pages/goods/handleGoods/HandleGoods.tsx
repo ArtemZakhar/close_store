@@ -11,7 +11,7 @@ import {
 import { SellerType } from '@/types/goods/seller';
 import Box from '@mui/material/Box';
 
-import { useEffect, useState } from 'react';
+import { memo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { useRouter } from 'next/navigation';
@@ -28,6 +28,7 @@ import CategoryAutocomplete from './formElements/CategoryAutocomplete';
 import GoodsInformation from './formElements/GoodsInformation';
 import SellerInformation from './formElements/SellerInformation';
 import SubCategoryAutocomplete from './formElements/SubCategoryAutocomplete';
+import { useSelectedCategoryHandler } from './hooks/useSelectedCategoryHandler';
 import { useUpdateFormState } from './hooks/useUpdateFormState';
 
 export type FormType = {
@@ -48,33 +49,22 @@ const HandleGoods = ({
   finishMode = () => {},
   selectedGoods,
   isEditing,
+  category,
 }: {
   finishMode?: (mode?: 'editing') => void;
   selectedGoods?: GoodsType | null;
   isEditing?: boolean;
+  category?: string;
 }) => {
   const form = useForm<FormType | UpdateFormType>();
-  const [selectedCategory, setSelectedCategory] = useState<CategoryType | null>(
-    null,
-  );
-
-  const onCategoryChange = (data: CategoryType | null) => {
-    setSelectedCategory(data);
-  };
+  const { selectedCategory, onCategoryChange } =
+    useSelectedCategoryHandler(selectedGoods);
 
   const router = useRouter();
 
   const fetchCountriesData = useGetAllCountries();
 
-  console.log('render');
-
   useUpdateFormState({ isEditing, form, selectedGoods });
-
-  useEffect(() => {
-    if (selectedGoods) {
-      setSelectedCategory(selectedGoods.category);
-    }
-  }, []);
 
   const {
     mutate: updateGoods,
@@ -82,7 +72,7 @@ const HandleGoods = ({
     isPending: isUpdateGoodsPending,
     isSuccess: isUpdateGoodsSuccess,
     error: updateGoodsError,
-  } = useUpdateGoods();
+  } = useUpdateGoods(category!);
 
   const {
     mutate: createNewGoods,
@@ -99,8 +89,9 @@ const HandleGoods = ({
 
     if (isEditing) {
       const dirty = form.formState.dirtyFields;
-      console.log(dirty, form.getValues('seller'));
-      const dirtyFields: Partial<NewGoodFormType> = {
+
+      const dirtyFields: Partial<UpdateGoodsFormType> = {
+        _id: selectedGoods?._id,
         category: dirty.category ? category._id : undefined,
         subCategory: dirty.subCategory ? subCategory : undefined,
         firm: dirty.goods?.firm ? goods.firm : undefined,
@@ -115,19 +106,29 @@ const HandleGoods = ({
         seller: dirty.seller ? seller : undefined,
       };
 
-      const updatedFields: Partial<NewGoodFormType> = {};
+      const updatedFields: Partial<UpdateGoodsFormType> = {};
 
       for (const [key, value] of Object.entries(dirtyFields) as [
-        keyof NewGoodFormType,
+        keyof UpdateGoodsFormType,
         any,
       ][]) {
         if (value) {
+          if (key === 'firm') {
+            updatedFields[key] = {
+              name: value.name,
+              countryOfOrigin:
+                typeof value.countryOfOrigin === 'string'
+                  ? value.countryOfOrigin
+                  : value.countryOfOrigin.name,
+            };
+            continue;
+          }
+
           updatedFields[key] = value;
         }
       }
-      // console.log(JSON.stringify(updatedFields, null, 2));
 
-      // updateGoods(updatedFields);
+      updateGoods(updatedFields);
     } else {
       createNewGoods({
         category: category._id,
@@ -145,14 +146,6 @@ const HandleGoods = ({
         sizeType: goods.sizeType,
       });
     }
-
-    // if (selectedGoods) {
-    //   if (isEditing) {
-    //     finishMode('editing');
-    //   } else {
-    //     finishMode();
-    //   }
-    // }
   };
 
   useShowFetchResultMessage({
@@ -177,6 +170,37 @@ const HandleGoods = ({
         errorType: responseMessages.goods.category.notExist,
         message: 'Створіть категорію перш ніж додавати товар',
       },
+      {
+        errorType: responseMessages.goods.firm.noData,
+        message: 'Перевірте чи зазначена назва фірми та країна виготовлення',
+      },
+    ],
+  });
+
+  useShowFetchResultMessage({
+    closeFunction: () => {
+      if (isEditing) {
+        finishMode('editing');
+      } else {
+        finishMode();
+      }
+    },
+    isError: isUpdateGoodsError,
+    isSuccess: isUpdateGoodsSuccess,
+    error: updateGoodsError,
+    customErrorMessage: [
+      {
+        errorType: responseMessages.goods.exist,
+        message: 'Виникла помилка. Ідентифікатор товару не був переданий',
+      },
+      {
+        errorType: responseMessages.goods.firm.noData,
+        message: "Відсутнє ім'я або країна фірми-виробника",
+      },
+      {
+        errorType: responseMessages.server.error,
+        message: 'Помилка на стороні сервера',
+      },
     ],
   });
 
@@ -190,6 +214,7 @@ const HandleGoods = ({
         <CategoryAutocomplete
           selectedCategory={selectedCategory}
           onCategoryChange={onCategoryChange}
+          isEditing={isEditing}
         />
 
         {selectedCategory && (
@@ -216,7 +241,7 @@ const HandleGoods = ({
               />
 
               <LoadingButton
-                isLoading={isCreateNewGoodsPending}
+                isLoading={isCreateNewGoodsPending || isUpdateGoodsPending}
                 sx={{ width: '13rem' }}
                 label={isEditing ? 'Оновити' : 'Створити'}
               />

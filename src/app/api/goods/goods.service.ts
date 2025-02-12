@@ -26,6 +26,13 @@ export const findOneGoodsByParams = async (
   return goods;
 };
 
+export const updateGoods = async (
+  _id: string,
+  goodsToUpdate: Partial<GoodsSchemaType>,
+) => {
+  await Goods.findOneAndUpdate({ _id }, goodsToUpdate);
+};
+
 export const deleteGoodsById = async (id: string) => {
   await Goods.findByIdAndDelete({ _id: id });
 };

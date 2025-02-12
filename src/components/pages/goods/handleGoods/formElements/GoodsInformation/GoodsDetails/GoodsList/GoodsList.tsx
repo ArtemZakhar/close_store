@@ -12,13 +12,7 @@ import { SizesAndCountDataType } from '../sizesData';
 import GoodsItem from './GoodsItem';
 import { styles } from './GoodsList.styles';
 
-const GoodsList = ({
-  sizeType,
-  selectedGoods,
-}: {
-  sizeType: SizesAndCountDataType;
-  selectedGoods?: GoodsType | null | undefined;
-}) => {
+const GoodsList = ({ sizeType }: { sizeType: SizesAndCountDataType }) => {
   const { setValue, getValues, watch } = useFormContext<FormType>();
   const goodsList = watch('goods.goodsDetails');
 

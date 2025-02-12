@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
   const id = query.get('id');
   const owner = query.get('owner');
 
-  let users = [];
+  let users: UserSchemaType[] = [];
 
   if (role === UserRole.seller) {
     users = await User.find(

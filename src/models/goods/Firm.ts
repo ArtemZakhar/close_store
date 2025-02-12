@@ -1,6 +1,6 @@
 import { FirmSchemaType } from '@/types/goods/firm';
 
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 
 import '../Location/City';
 import '../Location/Country';
@@ -17,6 +17,7 @@ const FirmSchema = new mongoose.Schema<FirmSchemaType>({
   },
 });
 
-const Firm = mongoose.models.Firm || mongoose.model('Firm', FirmSchema);
+const Firm: Model<FirmSchemaType> =
+  mongoose.models.Firm || mongoose.model('Firm', FirmSchema);
 
 export default Firm;

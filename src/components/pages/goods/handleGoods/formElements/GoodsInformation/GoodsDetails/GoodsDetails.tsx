@@ -36,6 +36,7 @@ const GoodsDetails = ({
   const {
     setValue,
     formState: { errors },
+    getValues,
   } = useFormContext<FormType>();
 
   useEffect(() => {
@@ -97,12 +98,18 @@ const GoodsDetails = ({
 
     setValue('goods.sizeType', updatedSizeType.label);
 
-    setValue('goods.goodsDetails', {
-      [NEW_PROPERTY_IN_GOODS_OBJECT]: {
-        color: '',
-        countAndSizes: newData.sizesAndCount || sizesData[0].sizesAndCount,
+    setValue(
+      'goods.goodsDetails',
+      {
+        [NEW_PROPERTY_IN_GOODS_OBJECT]: {
+          color: '',
+          countAndSizes: newData.sizesAndCount || sizesData[0].sizesAndCount,
+        },
       },
-    });
+      {
+        shouldDirty: true,
+      },
+    );
   };
 
   const isError = !!errors.goods && !!errors.goods.goodsDetails;
@@ -124,7 +131,7 @@ const GoodsDetails = ({
         )}
       </Box>
 
-      <GoodsList sizeType={sizeType} selectedGoods={selectedGoods} />
+      <GoodsList sizeType={sizeType} />
     </Box>
   );
 };

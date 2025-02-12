@@ -1,3 +1,4 @@
+import { FirmType } from '@/types/goods/firm';
 import { CountryType } from '@/types/location/location';
 import { UseQueryResult } from '@tanstack/react-query';
 
@@ -11,14 +12,17 @@ const GoodFirm = ({
   selectedFirm,
 }: {
   fetchCountriesData: UseQueryResult<CountryType[], Error>;
-  selectedFirm?: string;
+  selectedFirm?: FirmType;
 }) => {
   const firmDataRequest = useGetAllFirms();
   return (
     <>
       <FirmName firmDataRequest={firmDataRequest} selectedFirm={selectedFirm} />
 
-      <FirmCountry fetchCountriesData={fetchCountriesData} />
+      <FirmCountry
+        fetchCountriesData={fetchCountriesData}
+        selectedFirm={selectedFirm}
+      />
     </>
   );
 };

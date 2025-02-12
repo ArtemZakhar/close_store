@@ -1,6 +1,8 @@
+import { GoodsType } from '@/types/goods/good';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import AutocompleteStyled from '@/components/common/FormComponentsStyled/AutocompleteStyled';
@@ -8,8 +10,24 @@ import AutocompleteStyled from '@/components/common/FormComponentsStyled/Autocom
 import { FormType } from '../../../HandleGoods';
 import { seasonList } from './seasonList';
 
-const GoodsSeasonAutocomplete = () => {
-  const { control } = useFormContext<FormType>();
+const GoodsSeasonAutocomplete = ({
+  selectedGoods,
+}: {
+  selectedGoods: GoodsType | null | undefined;
+}) => {
+  const { control, setValue } = useFormContext<FormType>();
+
+  useEffect(() => {
+    if (selectedGoods) {
+      const newSeason = seasonList.find(
+        (season) => season.name === selectedGoods.season,
+      );
+
+      if (newSeason) {
+        setValue('goods.season', newSeason);
+      }
+    }
+  }, []);
 
   return (
     <Box width="15rem">

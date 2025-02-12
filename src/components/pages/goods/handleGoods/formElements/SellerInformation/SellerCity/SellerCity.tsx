@@ -1,3 +1,4 @@
+import { SellerType } from '@/types/goods/seller';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
@@ -11,23 +12,31 @@ import { useGetAllCities } from '@/hooks/api/useLocation';
 import { FormType } from '../../../HandleGoods';
 import { styles } from './SellerCity.styles';
 
-const SellerCity = () => {
+const SellerCity = ({
+  selectedSeller,
+}: {
+  selectedSeller: SellerType | undefined;
+}) => {
   const { data: citiesData, isError, isLoading } = useGetAllCities();
 
   const {
     control,
     formState: { errors },
     setValue,
-    watch,
+    resetField,
   } = useFormContext<FormType>();
 
-  const seller = watch('seller');
-
   useEffect(() => {
-    if (seller && seller.city) {
-      setValue('seller.city', seller.city);
+    if (selectedSeller && citiesData) {
+      const existingCity = citiesData.find(
+        (city) => city._id == selectedSeller.city,
+      );
+
+      if (existingCity) {
+        resetField('seller.city', { defaultValue: existingCity.name });
+      }
     }
-  }, [seller?.city]);
+  }, [isLoading]);
 
   return (
     <Box sx={styles.blockWrapper}>
@@ -48,7 +57,7 @@ const SellerCity = () => {
               freeSolo
               onChange={(_, newData) => field.onChange(newData)}
               onInputChange={(event, newInputValue) => {
-                setValue('seller.city', newInputValue);
+                field.onChange(newInputValue);
               }}
               getOptionLabel={(option) =>
                 typeof option === 'string' ? option : option.name

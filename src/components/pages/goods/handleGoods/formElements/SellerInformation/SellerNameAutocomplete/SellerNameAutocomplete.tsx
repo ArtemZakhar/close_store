@@ -22,7 +22,7 @@ const SellerNameAutocomplete = ({
   const {
     control,
     formState: { errors },
-    setValue,
+    resetField,
   } = useFormContext<FormType>();
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const SellerNameAutocomplete = ({
       const seller = sellerData.find((item) => item._id === selectedSeller);
 
       if (seller) {
-        setValue('seller', seller, { shouldValidate: true });
+        resetField('seller', { defaultValue: seller });
       }
     }
   }, [isLoading]);
@@ -61,11 +61,11 @@ const SellerNameAutocomplete = ({
               freeSolo
               onChange={(_, newData) => {
                 if (typeof newData !== 'string') {
-                  setValue('seller', newData);
+                  field.onChange(newData);
                 }
               }}
               onInputChange={(event, newInputValue) => {
-                setValue('seller.name', newInputValue);
+                field.onChange(newInputValue);
               }}
               getOptionLabel={(option) =>
                 typeof option === 'string' ? option : option.name

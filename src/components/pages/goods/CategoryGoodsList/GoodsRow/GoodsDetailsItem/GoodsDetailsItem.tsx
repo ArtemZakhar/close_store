@@ -47,27 +47,31 @@ const GoodsDetailsItem = ({
       </Box>
 
       {countAndSizes.map(({ size, count }) => (
-        <Box
-          key={size}
-          sx={(theme) => styles.dataContainer(theme.palette.action.disabled)}
-        >
-          <Typography
-            variant="body2"
-            sx={(theme) => styles.sizeItem(theme.palette.action.disabled)}
-          >
-            {size}
-          </Typography>
-
+        <>
           {count === 0 ? null : (
-            <HandleCartButton
-              goodsInCart={goodsInCart}
-              removeGoodsFromCart={removeGoodsFromCart}
-              addGoodsInCart={addGoodsInCart}
-              color={color}
-              size={size}
-            />
+            <Box
+              key={size}
+              sx={(theme) =>
+                styles.dataContainer(theme.palette.action.disabled)
+              }
+            >
+              <Typography
+                variant="body2"
+                sx={(theme) => styles.sizeItem(theme.palette.action.disabled)}
+              >
+                {size}
+              </Typography>
+
+              <HandleCartButton
+                goodsInCart={goodsInCart}
+                removeGoodsFromCart={removeGoodsFromCart}
+                addGoodsInCart={addGoodsInCart}
+                color={color}
+                size={size}
+              />
+            </Box>
           )}
-        </Box>
+        </>
       ))}
     </Box>
   );

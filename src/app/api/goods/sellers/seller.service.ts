@@ -42,7 +42,7 @@ export const updateSeller = async ({
     $if?: Partial<Record<keyof SellerType, any>>;
   };
 }) => {
-  await Seller.findOneAndUpdate(searchParam, dataToUpdate);
+  return await Seller.findOneAndUpdate(searchParam, dataToUpdate).exec();
 };
 
 export const handleSellerData = async ({
@@ -68,7 +68,9 @@ export const handleSellerData = async ({
           dataToUpdate: { $setOnInsert: { name: city } },
         });
 
-        seller.city = newCity._id;
+        if (newCity) {
+          seller.city = newCity._id;
+        }
       }
     }
 
@@ -80,7 +82,9 @@ export const handleSellerData = async ({
         dataToUpdate: { name: country },
       });
 
-      seller.country = newCountry._id;
+      if (newCountry) {
+        seller.country = newCountry._id;
+      }
     }
 
     const newSeller = await createSeller(seller, ownerId);

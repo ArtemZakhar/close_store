@@ -25,9 +25,11 @@ import { styles } from './CategoryAutocomplete.styles';
 const CategoryAutocomplete = ({
   selectedCategory,
   onCategoryChange,
+  isEditing = false,
 }: {
   selectedCategory: CategoryType | null;
   onCategoryChange: (data: CategoryType | null) => void;
+  isEditing?: boolean;
 }) => {
   const [addNewCategoryModalOpen, setAddNewCategoryModalOpen] = useState(false);
 
@@ -97,6 +99,7 @@ const CategoryAutocomplete = ({
                     onCategoryChange(newData);
                   }}
                   getOptionLabel={(option) => option.name}
+                  disabled={isEditing}
                   loading={isLoading}
                   noOptionsText={
                     isError ? (

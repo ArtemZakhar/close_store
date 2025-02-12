@@ -44,7 +44,7 @@ export async function sendPasswordReminder({
     from: process.env.MY_EMAIL,
     to: email,
     subject: `Створіть новий пароль`,
-    text: `Для створення нового паролю перейдіть, будь ласка, за посиланням: ${process.env.BASE_URL}new-password/?token=${token}`,
+    text: `Для створення нового паролю перейдіть, будь ласка, за посиланням: ${process.env.NEXT_PUBLIC_BASE_URL}new-password/?token=${token}`,
   };
 
   try {

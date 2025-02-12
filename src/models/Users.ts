@@ -1,6 +1,6 @@
 import { UserRole, UserSchemaType, UserStatus } from '@/types/users/userType';
 
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 
 const userSchema = new mongoose.Schema<UserSchemaType>(
   {
@@ -44,7 +44,7 @@ const userSchema = new mongoose.Schema<UserSchemaType>(
   },
 );
 
-const User =
+const User: Model<UserSchemaType> =
   mongoose.models.User || mongoose.model<UserSchemaType>('User', userSchema);
 
 export default User;

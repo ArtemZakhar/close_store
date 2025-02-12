@@ -43,7 +43,7 @@ export const usePostNewGoods = () => {
   });
 };
 
-export const useUpdateGoods = () => {
+export const useUpdateGoods = (category: string) => {
   const client = useQueryClient();
 
   return useMutation({
@@ -59,7 +59,7 @@ export const useUpdateGoods = () => {
         queryKey: [QUERY_COUNTRIES],
       });
       client.invalidateQueries({
-        queryKey: [QUERY_GOODS],
+        queryKey: [QUERY_GOODS, category],
       });
     },
     onError: (error) => error,
@@ -68,7 +68,7 @@ export const useUpdateGoods = () => {
 
 export const useGetAllGoods = (category: string) =>
   useQuery({
-    queryKey: [QUERY_GOODS],
+    queryKey: [QUERY_GOODS, category],
     queryFn: () => getAllGoods({ searchParams: `category=${category}` }),
   });
 

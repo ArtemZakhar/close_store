@@ -38,12 +38,13 @@ export type UpdateGoodsFormType = BaseGoodType & {
   seller: SellerType;
   firm: Partial<FirmType>;
   category: string;
+  _id: string;
 };
 
 export type GoodsType = BaseGoodType & {
   _id: string;
   code: string;
-  season: SeasonListItemType;
+  season: string;
   owner: string;
   seller: SellerType;
   firm: FirmType;
