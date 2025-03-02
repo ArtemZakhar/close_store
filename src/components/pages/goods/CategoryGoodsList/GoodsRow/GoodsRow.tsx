@@ -71,22 +71,32 @@ const GoodsRow = ({
 
   const goodsInCartFiltered = goodsInCart.filter((item) => item._id === _id);
 
-  const addGoodsInCart = ({ color, size }: { color: string; size: string }) => {
+  const addGoodsInCart = ({
+    color,
+    size,
+    goodsDetailsKey,
+  }: {
+    color: string;
+    size: string;
+    goodsDetailsKey: string;
+  }) => {
     if (!selectedGoods) return;
 
-    saveInCart({ _id: selectedGoods._id, color, size });
+    saveInCart({ _id: selectedGoods._id, color, size, goodsDetailsKey });
   };
 
   const removeGoodsFromCart = ({
     color,
     size,
+    goodsDetailsKey,
   }: {
     color: string;
     size: string;
+    goodsDetailsKey: string;
   }) => {
     if (!selectedGoods) return;
 
-    removeFromCart({ _id: selectedGoods._id, color, size });
+    removeFromCart({ _id: selectedGoods._id, color, size, goodsDetailsKey });
   };
 
   return (
@@ -127,6 +137,7 @@ const GoodsRow = ({
             <GoodsDetailsItem
               key={key}
               goods={goods}
+              id={key}
               goodsInCart={goodsInCartFiltered}
               addGoodsInCart={addGoodsInCart}
               removeGoodsFromCart={removeGoodsFromCart}

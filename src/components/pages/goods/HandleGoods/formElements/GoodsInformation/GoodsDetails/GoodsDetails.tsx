@@ -85,6 +85,8 @@ const GoodsDetails = ({
           countAndSizes: sizeType.sizesAndCount,
         },
       });
+
+      setValue('goods.sizeType', sizesData[0].label);
     }
   }, []);
 

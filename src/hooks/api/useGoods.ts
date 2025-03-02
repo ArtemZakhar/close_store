@@ -1,10 +1,4 @@
-import {
-  deleteGoods,
-  getAllFirms,
-  getAllGoods,
-  patchGoods,
-  postNewGoods,
-} from '@/app/api/goodsService';
+import goodsService from '@/app/api/goodsService';
 import { NewGoodFormType, UpdateGoodsFormType } from '@/types/goods/good';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -16,7 +10,7 @@ const QUERY_GOODS = 'goods';
 export const useGetAllFirms = () =>
   useQuery({
     queryKey: [QUERY_FIRM],
-    queryFn: getAllFirms,
+    queryFn: goodsService.getAllFirms,
     staleTime: Infinity,
   });
 
@@ -24,7 +18,7 @@ export const usePostNewGoods = () => {
   const client = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: NewGoodFormType) => postNewGoods(data),
+    mutationFn: (data: NewGoodFormType) => goodsService.putNewGoods(data),
     onSuccess: () => {
       client.invalidateQueries({
         queryKey: [QUERY_FIRM],
@@ -47,7 +41,8 @@ export const useUpdateGoods = (category: string) => {
   const client = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: Partial<UpdateGoodsFormType>) => patchGoods(data),
+    mutationFn: (data: Partial<UpdateGoodsFormType>) =>
+      goodsService.patchGoods(data),
     onSuccess: () => {
       client.invalidateQueries({
         queryKey: [QUERY_FIRM],
@@ -69,14 +64,15 @@ export const useUpdateGoods = (category: string) => {
 export const useGetAllGoods = (category: string) =>
   useQuery({
     queryKey: [QUERY_GOODS, category],
-    queryFn: () => getAllGoods({ searchParams: `category=${category}` }),
+    queryFn: () =>
+      goodsService.getAllGoods({ searchParams: `category=${category}` }),
   });
 
 export const useDeleteGoods = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => deleteGoods(id),
+    mutationFn: (id: string) => goodsService.deleteGoods(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: [QUERY_GOODS] }),
     onError: (error) => error,
   });

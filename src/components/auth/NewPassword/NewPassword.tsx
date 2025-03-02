@@ -13,7 +13,7 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { useSearchParams } from 'next/navigation';
 
-import LoadingButton from '@/components/common/LoadingButton';
+import LoadingButton from '@/components/common/buttons/LoadingButton';
 
 import { useNewPassword } from '@/hooks/api/useAuth';
 import { useShowFetchResultMessage } from '@/hooks/useShowUpdateResultMessage';

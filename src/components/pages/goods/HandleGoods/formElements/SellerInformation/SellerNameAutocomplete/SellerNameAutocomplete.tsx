@@ -23,6 +23,7 @@ const SellerNameAutocomplete = ({
     control,
     formState: { errors },
     resetField,
+    setValue,
   } = useFormContext<FormType>();
 
   useEffect(() => {
@@ -61,7 +62,7 @@ const SellerNameAutocomplete = ({
               freeSolo
               onChange={(_, newData) => {
                 if (typeof newData !== 'string') {
-                  field.onChange(newData);
+                  setValue('seller', newData);
                 }
               }}
               onInputChange={(event, newInputValue) => {

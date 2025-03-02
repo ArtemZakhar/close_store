@@ -1,5 +1,6 @@
 import Goods from '@/models/goods/Goods';
 import { GoodsSchemaType, GoodsType } from '@/types/goods/good';
+import { GoodsInCartType } from '@/types/localStorage/goods';
 
 export const createNewGoods = async (goods: Omit<GoodsSchemaType, '_id'>) => {
   const newGoods = await Goods.create(goods);
@@ -9,13 +10,27 @@ export const createNewGoods = async (goods: Omit<GoodsSchemaType, '_id'>) => {
   return newGoods;
 };
 
-export const getGoodsByParams = async (params: Partial<GoodsType>) => {
-  const good = await Goods.find(params)
+export const getGoodsByParams = async (
+  params: Partial<GoodsType> | Partial<GoodsInCartType>[],
+) => {
+  const query = Array.isArray(params)
+    ? {
+        $or: params.map((param) => ({
+          _id: param._id,
+          [`goodsDetails.${param.goodsDetailsKey}.color`]: param.color,
+          [`goodsDetails.${param.goodsDetailsKey}.countAndSizes`]: {
+            $elemMatch: { size: param.size },
+          },
+        })),
+      }
+    : params;
+
+  const goods = await Goods.find(query)
     .populate('seller')
     .populate('firm')
     .populate('category');
 
-  return good;
+  return goods;
 };
 
 export const findOneGoodsByParams = async (

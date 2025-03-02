@@ -1,31 +1,28 @@
 import { getSession } from '@/helpers/getSession';
-import { UserRole } from '@/types/users/userType';
 
 import { Suspense } from 'react';
 
 import ContainerWithPadding from '@/components/common/ContainerWithPadding';
+import ErrorBoundary from '@/components/common/ErrorBoundary';
 import Loading from '@/components/common/Loading';
-import CategoryGoodsList from '@/components/pages/goods/CategoryGoodsList';
+import CartPage from '@/components/pages/CartPage';
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'auto';
 export const dynamicParams = true;
 
-export default async function CategoryPage({
-  params,
-}: {
-  params: { [key: string]: string };
-}) {
-  const { category } = params;
+export default async function Users() {
   const session = await getSession();
 
   if (!session) return;
 
-  const canModify = session.role === UserRole.owner;
+  const { role, id, owner } = session;
 
   return (
     <ContainerWithPadding>
       <Suspense fallback={<Loading />}>
-        <CategoryGoodsList canModify={canModify} category={category} />
+        <ErrorBoundary>
+          <CartPage />
+        </ErrorBoundary>
       </Suspense>
     </ContainerWithPadding>
   );

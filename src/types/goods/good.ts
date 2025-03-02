@@ -80,4 +80,14 @@ export type PostNewGoodType = {
   goods: Omit<NewGoodFormType, '_id'>;
 };
 
+export type CartTableGoodsType = {
+  id: string;
+  goods: GoodsType;
+  count: number;
+  maxCount: number;
+  key: string;
+  color: string;
+  size: string;
+};
+
 export type SeasonType = 'other' | 'summer' | 'winter';

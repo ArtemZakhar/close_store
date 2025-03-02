@@ -16,8 +16,8 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import { useRouter } from 'next/navigation';
 
-import BackButton from '@/components/common/BackButton';
-import LoadingButton from '@/components/common/LoadingButton';
+import BackButton from '@/components/common/buttons/BackButton';
+import LoadingButton from '@/components/common/buttons/LoadingButton';
 
 import { usePostNewGoods, useUpdateGoods } from '@/hooks/api/useGoods';
 import { useGetAllCountries } from '@/hooks/api/useLocation';

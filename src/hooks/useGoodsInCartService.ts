@@ -11,7 +11,8 @@ const useGoodsInCartService = () => {
   const [goodsInCart, setGoodsInCart] = useState<GoodsInCartType[]>([]);
 
   const loadGoods = () => {
-    const goods = localStorageService.get<GoodsInCartType[]>(goodsInCartLabel);
+    const goods =
+      localStorageService.getParsedData<GoodsInCartType[]>(goodsInCartLabel);
 
     setGoodsInCart(goods ? goods : []);
   };
@@ -25,8 +26,6 @@ const useGoodsInCartService = () => {
   }, []);
 
   const saveInCart = (goods: GoodsInCartType) => {
-    console.log(goods, goodsInCart);
-
     const newStore = [...goodsInCart, goods];
 
     localStorageService.set(goodsInCartLabel, newStore);
@@ -53,7 +52,12 @@ const useGoodsInCartService = () => {
     window.dispatchEvent(new Event(goodsLocalStorageEvent));
   };
 
-  return { goodsInCart, saveInCart, removeFromCart, clearCart };
+  return {
+    goodsInCart,
+    saveInCart,
+    removeFromCart,
+    clearCart,
+  };
 };
 
 export default useGoodsInCartService;

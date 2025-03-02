@@ -1,8 +1,6 @@
-const get = <T>(key: string): T | null => {
-  if (typeof window === 'undefined') return null;
-
+const getParsedData = <T>(key: string): T | null => {
   try {
-    const item = localStorage.getItem(key);
+    const item = get(key);
 
     return item ? JSON.parse(item) : null;
   } catch (error) {
@@ -10,6 +8,12 @@ const get = <T>(key: string): T | null => {
 
     return null;
   }
+};
+
+const get = (key: string) => {
+  if (typeof window === 'undefined') return null;
+
+  return localStorage.getItem(key);
 };
 
 const set = (key: string, value: any): void => {
@@ -32,4 +36,4 @@ const remove = (key: string) => {
   }
 };
 
-export default { get, set, remove };
+export default { getParsedData, set, remove, get };

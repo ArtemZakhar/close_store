@@ -8,4 +8,5 @@ export const routePaths = {
     new: 'goods/new',
     edit: 'goods/edit',
   },
+  cart: 'cart',
 };

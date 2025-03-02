@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 
 import { useForm } from 'react-hook-form';
 
-import LoadingButton from '@/components/common/LoadingButton';
+import LoadingButton from '@/components/common/buttons/LoadingButton';
 
 import { styles } from './AddNewCategoryModal.styles';
 import CategoryLabel from './formElements/CategoryLabel';
