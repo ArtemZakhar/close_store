@@ -12,8 +12,8 @@ import Typography from '@mui/material/Typography';
 
 import { useState } from 'react';
 
-import ButtonStyled from '../ButtonStyled';
 import NewUserForm from '../NewUserForm';
+import ButtonStyled from '../buttons/ButtonStyled';
 import { styles } from './InviteUser.styles';
 
 const InviteUser = ({ type }: { type: UserRole }) => {

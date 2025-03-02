@@ -18,23 +18,20 @@ export const useUpdateFormState = ({
   useEffect(() => {
     if (selectedGoods) {
       if (isEditing) {
-        setValue('category', selectedGoods.category);
         setValue('category.lastId', selectedGoods.category.lastId - 1);
-        setValue('goods.buyDate', selectedGoods.buyDate);
-        setValue('goods.arrivalDate', selectedGoods.arrivalDate);
         setValue('goods.description', selectedGoods.description);
-        setValue('subCategory', selectedGoods.subCategory);
         setValue('goods.model', selectedGoods.model);
         setValue('goods.notes', selectedGoods.notes);
         setValue('goods.stored', selectedGoods.stored);
       } else {
-        setValue('category', selectedGoods.category);
         setValue('category.lastId', selectedGoods.category.lastId);
-        setValue('goods.buyDate', selectedGoods.buyDate);
-        setValue('goods.arrivalDate', selectedGoods.arrivalDate);
-        setValue('subCategory', selectedGoods.subCategory);
         setValue('goods.model', `${selectedGoods.model} (копія)`);
       }
+      setValue('subCategory', selectedGoods.subCategory);
+      setValue('goods.arrivalDate', selectedGoods.arrivalDate);
+      setValue('goods.buyDate', selectedGoods.buyDate);
+      setValue('category', selectedGoods.category);
+      setValue('goods.sizeType', selectedGoods.sizeType);
     }
 
     return () => reset();

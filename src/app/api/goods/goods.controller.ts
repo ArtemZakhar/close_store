@@ -82,7 +82,7 @@ export const httpGetGoods = async (request: NextRequest) => {
   }
 };
 
-export const httpPostNewGoods = async (request: NextRequest) => {
+export const httpPutNewGoods = async (request: NextRequest) => {
   try {
     const session = await getSession();
     await connectToDatabase();
@@ -439,6 +439,34 @@ export const httpUpdateGoods = async (request: NextRequest) => {
     return NextResponse.json({ status: responseMessages.codes[200] });
   } catch (error) {
     console.error('Error during Updating goods:', error);
+    return NextResponse.json(
+      { error: responseMessages.server.error },
+      { status: responseMessages.codes[500] },
+    );
+  }
+};
+
+export const httpGetGoodsForCart = async (request: NextRequest) => {
+  try {
+    const session = await getSession();
+
+    if (!session) {
+      return NextResponse.json(
+        { error: true, message: responseMessages.user.forbidden },
+        {
+          status: responseMessages.codes[401],
+        },
+      );
+    }
+
+    await connectToDatabase();
+    const data = await request.json();
+
+    const goods = await getGoodsByParams(data);
+
+    return NextResponse.json(goods, { status: responseMessages.codes[200] });
+  } catch (error) {
+    console.error('Error during FETCHING goods for cart:', error);
     return NextResponse.json(
       { error: responseMessages.server.error },
       { status: responseMessages.codes[500] },

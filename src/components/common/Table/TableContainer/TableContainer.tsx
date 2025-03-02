@@ -27,6 +27,7 @@ const TableContainerStyled = ({
   canInviteUser,
   type,
   pagination,
+  footerData,
 }: {
   children: React.ReactNode;
   headerData: React.ReactNode[];
@@ -34,6 +35,7 @@ const TableContainerStyled = ({
   canInviteUser?: boolean;
   type?: UserRole;
   pagination?: Pagination;
+  footerData?: React.ReactNode | undefined;
 }) => {
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -95,6 +97,8 @@ const TableContainerStyled = ({
           sx={styles.pagination}
         />
       )}
+
+      {footerData}
     </TableContainer>
   );
 };

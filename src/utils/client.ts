@@ -1,4 +1,4 @@
-type RequestMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE';
+type RequestMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT';
 
 export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -66,6 +66,9 @@ export const client = {
     data?: any;
     tags?: string[];
   }) => request<T>({ url, method: 'POST', data, tags }),
+
+  put: <T>({ url, data, tags }: { url: string; data?: any; tags?: string[] }) =>
+    request<T>({ url, method: 'PUT', data, tags }),
 
   patch: <T>({
     url,

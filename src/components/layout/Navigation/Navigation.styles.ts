@@ -26,4 +26,27 @@ export const styles = {
     fontSize: '1rem',
     lineHeight: '1.5rem',
   },
+  notificationButton: {
+    p: 0,
+    minWidth: '2rem',
+    minHeight: '2rem',
+    maxWidth: '2rem',
+    maxHeight: '2rem',
+    fontSize: '1.95rem',
+    position: 'relative',
+  },
+  icon: {
+    color: 'primary.main',
+    padding: '0.25rem',
+    boxSizing: 'content-box',
+  },
+
+  goodsInCart: {
+    '& .MuiBadge-badge': {
+      marginTop: '0.17rem',
+      color: 'white',
+      border: '2px solid white',
+      fontSize: '0.7rem',
+    },
+  },
 };

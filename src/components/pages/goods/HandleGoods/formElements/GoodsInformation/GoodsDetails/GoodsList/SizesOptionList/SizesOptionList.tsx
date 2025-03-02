@@ -1,6 +1,3 @@
-import ControlPointIcon from '@mui/icons-material/ControlPoint';
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
 import FormGroup from '@mui/material/FormGroup';
 import TextField from '@mui/material/TextField';
@@ -12,6 +9,7 @@ import {
   useFormContext,
 } from 'react-hook-form';
 
+import ChangeQuantityButton from '@/components/common/buttons/ChangeQuantityButton';
 import { FormType } from '@/components/pages/goods/HandleGoods/HandleGoods';
 
 import { validations } from '../../../../formValidations';
@@ -107,15 +105,17 @@ const SizesOptionList = ({
               return (
                 <Box key={size} sx={styles.itemWrapper}>
                   <Box sx={styles.sizeWrapper}>
-                    <Button onClick={() => decreaseCount(sizeIndex)}>
-                      <RemoveCircleOutlineIcon fontSize="small" />
-                    </Button>
+                    <ChangeQuantityButton
+                      type="decrease"
+                      callBackFunction={() => decreaseCount(sizeIndex)}
+                    />
 
                     <Typography align="center">{size}</Typography>
 
-                    <Button onClick={() => increaseCount(sizeIndex)}>
-                      <ControlPointIcon fontSize="small" />
-                    </Button>
+                    <ChangeQuantityButton
+                      type="increase"
+                      callBackFunction={() => increaseCount(sizeIndex)}
+                    />
                   </Box>
 
                   <TextField

@@ -9,18 +9,30 @@ import HandleCartButton from './HandleCartButton';
 const GoodsDetailsItem = ({
   goods,
   goodsInCart,
+  id,
   addGoodsInCart,
   removeGoodsFromCart,
 }: {
   goods: GoodsDetailsItemType;
   goodsInCart: GoodsInCartType[] | undefined;
-  addGoodsInCart: ({ color, size }: { color: string; size: string }) => void;
-  removeGoodsFromCart: ({
+  id: string;
+  addGoodsInCart: ({
     color,
     size,
+    goodsDetailsKey,
   }: {
     color: string;
     size: string;
+    goodsDetailsKey: string;
+  }) => void;
+  removeGoodsFromCart: ({
+    color,
+    size,
+    goodsDetailsKey,
+  }: {
+    color: string;
+    size: string;
+    goodsDetailsKey: string;
   }) => void;
 }) => {
   const { color, countAndSizes } = goods;
@@ -66,6 +78,7 @@ const GoodsDetailsItem = ({
                 goodsInCart={goodsInCart}
                 removeGoodsFromCart={removeGoodsFromCart}
                 addGoodsInCart={addGoodsInCart}
+                id={id}
                 color={color}
                 size={size}
               />

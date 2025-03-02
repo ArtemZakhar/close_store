@@ -10,7 +10,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useCreateNewUser } from '@/hooks/api/useUsers';
 import { useShowFetchResultMessage } from '@/hooks/useShowUpdateResultMessage';
 
-import LoadingButton from '../LoadingButton';
+import LoadingButton from '../buttons/LoadingButton';
 import { styles } from './NewUserForm.styles';
 import { validation } from './formValidation';
 

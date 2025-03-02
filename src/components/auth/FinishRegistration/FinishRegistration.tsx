@@ -15,7 +15,7 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 
-import LoadingButton from '@/components/common/LoadingButton';
+import LoadingButton from '@/components/common/buttons/LoadingButton';
 
 import { useFinishRegistration } from '@/hooks/api/useAuth';
 import { useShowFetchResultMessage } from '@/hooks/useShowUpdateResultMessage';

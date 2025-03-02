@@ -6,7 +6,7 @@ import Fade from '@mui/material/Fade';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 
-import LoadingButton from '../LoadingButton';
+import LoadingButton from '../buttons/LoadingButton';
 import { styles } from './ConfirmationModal.styles';
 
 const ConfirmationModal = ({

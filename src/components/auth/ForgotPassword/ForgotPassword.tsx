@@ -10,7 +10,7 @@ import { Controller, useForm } from 'react-hook-form';
 
 import Link from 'next/link';
 
-import LoadingButton from '@/components/common/LoadingButton';
+import LoadingButton from '@/components/common/buttons/LoadingButton';
 
 import { useForgotPassword } from '@/hooks/api/useAuth';
 import { useShowFetchResultMessage } from '@/hooks/useShowUpdateResultMessage';
