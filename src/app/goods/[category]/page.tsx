@@ -1,4 +1,3 @@
-import { getAllGoods } from '@/app/api/goodsService';
 import { getSession } from '@/helpers/getSession';
 import { UserRole } from '@/types/users/userType';
 
