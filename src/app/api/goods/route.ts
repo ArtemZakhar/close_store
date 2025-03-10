@@ -1,17 +1,14 @@
 import {
-  httpDeleteGoods,
   httpGetGoods,
   httpGetGoodsForCart,
+  httpPatchSellGoods,
   httpPutNewGoods,
-  httpUpdateGoods,
 } from './goods.controller';
 
 export const GET = httpGetGoods;
 
 export const PUT = httpPutNewGoods;
 
-export const PATCH = httpUpdateGoods;
-
-export const DELETE = httpDeleteGoods;
-
 export const POST = httpGetGoodsForCart;
+
+export const PATCH = httpPatchSellGoods;

@@ -44,5 +44,6 @@ export const responseMessages = {
     firm: {
       noData: 'Missing name or country of goods firm.',
     },
+    delete: 'Успішно видалено',
   },
 };

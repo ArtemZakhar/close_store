@@ -49,8 +49,6 @@ const GoodsList = ({ sizeType }: { sizeType: SizesAndCountDataType }) => {
     setValue('goods.goodsDetails', newState);
   };
 
-  // console.log(goodsList);
-
   return (
     <>
       {goodsList &&

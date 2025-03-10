@@ -7,6 +7,7 @@ import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
+import { FormEvent } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import LoadingButton from '@/components/common/buttons/LoadingButton';
@@ -32,6 +33,12 @@ const AddNewSubcategoryModal = ({
     confirmFunction(data.subCategory);
   };
 
+  const extendedFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    form.handleSubmit(onSubmit)();
+  };
+
   return (
     <Modal open={openModal} onClose={handleClose} disableRestoreFocus>
       <Fade in={openModal} timeout={theme.transitions.duration.standard}>
@@ -54,7 +61,7 @@ const AddNewSubcategoryModal = ({
             Створити нову підкатегорію
           </Typography>
 
-          <Box onSubmit={form.handleSubmit(onSubmit)} component="form">
+          <Box onSubmit={extendedFormSubmit} component="form">
             <Box sx={styles.inputWrapper}>
               <Typography marginBottom="1rem" variant="h4">
                 Назва

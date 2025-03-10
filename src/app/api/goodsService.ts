@@ -1,5 +1,6 @@
 import { FirmType } from '@/types/goods/firm';
 import {
+  CartTableGoodsType,
   GoodsType,
   NewGoodFormType,
   UpdateGoodsFormType,
@@ -16,8 +17,8 @@ const getAllFirms = async () =>
 const putNewGoods = async (data: NewGoodFormType) =>
   await client.put({ url: apiCalls.goods, data, tags: ['goods-category'] });
 
-const patchGoods = async (data: Partial<UpdateGoodsFormType>) =>
-  await client.patch({ url: apiCalls.goods, data });
+const updateGoods = async (data: Partial<UpdateGoodsFormType>) =>
+  await client.patch({ url: `${apiCalls.goods}/${data._id}`, data });
 
 const getAllGoods = async ({
   searchParams,
@@ -42,7 +43,7 @@ const getAllGoods = async ({
 
 const deleteGoods = async (id: string) => {
   try {
-    client.delete({ url: `${apiCalls.goods}/${id}` });
+    return await client.delete({ url: `${apiCalls.goods}/${id}` });
   } catch (error) {
     console.error('Error during GET goods:', error);
     throw new Error('Error during GET goods');
@@ -60,11 +61,21 @@ const getDataForGoodsFromCart = async (
   }
 };
 
+const sellGoods = async (data: CartTableGoodsType[]) => {
+  try {
+    return await client.patch({ url: apiCalls.goods, data });
+  } catch (error) {
+    console.error('Error during SELLING goods:', error);
+    throw new Error('Error during SELLING goods');
+  }
+};
+
 export default {
   deleteGoods,
   getAllGoods,
-  patchGoods,
+  updateGoods,
   putNewGoods,
   getAllFirms,
   getDataForGoodsFromCart,
+  sellGoods,
 };

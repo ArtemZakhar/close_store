@@ -11,6 +11,7 @@ type BaseGoodType = {
   sizeType: 'clothes' | 'jackets' | 'jeans';
   goodsDetails: GoodsDetails;
   stored?: string;
+  sellerCode: string;
   notes?: string;
   buyDate?: string;
   arrivalDate?: string;
@@ -61,6 +62,7 @@ export type GoodsDetails = {
 };
 
 export type GoodsDetailsItemType = {
+  _id?: string;
   color: string;
   incomePriceUSD?: number;
   incomePriceGRN?: number;
@@ -81,13 +83,31 @@ export type PostNewGoodType = {
 };
 
 export type CartTableGoodsType = {
+  _id: string;
   id: string;
   goods: GoodsType;
   count: number;
   maxCount: number;
+  itemId: string;
   key: string;
   color: string;
   size: string;
+};
+
+export type SoldGoodsSchema = {
+  code: string;
+  model: string;
+  color: string;
+  incomePriceUSD?: number;
+  incomePriceGRN?: number;
+  outcomePrice?: number;
+  size: string;
+  sellerCode: string;
+  firm: string;
+  seller: ObjectId;
+  category: ObjectId;
+  owner: ObjectId;
+  count: number;
 };
 
 export type SeasonType = 'other' | 'summer' | 'winter';

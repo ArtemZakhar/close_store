@@ -1,8 +1,14 @@
 import goodsService from '@/app/api/goodsService';
-import { NewGoodFormType, UpdateGoodsFormType } from '@/types/goods/good';
+import {
+  CartTableGoodsType,
+  NewGoodFormType,
+  UpdateGoodsFormType,
+} from '@/types/goods/good';
+import { UserRole } from '@/types/users/userType';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { QUERY_CITIES, QUERY_COUNTRIES } from './useLocation';
+import { QUERY_SELLERS } from './useSellers';
 
 const QUERY_FIRM = 'firms';
 const QUERY_GOODS = 'goods';
@@ -42,7 +48,7 @@ export const useUpdateGoods = (category: string) => {
 
   return useMutation({
     mutationFn: (data: Partial<UpdateGoodsFormType>) =>
-      goodsService.patchGoods(data),
+      goodsService.updateGoods(data),
     onSuccess: () => {
       client.invalidateQueries({
         queryKey: [QUERY_FIRM],
@@ -56,16 +62,29 @@ export const useUpdateGoods = (category: string) => {
       client.invalidateQueries({
         queryKey: [QUERY_GOODS, category],
       });
+      client.invalidateQueries({
+        queryKey: [QUERY_SELLERS],
+      });
     },
     onError: (error) => error,
   });
 };
 
-export const useGetAllGoods = (category: string) =>
+export const useGetAllGoods = ({
+  category,
+  owner,
+  role,
+}: {
+  category: string;
+  owner: string;
+  role: UserRole.seller | UserRole.owner;
+}) =>
   useQuery({
     queryKey: [QUERY_GOODS, category],
     queryFn: () =>
-      goodsService.getAllGoods({ searchParams: `category=${category}` }),
+      goodsService.getAllGoods({
+        searchParams: `category=${category}&owner=${owner}&role=${role}`,
+      }),
   });
 
 export const useDeleteGoods = () => {
@@ -73,7 +92,21 @@ export const useDeleteGoods = () => {
 
   return useMutation({
     mutationFn: (id: string) => goodsService.deleteGoods(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: [QUERY_GOODS] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_GOODS] });
+    },
+    onError: (error) => error,
+  });
+};
+
+export const useSellGoods = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: CartTableGoodsType[]) => goodsService.sellGoods(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_GOODS] });
+    },
     onError: (error) => error,
   });
 };

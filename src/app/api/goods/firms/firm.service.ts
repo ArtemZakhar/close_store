@@ -56,7 +56,6 @@ export const updateFirm = async ({
       newDateToUpdate.countryOfOrigin = countryOfOrigin._id;
     }
   }
-  console.log(newDateToUpdate);
 
   return await Firm.findOneAndUpdate(searchParam, newDateToUpdate).exec();
 };

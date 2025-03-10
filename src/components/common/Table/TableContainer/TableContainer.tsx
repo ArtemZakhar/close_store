@@ -28,6 +28,7 @@ const TableContainerStyled = ({
   type,
   pagination,
   footerData,
+  minHeight,
 }: {
   children: React.ReactNode;
   headerData: React.ReactNode[];
@@ -36,6 +37,7 @@ const TableContainerStyled = ({
   type?: UserRole;
   pagination?: Pagination;
   footerData?: React.ReactNode | undefined;
+  minHeight?: string;
 }) => {
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -65,6 +67,7 @@ const TableContainerStyled = ({
       sx={{
         ...styles.tableContainer,
         border: border ? '1px solid #E1E1E1' : '',
+        minHeight: minHeight ? minHeight : '40vh',
       }}
     >
       {canInviteUser && type && (

@@ -23,6 +23,7 @@ export const useUpdateFormState = ({
         setValue('goods.model', selectedGoods.model);
         setValue('goods.notes', selectedGoods.notes);
         setValue('goods.stored', selectedGoods.stored);
+        setValue('goods.sellerCode', selectedGoods.sellerCode);
       } else {
         setValue('category.lastId', selectedGoods.category.lastId);
         setValue('goods.model', `${selectedGoods.model} (копія)`);

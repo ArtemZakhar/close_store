@@ -45,8 +45,6 @@ const ColorAutocomplete = ({ id }: { id: string }) => {
       return;
     }
 
-    console.log(prevState[value.name], prevState);
-
     const newState: GoodsDetails = {};
 
     for (const [key, oldValue] of Object.entries(prevState)) {

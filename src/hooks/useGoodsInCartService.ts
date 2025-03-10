@@ -33,12 +33,31 @@ const useGoodsInCartService = () => {
     window.dispatchEvent(new Event(goodsLocalStorageEvent));
   };
 
-  const removeFromCart = (goods: GoodsInCartType) => {
+  const removeFromCart = (goods: Omit<GoodsInCartType, 'color'>) => {
     const newStore = goodsInCart.filter((item) => {
       return !(
         item._id === goods._id &&
         item.size === goods.size &&
-        item.color === goods.color
+        item.itemId === item.itemId
+      );
+    });
+
+    localStorageService.set(goodsInCartLabel, newStore);
+    setGoodsInCart(newStore);
+    window.dispatchEvent(new Event(goodsLocalStorageEvent));
+  };
+
+  const removeManyFromCart = (
+    goodsToRemove: Omit<GoodsInCartType, 'color'>[],
+  ) => {
+    if (!goodsToRemove.length) return;
+
+    const newStore = goodsInCart.filter((item) => {
+      return !goodsToRemove.find(
+        (itemToRemove) =>
+          item._id === itemToRemove._id &&
+          item.size === itemToRemove.size &&
+          item.itemId === itemToRemove.itemId,
       );
     });
 
@@ -57,6 +76,7 @@ const useGoodsInCartService = () => {
     saveInCart,
     removeFromCart,
     clearCart,
+    removeManyFromCart,
   };
 };
 

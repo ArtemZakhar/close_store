@@ -1,19 +1,24 @@
 import { getSession } from '@/helpers/getSession';
 import { connectToDatabase } from '@/lib/mongoDb';
 import {
+  CartTableGoodsType,
   GoodsDetails,
   GoodsDetailsItemType,
+  GoodsQuantityAndCount,
   GoodsSchemaType,
   NewGoodFormType,
+  SoldGoodsSchema,
   UpdateGoodsFormType,
 } from '@/types/goods/good';
 import { SellerType } from '@/types/goods/seller';
+import { GoodsInCartType } from '@/types/localStorage/goods';
 import { UserRole } from '@/types/users/userType';
 
 import { revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { ObjectId } from 'mongodb';
+import mongoose from 'mongoose';
 
 import { findCityAndUpdate } from '../cities/cities.serivce';
 import { responseMessages } from '../constants/responseMessages';
@@ -25,11 +30,14 @@ import {
   deleteGoodsById,
   findOneGoodsByParams,
   getGoodsByParams,
+  getPopulatedGoods,
   updateGoods,
+  updateMany,
 } from './goods.service';
 import { handleLocationUpdate } from './helpers/handleLocation';
 import { handleSearchParams } from './helpers/handleSearchParams';
 import { handleSellerData, updateSeller } from './sellers/seller.service';
+import { sellGoods } from './sold/soldGoods.service';
 
 export const httpGetGoods = async (request: NextRequest) => {
   try {
@@ -37,14 +45,12 @@ export const httpGetGoods = async (request: NextRequest) => {
 
     const queryParams = newUrl.searchParams;
 
-    let id = queryParams.get('id');
     let owner = queryParams.get('owner') || undefined;
     let role = queryParams.get('role');
 
-    if (!id || !role) {
+    if (!role || !owner) {
       const session = await getSession();
-
-      if (!session) {
+      if (!session || !session.owner) {
         return NextResponse.json(
           { error: true, message: responseMessages.user.forbidden },
           {
@@ -53,23 +59,22 @@ export const httpGetGoods = async (request: NextRequest) => {
         );
       }
 
-      id = session.id;
       role = session.role;
-      owner = session.owner || undefined;
+      owner = session.owner;
     }
 
     await connectToDatabase();
 
     const searchParams = await handleSearchParams({ queryParams });
 
-    let goods = [];
+    let goods: GoodsSchemaType[] = [];
 
     if (role === UserRole.owner) {
-      goods = await getGoodsByParams({ ...searchParams, owner: id });
+      goods = await getPopulatedGoods({ ...searchParams, owner: owner });
     }
 
     if (role === UserRole.seller) {
-      goods = await getGoodsByParams({ ...searchParams, owner });
+      goods = await getPopulatedGoods({ ...searchParams, owner });
     }
 
     return NextResponse.json(goods, { status: responseMessages.codes[200] });
@@ -112,6 +117,7 @@ export const httpPutNewGoods = async (request: NextRequest) => {
       description,
       stored,
       notes,
+      sellerCode,
     } = body;
 
     if (!seller.email && !seller.phone) {
@@ -157,6 +163,7 @@ export const httpPutNewGoods = async (request: NextRequest) => {
 
     const existingGoods = await findOneGoodsByParams({
       seller: sellerId,
+      owner: new ObjectId(session.id),
       model,
     });
 
@@ -223,6 +230,7 @@ export const httpPutNewGoods = async (request: NextRequest) => {
       buyDate: buyDate ?? '',
       sizeType: sizeType,
       arrivalDate: arrivalDate ?? '',
+      sellerCode: sellerCode ?? '',
     });
 
     await newGoods.save();
@@ -244,8 +252,10 @@ export const httpDeleteGoods = async (
   params: { params: { id: string } },
 ) => {
   const session = await getSession();
+  const isAllowedToDelete =
+    session?.role === UserRole.seller || session?.role === UserRole.owner;
 
-  if (!session) {
+  if (!session || !isAllowedToDelete) {
     return NextResponse.json(
       { error: true, message: responseMessages.user.forbidden },
       {
@@ -259,9 +269,12 @@ export const httpDeleteGoods = async (
 
     await deleteGoodsById(params.params.id);
 
-    return NextResponse.json({
-      status: responseMessages.codes[200],
-    });
+    return NextResponse.json(
+      { message: responseMessages.goods.delete },
+      {
+        status: responseMessages.codes[200],
+      },
+    );
   } catch (error) {
     console.error('Error during DELETE goods:', error);
     return NextResponse.json(
@@ -271,7 +284,10 @@ export const httpDeleteGoods = async (
   }
 };
 
-export const httpUpdateGoods = async (request: NextRequest) => {
+export const httpUpdateGoods = async (
+  request: NextRequest,
+  params: { params: { id: string } },
+) => {
   try {
     const session = await getSession();
     if (!session) {
@@ -299,9 +315,10 @@ export const httpUpdateGoods = async (request: NextRequest) => {
       arrivalDate,
       notes,
       stored,
+      sellerCode,
     } = body;
 
-    if (!_id) {
+    if (!_id || _id !== params.params.id) {
       return NextResponse.json(
         { error: true, message: responseMessages.goods.exist },
         {
@@ -351,6 +368,10 @@ export const httpUpdateGoods = async (request: NextRequest) => {
 
     if (subCategory) {
       goodsToUpdate['subCategory'] = subCategory;
+    }
+
+    if (sellerCode) {
+      goodsToUpdate['sellerCode'] = sellerCode;
     }
 
     if (firm) {
@@ -411,7 +432,23 @@ export const httpUpdateGoods = async (request: NextRequest) => {
     }
 
     if (goodsDetails) {
-      goodsToUpdate['goodsDetails'] = goodsDetails;
+      const normalizedGoodsDetails = Object.entries(goodsDetails).reduce(
+        (acc, [key, value]) => {
+          const newValue: GoodsDetailsItemType = {
+            color: value.color,
+            incomePriceGRN: value.incomePriceGRN,
+            incomePriceUSD: value.incomePriceUSD,
+            outcomePrice: value.outcomePrice,
+            countAndSizes: value.countAndSizes.filter((item) => item.count > 0),
+          };
+          acc[key] = newValue;
+
+          return acc;
+        },
+        {} as GoodsDetails,
+      );
+
+      goodsToUpdate['goodsDetails'] = normalizedGoodsDetails;
     }
 
     if (season) {
@@ -434,7 +471,11 @@ export const httpUpdateGoods = async (request: NextRequest) => {
       goodsToUpdate['stored'] = stored;
     }
 
-    await updateGoods(_id, goodsToUpdate);
+    await updateGoods(
+      _id,
+      session.owner ? session.owner : session.id,
+      goodsToUpdate,
+    );
 
     return NextResponse.json({ status: responseMessages.codes[200] });
   } catch (error) {
@@ -460,13 +501,142 @@ export const httpGetGoodsForCart = async (request: NextRequest) => {
     }
 
     await connectToDatabase();
-    const data = await request.json();
+    const data: GoodsInCartType[] = await request.json();
 
-    const goods = await getGoodsByParams(data);
+    const searchParams = {
+      $or: data.map((param) => ({
+        _id: param._id,
+        [`goodsDetails.${param.goodsDetailsKey}.color`]: param.color,
+        [`goodsDetails.${param.goodsDetailsKey}.countAndSizes`]: {
+          $elemMatch: { size: param.size },
+        },
+      })),
+    };
+
+    const goods = await getPopulatedGoods(searchParams);
 
     return NextResponse.json(goods, { status: responseMessages.codes[200] });
   } catch (error) {
     console.error('Error during FETCHING goods for cart:', error);
+    return NextResponse.json(
+      { error: responseMessages.server.error },
+      { status: responseMessages.codes[500] },
+    );
+  }
+};
+
+export const httpPatchSellGoods = async (request: NextRequest) => {
+  await connectToDatabase();
+
+  const mongooseSession = await mongoose.startSession();
+  mongooseSession.startTransaction();
+
+  try {
+    const session = await getSession();
+
+    if (!session) {
+      return NextResponse.json(
+        { error: true, message: responseMessages.user.forbidden },
+        {
+          status: responseMessages.codes[401],
+        },
+      );
+    }
+
+    const data: CartTableGoodsType[] = await request.json();
+
+    const searchParams = {
+      $or: data.map(({ goods, key, size, color }) => ({
+        _id: goods._id,
+        owner: session.owner ? session.owner : session.id,
+        [`goodsDetails.${key}.color`]: color,
+        [`goodsDetails.${key}.countAndSizes`]: {
+          $elemMatch: { size },
+        },
+      })),
+    };
+
+    const existingGoods: GoodsSchemaType[] =
+      await getGoodsByParams(searchParams).lean();
+
+    const dataForSellingGoods: SoldGoodsSchema[] = data.map(
+      ({ goods, key, size, count }) => {
+        const details = goods.goodsDetails[key];
+        return {
+          code: goods.code,
+          model: goods.model,
+          sellerCode: goods.sellerCode,
+          firm: goods.firm.name,
+          category: new ObjectId(goods.category._id),
+          owner: new ObjectId(goods.owner),
+          seller: new ObjectId(goods.seller._id),
+          color: details.color,
+          incomePriceGRN: details.incomePriceGRN,
+          incomePriceUSD: details.incomePriceUSD,
+          outcomePrice: details.outcomePrice,
+          size,
+          count,
+        };
+      },
+    );
+
+    const goodsToUpdate = existingGoods.reduce(
+      (acc, elem) => {
+        const changes = data.filter((item) => item._id === elem._id.toString());
+        if (changes.length) {
+          const newGoodsDetails = elem.goodsDetails;
+
+          for (const change of changes) {
+            for (const [key, value] of Object.entries(elem.goodsDetails)) {
+              if (newGoodsDetails[key]._id?.toString() !== change.itemId)
+                continue;
+
+              const newCountAndSizes = value.countAndSizes.reduce((acc, i) => {
+                if (i.size === change.size) {
+                  const newValue = i.count - change.count;
+
+                  if (newValue === 0) {
+                    return acc;
+                  }
+
+                  acc.push({ count: newValue, size: i.size });
+                } else {
+                  acc.push(i);
+                }
+                return acc;
+              }, [] as GoodsQuantityAndCount[]);
+
+              newGoodsDetails[key] = {
+                ...newGoodsDetails[key],
+                countAndSizes: newCountAndSizes,
+              };
+            }
+          }
+
+          acc.push({
+            _id: elem._id,
+            owner: elem.owner,
+            goodsDetails: newGoodsDetails,
+          });
+        }
+
+        return acc;
+      },
+      [] as Pick<GoodsSchemaType, '_id' | 'owner' | 'goodsDetails'>[],
+    );
+
+    await sellGoods(dataForSellingGoods, mongooseSession);
+
+    await updateMany(goodsToUpdate, mongooseSession);
+
+    await mongooseSession.commitTransaction();
+    await mongooseSession.endSession();
+
+    return NextResponse.json({ status: responseMessages.codes[200] });
+  } catch (error) {
+    await mongooseSession.abortTransaction();
+    await mongooseSession.endSession();
+    console.error('Error during SELLING goods:', error);
     return NextResponse.json(
       { error: responseMessages.server.error },
       { status: responseMessages.codes[500] },

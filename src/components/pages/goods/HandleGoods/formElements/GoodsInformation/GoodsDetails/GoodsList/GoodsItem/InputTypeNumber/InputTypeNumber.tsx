@@ -53,7 +53,10 @@ const InputTypeNumber = ({
             }}
             onChange={(event) =>
               field.onChange(
-                event.target.value.replace(/^0+(0$|[1-9])/gm, '$1'),
+                event.target.value.replace(
+                  /^0+(0$|[1-9]|(\.\d{1,2}))$/gm,
+                  '$1',
+                ),
               )
             }
             placeholder="0.00"

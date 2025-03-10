@@ -3,6 +3,8 @@ import { GoodsInCartType } from '@/types/localStorage/goods';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import { Fragment } from 'react';
+
 import { styles } from './GoodsDetailsItem.styles';
 import HandleCartButton from './HandleCartButton';
 
@@ -20,17 +22,19 @@ const GoodsDetailsItem = ({
     color,
     size,
     goodsDetailsKey,
+    itemId,
   }: {
+    itemId: string;
     color: string;
     size: string;
     goodsDetailsKey: string;
   }) => void;
   removeGoodsFromCart: ({
-    color,
     size,
     goodsDetailsKey,
+    itemId,
   }: {
-    color: string;
+    itemId: string;
     size: string;
     goodsDetailsKey: string;
   }) => void;
@@ -59,10 +63,9 @@ const GoodsDetailsItem = ({
       </Box>
 
       {countAndSizes.map(({ size, count }) => (
-        <>
+        <Fragment key={size}>
           {count === 0 ? null : (
             <Box
-              key={size}
               sx={(theme) =>
                 styles.dataContainer(theme.palette.action.disabled)
               }
@@ -79,12 +82,13 @@ const GoodsDetailsItem = ({
                 removeGoodsFromCart={removeGoodsFromCart}
                 addGoodsInCart={addGoodsInCart}
                 id={id}
+                itemId={goods._id!}
                 color={color}
                 size={size}
               />
             </Box>
           )}
-        </>
+        </Fragment>
       ))}
     </Box>
   );

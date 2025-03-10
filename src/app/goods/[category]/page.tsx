@@ -22,10 +22,18 @@ export default async function CategoryPage({
 
   const canModify = session.role === UserRole.owner;
 
+  const owner = session.owner ? session.owner : session.id;
+  const role = session.owner ? UserRole.seller : UserRole.owner;
+
   return (
     <ContainerWithPadding>
       <Suspense fallback={<Loading />}>
-        <CategoryGoodsList canModify={canModify} category={category} />
+        <CategoryGoodsList
+          canModify={canModify}
+          category={category}
+          owner={owner}
+          role={role}
+        />
       </Suspense>
     </ContainerWithPadding>
   );

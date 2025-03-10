@@ -2,6 +2,7 @@
 
 import { routePaths } from '@/constants/routePaths';
 import { GoodsType } from '@/types/goods/good';
+import { UserRole } from '@/types/users/userType';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -22,9 +23,13 @@ import GoodsRow from './GoodsRow';
 const CategoryGoodsList = ({
   canModify,
   category,
+  owner,
+  role,
 }: {
   canModify: boolean;
   category: string;
+  owner: string;
+  role: UserRole.owner | UserRole.seller;
 }) => {
   const [selectedGoods, setSelectedGoods] = useState<GoodsType | null>(null);
   const [isEditingMode, setIsEditingMode] = useState(false);
@@ -34,7 +39,7 @@ const CategoryGoodsList = ({
     data: goods,
     isError: isGoodsFetchingError,
     isLoading: isGoodsLoading,
-  } = useGetAllGoods(category);
+  } = useGetAllGoods({ category, role, owner });
 
   const startMode = (mode?: 'editing') => {
     if (mode === 'editing') {

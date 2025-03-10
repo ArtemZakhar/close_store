@@ -1,5 +1,6 @@
 import goodsService from '@/app/api/goodsService';
 import { CartTableGoodsType, GoodsDetails } from '@/types/goods/good';
+import { GoodsInCartType } from '@/types/localStorage/goods';
 
 import { useEffect, useState } from 'react';
 
@@ -12,20 +13,20 @@ export const useGetGoodsInCartFilled = () => {
     CartTableGoodsType[]
   >([]);
 
-  const { goodsInCart } = useGoodsInCartService();
+  const { goodsInCart, removeManyFromCart, clearCart } =
+    useGoodsInCartService();
 
   useEffect(() => {
     if (goodsInCart.length) {
       goodsService
         .getDataForGoodsFromCart(goodsInCart)
         .then((data) => {
+          const shouldBeRemovedFromCart: GoodsInCartType[] = [];
           const cartTableGoods: CartTableGoodsType[] = goodsInCart.reduce(
             (acc, elem) => {
               const existingGoods = data.find(
                 (goodsItem) => goodsItem._id === elem._id,
               );
-
-              // todo remove goods from local storage if goods not find
 
               if (existingGoods) {
                 const existingGoodsDetails =
@@ -41,6 +42,7 @@ export const useGetGoodsInCartFilled = () => {
                   };
 
                   acc.push({
+                    _id: elem._id,
                     id: `${elem._id}${elem.goodsDetailsKey}${elem.size}`,
                     goods: {
                       ...existingGoods,
@@ -51,8 +53,11 @@ export const useGetGoodsInCartFilled = () => {
                     color: elem.color,
                     size: elem.size,
                     maxCount,
+                    itemId: newGoodsDetails[elem.goodsDetailsKey]._id!,
                   });
                 }
+              } else {
+                shouldBeRemovedFromCart.push(elem);
               }
 
               return acc;
@@ -60,13 +65,17 @@ export const useGetGoodsInCartFilled = () => {
             [] as CartTableGoodsType[],
           );
 
+          removeManyFromCart(shouldBeRemovedFromCart);
           setGoodsInCartFilled(cartTableGoods);
-          setIsLoading(false);
         })
         .catch((error) => {
           setIsError(true);
+        })
+        .finally(() => {
           setIsLoading(false);
         });
+    } else {
+      setIsLoading(false);
     }
   }, [goodsInCart.length]);
 
@@ -82,5 +91,16 @@ export const useGetGoodsInCartFilled = () => {
     return () => clearTimeout(timer);
   }, [isError]);
 
-  return { isError, isLoading, goodsInCartFilled, setGoodsInCartFilled };
+  const clearGoodsFromCart = () => {
+    setGoodsInCartFilled([]);
+    clearCart();
+  };
+
+  return {
+    isError,
+    isLoading,
+    goodsInCartFilled,
+    setGoodsInCartFilled,
+    clearGoodsFromCart,
+  };
 };

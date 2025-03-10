@@ -39,6 +39,7 @@ export const useShowFetchResultMessage = ({
     if (isSuccess) {
       if (customMessage) {
         toast.success(customMessage);
+        closeFunction();
 
         return;
       }
