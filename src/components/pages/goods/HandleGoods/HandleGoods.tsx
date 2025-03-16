@@ -13,6 +13,7 @@ import Box from '@mui/material/Box';
 
 import { memo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 
 import { useRouter } from 'next/navigation';
 
@@ -87,23 +88,35 @@ const HandleGoods = ({
 
     if (!category || !seller) return;
 
-    if (isEditing) {
+    if (isEditing && selectedGoods) {
       const dirty = form.formState.dirtyFields;
 
+      if (!Object.keys(dirty).length) {
+        toast.dismiss();
+        toast('Не було внесено жодних змін', {
+          icon: '⏹️',
+        });
+        return;
+      }
+
       const dirtyFields: Partial<UpdateGoodsFormType> = {
-        _id: selectedGoods?._id,
+        _id: selectedGoods._id,
         category: dirty.category ? category._id : undefined,
         subCategory: dirty.subCategory ? subCategory : undefined,
         firm: dirty.goods?.firm ? goods.firm : undefined,
         model: dirty.goods?.model ? goods.model : undefined,
         description: dirty.goods?.description ? goods.description : undefined,
-        goodsDetails: goods.goodsDetails,
+        goodsDetails:
+          !!dirty.goods && !!dirty.goods.goodsDetails
+            ? goods.goodsDetails
+            : undefined,
         stored: dirty.goods?.stored ? goods.stored : undefined,
         notes: dirty.goods?.notes ? goods.notes : undefined,
         buyDate: dirty.goods?.buyDate ? goods.buyDate : undefined,
         arrivalDate: dirty.goods?.arrivalDate ? goods.arrivalDate : undefined,
         season: dirty.goods?.season ? goods.season : undefined,
         seller: dirty.seller ? seller : undefined,
+        sellerCode: dirty.goods?.sellerCode ? goods.sellerCode : undefined,
       };
 
       const updatedFields: Partial<UpdateGoodsFormType> = {};
@@ -120,6 +133,19 @@ const HandleGoods = ({
                 typeof value.countryOfOrigin === 'string'
                   ? value.countryOfOrigin
                   : value.countryOfOrigin.name,
+            };
+            continue;
+          }
+
+          if (key === 'seller') {
+            updatedFields[key] = {
+              ...value,
+              city:
+                typeof value.city === 'string' ? value.city : value.city.name,
+              country:
+                typeof value.country === 'string'
+                  ? value.country
+                  : value.country.name,
             };
             continue;
           }
@@ -144,6 +170,7 @@ const HandleGoods = ({
         season: goods.season,
         seller,
         sizeType: goods.sizeType,
+        sellerCode: goods.sellerCode,
       });
     }
   };
@@ -206,11 +233,7 @@ const HandleGoods = ({
 
   return (
     <FormProvider {...form}>
-      <Box
-        component="form"
-        onSubmit={form.handleSubmit(onSubmit)}
-        marginTop="4rem"
-      >
+      <Box component="form" onSubmit={form.handleSubmit(onSubmit)}>
         <CategoryAutocomplete
           selectedCategory={selectedCategory}
           onCategoryChange={onCategoryChange}

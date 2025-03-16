@@ -11,7 +11,7 @@ export const handleSearchParams = async ({
 
   if (queryParams.toString()) {
     for (const [key, value] of queryParams.entries()) {
-      if (key === 'id' || key === 'role' || key === 'owner') {
+      if (key === 'role') {
         continue;
       }
 

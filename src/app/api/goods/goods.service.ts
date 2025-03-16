@@ -1,6 +1,7 @@
 import Goods from '@/models/goods/Goods';
 import { GoodsSchemaType, GoodsType } from '@/types/goods/good';
-import { GoodsInCartType } from '@/types/localStorage/goods';
+
+import mongoose, { Query, QueryWithHelpers } from 'mongoose';
 
 export const createNewGoods = async (goods: Omit<GoodsSchemaType, '_id'>) => {
   const newGoods = await Goods.create(goods);
@@ -10,42 +11,70 @@ export const createNewGoods = async (goods: Omit<GoodsSchemaType, '_id'>) => {
   return newGoods;
 };
 
-export const getGoodsByParams = async (
-  params: Partial<GoodsType> | Partial<GoodsInCartType>[],
-) => {
-  const query = Array.isArray(params)
-    ? {
-        $or: params.map((param) => ({
-          _id: param._id,
-          [`goodsDetails.${param.goodsDetailsKey}.color`]: param.color,
-          [`goodsDetails.${param.goodsDetailsKey}.countAndSizes`]: {
-            $elemMatch: { size: param.size },
-          },
-        })),
-      }
-    : params;
+export const getGoodsByParams = (
+  params:
+    | Partial<GoodsType>
+    | {
+        $or?: Record<string, any>[];
+      },
+): QueryWithHelpers<GoodsSchemaType[], GoodsSchemaType> => {
+  return Goods.find(params);
+};
 
-  const goods = await Goods.find(query)
+export const getPopulatedGoods = async (
+  params:
+    | Partial<GoodsType>
+    | {
+        $or?: Record<string, any>[];
+      },
+) => {
+  return await getGoodsByParams(params)
     .populate('seller')
     .populate('firm')
     .populate('category');
-
-  return goods;
 };
 
 export const findOneGoodsByParams = async (
   params: Partial<GoodsSchemaType>,
 ) => {
-  const goods = await Goods.findOne(params);
+  const goods = await Goods.findOne(params)
+    .populate({
+      path: 'seller',
+      populate: ['city', 'country'],
+    })
+    .populate({
+      path: 'firm',
+      populate: ['countryOfOrigin'],
+    })
+    .populate('category');
 
   return goods;
 };
 
 export const updateGoods = async (
   _id: string,
+  owner: string,
   goodsToUpdate: Partial<GoodsSchemaType>,
 ) => {
-  await Goods.findOneAndUpdate({ _id }, goodsToUpdate);
+  await Goods.findOneAndUpdate({ _id, owner }, goodsToUpdate);
+};
+
+export const updateMany = async (
+  goodsToUpdate: Pick<GoodsSchemaType, '_id' | 'owner' | 'goodsDetails'>[],
+  session: mongoose.ClientSession,
+) => {
+  console.log(goodsToUpdate);
+  if (!goodsToUpdate.length) return;
+
+  const bulkOperations = goodsToUpdate.map(({ _id, owner, goodsDetails }) => ({
+    updateOne: {
+      filter: { _id, owner },
+      update: { $set: { goodsDetails } },
+      session,
+    },
+  }));
+
+  return await Goods.bulkWrite(bulkOperations);
 };
 
 export const deleteGoodsById = async (id: string) => {

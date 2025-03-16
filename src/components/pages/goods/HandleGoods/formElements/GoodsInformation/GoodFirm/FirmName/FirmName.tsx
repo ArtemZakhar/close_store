@@ -104,7 +104,7 @@ const FirmName = ({
 
                 return (
                   <li key={option._id} {...otherProps}>
-                    {option.name}
+                    {`${option.name}, ${option.countryOfOrigin}`}
                   </li>
                 );
               }}

@@ -6,7 +6,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
 
 import { forwardRef } from 'react';
-import React, { useRef } from 'react';
+import React from 'react';
 
 import { styles } from './AutocompleteStyled.styles';
 import CustomList from './CustomList';

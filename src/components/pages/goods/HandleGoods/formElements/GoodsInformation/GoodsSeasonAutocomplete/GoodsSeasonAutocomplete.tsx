@@ -7,8 +7,8 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import AutocompleteStyled from '@/components/common/FormComponentsStyled/AutocompleteStyled';
 
+import { seasonList } from '../../../../../../../helpers/seasonList';
 import { FormType } from '../../../HandleGoods';
-import { seasonList } from './seasonList';
 
 const GoodsSeasonAutocomplete = ({
   selectedGoods,

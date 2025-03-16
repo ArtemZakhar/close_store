@@ -44,7 +44,6 @@ export async function GET(request: NextRequest) {
   }
 
   if (role === UserRole.owner) {
-    console.log('here');
     users = await User.find(
       {
         status: { $ne: 'deleted' },

@@ -1,10 +1,14 @@
 import { responseMessages } from '@/app/api/constants/responseMessages';
+import { routePaths } from '@/constants/routePaths';
 import { GoodsType } from '@/types/goods/good';
+import { GoodsInCartType } from '@/types/localStorage/goods';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 
 import { useState } from 'react';
+
+import Link from 'next/link';
 
 import ConfirmationModal from '@/components/common/ConfirmationModal';
 
@@ -31,7 +35,8 @@ const GoodsRow = ({
 }) => {
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
 
-  const { goodsInCart, saveInCart, removeFromCart } = useGoodsInCartService();
+  const { goodsInCart, saveInCart, removeFromCart, removeManyFromCart } =
+    useGoodsInCartService();
 
   const {
     mutate: deleteGoods,
@@ -51,11 +56,76 @@ const GoodsRow = ({
     setIsRemoveModalOpen(false);
   };
 
+  const goodsInCartFiltered = goodsInCart.filter((item) => item._id === _id);
+
+  const addGoodsInCart = ({
+    color,
+    size,
+    goodsDetailsKey,
+    itemId,
+  }: {
+    color: string;
+    size: string;
+    goodsDetailsKey: string;
+    itemId: string;
+  }) => {
+    if (!selectedGoods) return;
+
+    saveInCart({
+      _id: selectedGoods._id,
+      color,
+      size,
+      goodsDetailsKey,
+      itemId,
+    });
+  };
+
+  const removeGoodsFromCart = ({
+    size,
+    goodsDetailsKey,
+    itemId,
+  }: {
+    size: string;
+    goodsDetailsKey: string;
+    itemId: string;
+  }) => {
+    if (!selectedGoods) return;
+
+    removeFromCart({
+      _id: selectedGoods._id,
+      size,
+      goodsDetailsKey,
+      itemId,
+    });
+  };
+
+  const handleSuccessDeletion = () => {
+    if (!selectedGoods) return;
+    const shouldBeRemoved = Object.entries(selectedGoods.goodsDetails).reduce(
+      (acc, [key, value]) => {
+        for (const size of value.countAndSizes) {
+          acc.push({
+            _id: selectedGoods._id,
+            size: size.size,
+            itemId: value._id!,
+            goodsDetailsKey: key,
+          });
+        }
+
+        return acc;
+      },
+      [] as Omit<GoodsInCartType, 'color'>[],
+    );
+
+    removeManyFromCart(shouldBeRemoved);
+    hideConfirmationRemoveModal();
+  };
+
   useShowFetchResultMessage({
     isError: isDeleteGoodsError,
     isSuccess: isDeleteGoodsSuccess,
     error: deleteGoodsError,
-    closeFunction: hideConfirmationRemoveModal,
+    closeFunction: handleSuccessDeletion,
     customErrorMessage: [
       {
         errorType: responseMessages.user.forbidden,
@@ -68,36 +138,6 @@ const GoodsRow = ({
       },
     ],
   });
-
-  const goodsInCartFiltered = goodsInCart.filter((item) => item._id === _id);
-
-  const addGoodsInCart = ({
-    color,
-    size,
-    goodsDetailsKey,
-  }: {
-    color: string;
-    size: string;
-    goodsDetailsKey: string;
-  }) => {
-    if (!selectedGoods) return;
-
-    saveInCart({ _id: selectedGoods._id, color, size, goodsDetailsKey });
-  };
-
-  const removeGoodsFromCart = ({
-    color,
-    size,
-    goodsDetailsKey,
-  }: {
-    color: string;
-    size: string;
-    goodsDetailsKey: string;
-  }) => {
-    if (!selectedGoods) return;
-
-    removeFromCart({ _id: selectedGoods._id, color, size, goodsDetailsKey });
-  };
 
   return (
     <Tooltip title={selectedGoods?._id === _id ? '' : item.stored} arrow>
@@ -112,21 +152,20 @@ const GoodsRow = ({
           <>
             {canModify && (
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Box>
-                  <Button onClick={() => startMode('editing')}>
-                    Редагування
-                  </Button>
-                </Box>
+                <Button
+                  component={Link}
+                  href={`/${routePaths.goods.root}/${selectedGoods.category.url}/${_id}`}
+                >
+                  Деталі
+                </Button>
 
-                <Box>
-                  <Button onClick={() => startMode()}>Створити копію</Button>
-                </Box>
+                <Button onClick={() => startMode('editing')}>
+                  Редагування
+                </Button>
 
-                <Box>
-                  <Button onClick={showConfirmationRemoveModal}>
-                    Видалення
-                  </Button>
-                </Box>
+                <Button onClick={() => startMode()}>Створити копію</Button>
+
+                <Button onClick={showConfirmationRemoveModal}>Видалення</Button>
               </Box>
             )}
           </>

@@ -1,7 +1,6 @@
 export const styles = {
   container: { display: 'flex', flexDirection: 'column', alignItems: 'center' },
   iconsWrapper: {
-    mt: '4rem',
     display: 'flex',
     justifyContent: 'center',
     flexWrap: 'wrap',

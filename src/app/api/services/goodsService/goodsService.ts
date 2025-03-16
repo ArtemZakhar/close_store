@@ -1,25 +1,27 @@
 import { FirmType } from '@/types/goods/firm';
 import {
+  CartTableGoodsType,
   GoodsType,
   NewGoodFormType,
+  PopulatedGoodsType,
   UpdateGoodsFormType,
 } from '@/types/goods/good';
 import { GoodsInCartType } from '@/types/localStorage/goods';
 
 import { client } from '@/utils/client';
 
-import { apiCalls } from './constants/apiCalls';
+import { apiCalls } from '../../constants/apiCalls';
 
-const getAllFirms = async () =>
+export const getAllFirms = async () =>
   await client.get<FirmType[]>({ url: apiCalls.firms });
 
-const putNewGoods = async (data: NewGoodFormType) =>
+export const putNewGoods = async (data: NewGoodFormType) =>
   await client.put({ url: apiCalls.goods, data, tags: ['goods-category'] });
 
-const patchGoods = async (data: Partial<UpdateGoodsFormType>) =>
-  await client.patch({ url: apiCalls.goods, data });
+export const updateGoods = async (data: Partial<UpdateGoodsFormType>) =>
+  await client.patch({ url: `${apiCalls.goods}/${data._id}`, data });
 
-const getAllGoods = async ({
+export const getAllGoods = async ({
   searchParams,
   tags,
 }: {
@@ -40,16 +42,16 @@ const getAllGoods = async ({
   }
 };
 
-const deleteGoods = async (id: string) => {
+export const deleteGoods = async (id: string) => {
   try {
-    client.delete({ url: `${apiCalls.goods}/${id}` });
+    return await client.delete({ url: `${apiCalls.goods}/${id}` });
   } catch (error) {
     console.error('Error during GET goods:', error);
     throw new Error('Error during GET goods');
   }
 };
 
-const getDataForGoodsFromCart = async (
+export const getDataForGoodsFromCart = async (
   dataFromCart: GoodsInCartType[],
 ): Promise<GoodsType[]> => {
   try {
@@ -60,11 +62,14 @@ const getDataForGoodsFromCart = async (
   }
 };
 
-export default {
-  deleteGoods,
-  getAllGoods,
-  patchGoods,
-  putNewGoods,
-  getAllFirms,
-  getDataForGoodsFromCart,
+export const sellGoods = async (data: CartTableGoodsType[]) => {
+  try {
+    return await client.patch({ url: apiCalls.goods, data });
+  } catch (error) {
+    console.error('Error during SELLING goods:', error);
+    throw new Error('Error during SELLING goods');
+  }
 };
+
+export const getGoodsById = async (id: string) =>
+  await client.get<PopulatedGoodsType>({ url: `${apiCalls.goods}/${id}` });

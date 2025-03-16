@@ -20,3 +20,9 @@ export type FirmType = {
   name: string;
   countryOfOrigin: CountryType | string;
 };
+
+export type PopulatedFirmType = {
+  _id: string;
+  name: string;
+  countryOfOrigin: CountryType;
+};

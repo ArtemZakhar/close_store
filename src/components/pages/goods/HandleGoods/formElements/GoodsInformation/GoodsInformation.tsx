@@ -13,6 +13,7 @@ import { styles } from './GoodsInformation.styles';
 import GoodsNotes from './GoodsNotes';
 import GoodsSeasonAutocomplete from './GoodsSeasonAutocomplete';
 import ModelName from './ModelName';
+import SellerCode from './SellerCode';
 
 const GoodsInformation = ({
   fetchCountriesData,
@@ -38,6 +39,7 @@ const GoodsInformation = ({
 
       <Box sx={styles.sectionWrapper}>
         <ModelName />
+        <SellerCode />
       </Box>
 
       <GoodsDetails selectedGoods={selectedGoods} isEditing={isEditing} />

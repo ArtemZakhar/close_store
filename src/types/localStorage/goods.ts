@@ -3,4 +3,5 @@ export type GoodsInCartType = {
   color: string;
   size: string;
   goodsDetailsKey: string;
+  itemId: string;
 };

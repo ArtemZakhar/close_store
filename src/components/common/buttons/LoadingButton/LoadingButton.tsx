@@ -1,41 +1,31 @@
 'use client';
 
+import { ButtonProps } from '@mui/material';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 
-interface LoadingButtonProps {
+interface LoadingButtonProps extends Omit<ButtonProps, 'color'> {
   isLoading: boolean;
   label: string;
-  type?: 'button' | 'submit';
-  variant?: 'contained' | 'outlined';
-  color?:
-    | 'primary'
-    | 'secondary'
-    | 'inherit'
-    | 'success'
-    | 'error'
-    | 'info'
-    | 'warning';
-  sx?: { [key: string]: any };
   onClick?: (data?: any) => void;
 }
 
 const LoadingButton = ({
   isLoading,
-  type = 'submit',
-  variant = 'contained',
-  color = 'primary',
   label,
   sx,
+  type,
   onClick,
+  variant,
+  ...buttonProps
 }: LoadingButtonProps) => {
   return (
     <Button
-      type={type}
+      {...buttonProps}
       fullWidth
-      variant={variant}
-      color={color}
+      variant={variant ? variant : 'contained'}
       sx={{ ...sx, color: 'common.white', fontWeight: 800 }}
+      type={type ? type : 'submit'}
       onClick={onClick}
     >
       {isLoading ? <CircularProgress color="inherit" size={24} /> : label}

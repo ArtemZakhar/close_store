@@ -2,10 +2,10 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
 import { SizesAndCountDataType } from '../../sizesData';
-import SizesOptionList from '../SizesOptionList';
 import ColorAutocomplete from './ColorAutocomplete';
 import { styles } from './GoodsItem.styles';
 import GoodsPrice from './GoodsPrice';
+import SizesOptionList from './SizesOptionList';
 
 const GoodsItem = ({
   sizeType,

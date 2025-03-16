@@ -10,12 +10,15 @@ const HandleCartButton = ({
   size,
   id,
   color,
+  itemId,
 }: {
   size: string;
   color: string;
   id: string;
+  itemId: string;
   goodsInCart: GoodsInCartType[] | undefined;
   addGoodsInCart: ({
+    itemId,
     color,
     size,
     goodsDetailsKey,
@@ -23,13 +26,14 @@ const HandleCartButton = ({
     color: string;
     size: string;
     goodsDetailsKey: string;
+    itemId: string;
   }) => void;
   removeGoodsFromCart: ({
-    color,
+    itemId,
     size,
     goodsDetailsKey,
   }: {
-    color: string;
+    itemId: string;
     size: string;
     goodsDetailsKey: string;
   }) => void;
@@ -40,13 +44,15 @@ const HandleCartButton = ({
 
   return isGoodsInCart ? (
     <Button
-      onClick={() => removeGoodsFromCart({ size, color, goodsDetailsKey: id })}
+      onClick={() => removeGoodsFromCart({ itemId, size, goodsDetailsKey: id })}
     >
       <DeleteForeverOutlinedIcon />
     </Button>
   ) : (
     <Button
-      onClick={() => addGoodsInCart({ size, color, goodsDetailsKey: id })}
+      onClick={() =>
+        addGoodsInCart({ itemId, size, color, goodsDetailsKey: id })
+      }
     >
       <AddShoppingCartOutlinedIcon />
     </Button>

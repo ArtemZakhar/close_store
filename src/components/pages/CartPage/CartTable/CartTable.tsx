@@ -58,6 +58,7 @@ const CartTable = ({
           </TableCellHeader>,
         ]}
         footerData={footerData}
+        minHeight="1vh"
       >
         {goodsInCartFilled.map((goods) => (
           <CartItem

@@ -12,8 +12,8 @@ import {
 import ChangeQuantityButton from '@/components/common/buttons/ChangeQuantityButton';
 import { FormType } from '@/components/pages/goods/HandleGoods/HandleGoods';
 
-import { validations } from '../../../../formValidations';
-import { SizesAndCountDataType } from '../../sizesData';
+import { validations } from '../../../../../formValidations';
+import { SizesAndCountDataType } from '../../../sizesData';
 import { styles } from './SizesOptionList.styles';
 
 const SizesOptionList = ({

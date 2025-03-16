@@ -8,6 +8,7 @@ import Fade from '@mui/material/Fade';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 
+import { FormEvent } from 'react';
 import { useForm } from 'react-hook-form';
 
 import LoadingButton from '@/components/common/buttons/LoadingButton';
@@ -51,6 +52,12 @@ const AddNewCategoryModal = ({
     });
   };
 
+  const extendedFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    form.handleSubmit(onSubmit)();
+  };
+
   return (
     <Modal open={openModal} onClose={handleClose} disableRestoreFocus>
       <Fade in={openModal} timeout={theme.transitions.duration.standard}>
@@ -73,7 +80,7 @@ const AddNewCategoryModal = ({
             Створити нову категорію
           </Typography>
 
-          <Box onSubmit={form.handleSubmit(onSubmit)} component="form">
+          <Box onSubmit={extendedFormSubmit} component="form">
             <Box sx={styles.inputContainer}>
               <Box sx={styles.inputWrapper}>
                 <CategoryNameInput form={form} />

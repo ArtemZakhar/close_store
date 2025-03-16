@@ -36,7 +36,6 @@ const GoodsDetails = ({
   const {
     setValue,
     formState: { errors },
-    getValues,
   } = useFormContext<FormType>();
 
   useEffect(() => {
@@ -78,6 +77,13 @@ const GoodsDetails = ({
 
         setValue('goods.goodsDetails', newGoodsDetailsValue);
       }
+    } else if (!isEditing && !!selectedGoods) {
+      setValue('goods.goodsDetails', {
+        [NEW_PROPERTY_IN_GOODS_OBJECT]: {
+          color: '',
+          countAndSizes: sizeType.sizesAndCount,
+        },
+      });
     } else {
       setValue('goods.goodsDetails', {
         [NEW_PROPERTY_IN_GOODS_OBJECT]: {
