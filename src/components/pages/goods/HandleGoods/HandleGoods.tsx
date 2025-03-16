@@ -233,11 +233,7 @@ const HandleGoods = ({
 
   return (
     <FormProvider {...form}>
-      <Box
-        component="form"
-        onSubmit={form.handleSubmit(onSubmit)}
-        marginTop="4rem"
-      >
+      <Box component="form" onSubmit={form.handleSubmit(onSubmit)}>
         <CategoryAutocomplete
           selectedCategory={selectedCategory}
           onCategoryChange={onCategoryChange}

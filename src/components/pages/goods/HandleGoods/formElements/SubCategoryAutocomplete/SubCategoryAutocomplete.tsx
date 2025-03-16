@@ -91,6 +91,7 @@ const SubCategoryAutocomplete = ({
           <Typography marginBottom="1rem" variant="h4">
             Підкатегорії
           </Typography>
+
           <Box width="30rem">
             <Controller
               name="subCategory"

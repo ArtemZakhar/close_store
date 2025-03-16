@@ -13,7 +13,7 @@ export const colorList: ColorsType[] = [
   {
     id: 2,
     label: 'світло синій',
-    name: 'lightBlue',
+    name: 'lightskyblue',
   },
   {
     id: 3,
@@ -178,7 +178,7 @@ export const colorList: ColorsType[] = [
   {
     id: 35,
     label: 'шоколад',
-    name: 'chocolat',
+    name: 'saddlebrown',
   },
   {
     id: 36,
@@ -188,6 +188,6 @@ export const colorList: ColorsType[] = [
   {
     id: 37,
     label: 'меланж',
-    name: 'melange',
+    name: 'lightgrey',
   },
 ];

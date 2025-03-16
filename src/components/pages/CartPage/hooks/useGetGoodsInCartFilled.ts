@@ -1,4 +1,4 @@
-import goodsService from '@/app/api/goodsService';
+import { getDataForGoodsFromCart } from '@/app/api/services/goodsService';
 import { CartTableGoodsType, GoodsDetails } from '@/types/goods/good';
 import { GoodsInCartType } from '@/types/localStorage/goods';
 
@@ -18,8 +18,7 @@ export const useGetGoodsInCartFilled = () => {
 
   useEffect(() => {
     if (goodsInCart.length) {
-      goodsService
-        .getDataForGoodsFromCart(goodsInCart)
+      getDataForGoodsFromCart(goodsInCart)
         .then((data) => {
           const shouldBeRemovedFromCart: GoodsInCartType[] = [];
           const cartTableGoods: CartTableGoodsType[] = goodsInCart.reduce(

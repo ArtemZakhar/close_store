@@ -3,24 +3,25 @@ import {
   CartTableGoodsType,
   GoodsType,
   NewGoodFormType,
+  PopulatedGoodsType,
   UpdateGoodsFormType,
 } from '@/types/goods/good';
 import { GoodsInCartType } from '@/types/localStorage/goods';
 
 import { client } from '@/utils/client';
 
-import { apiCalls } from './constants/apiCalls';
+import { apiCalls } from '../../constants/apiCalls';
 
-const getAllFirms = async () =>
+export const getAllFirms = async () =>
   await client.get<FirmType[]>({ url: apiCalls.firms });
 
-const putNewGoods = async (data: NewGoodFormType) =>
+export const putNewGoods = async (data: NewGoodFormType) =>
   await client.put({ url: apiCalls.goods, data, tags: ['goods-category'] });
 
-const updateGoods = async (data: Partial<UpdateGoodsFormType>) =>
+export const updateGoods = async (data: Partial<UpdateGoodsFormType>) =>
   await client.patch({ url: `${apiCalls.goods}/${data._id}`, data });
 
-const getAllGoods = async ({
+export const getAllGoods = async ({
   searchParams,
   tags,
 }: {
@@ -41,7 +42,7 @@ const getAllGoods = async ({
   }
 };
 
-const deleteGoods = async (id: string) => {
+export const deleteGoods = async (id: string) => {
   try {
     return await client.delete({ url: `${apiCalls.goods}/${id}` });
   } catch (error) {
@@ -50,7 +51,7 @@ const deleteGoods = async (id: string) => {
   }
 };
 
-const getDataForGoodsFromCart = async (
+export const getDataForGoodsFromCart = async (
   dataFromCart: GoodsInCartType[],
 ): Promise<GoodsType[]> => {
   try {
@@ -61,7 +62,7 @@ const getDataForGoodsFromCart = async (
   }
 };
 
-const sellGoods = async (data: CartTableGoodsType[]) => {
+export const sellGoods = async (data: CartTableGoodsType[]) => {
   try {
     return await client.patch({ url: apiCalls.goods, data });
   } catch (error) {
@@ -70,12 +71,5 @@ const sellGoods = async (data: CartTableGoodsType[]) => {
   }
 };
 
-export default {
-  deleteGoods,
-  getAllGoods,
-  updateGoods,
-  putNewGoods,
-  getAllFirms,
-  getDataForGoodsFromCart,
-  sellGoods,
-};
+export const getGoodsById = async (id: string) =>
+  await client.get<PopulatedGoodsType>({ url: `${apiCalls.goods}/${id}` });

@@ -1,4 +1,4 @@
-import { GoodsType } from '@/types/goods/good';
+import { GoodsType, PopulatedGoodsType } from '@/types/goods/good';
 
 import { useEffect } from 'react';
 import { UseFormReturn } from 'react-hook-form';
@@ -12,7 +12,7 @@ export const useUpdateFormState = ({
 }: {
   form: UseFormReturn<FormType | UpdateFormType, any, undefined>;
   isEditing: boolean | undefined;
-  selectedGoods: GoodsType | null | undefined;
+  selectedGoods: GoodsType | PopulatedGoodsType | null | undefined;
 }) => {
   const { setValue, reset } = form;
   useEffect(() => {

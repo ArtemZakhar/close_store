@@ -51,14 +51,13 @@ const InputTypeNumber = ({
                 step: '0.01',
               },
             }}
-            onChange={(event) =>
-              field.onChange(
-                event.target.value.replace(
-                  /^0+(0$|[1-9]|(\.\d{1,2}))$/gm,
-                  '$1',
-                ),
-              )
-            }
+            onChange={(event) => {
+              const value = event.target.value
+                .replace(/[^\d.]/g, '')
+                .replace(/^0+(\d)/, '$1')
+                .replace(/^(\d*\.\d{0,2}).*$/, '$1');
+              field.onChange(value);
+            }}
             placeholder="0.00"
             error={name === 'outcomePrice' && !!error}
             helperText={name === 'outcomePrice' && error ? error.message : ''}

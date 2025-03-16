@@ -87,6 +87,39 @@ export const httpGetGoods = async (request: NextRequest) => {
   }
 };
 
+export const httpGetGoodsById = async (
+  request: NextRequest,
+  params: { params: { id: string } },
+) => {
+  try {
+    const session = await getSession();
+
+    if (!session) {
+      return NextResponse.json(
+        { error: true, message: responseMessages.user.forbidden },
+        {
+          status: responseMessages.codes[401],
+        },
+      );
+    }
+
+    const owner = session.owner ? session.owner : session.id;
+
+    const goods = await findOneGoodsByParams({
+      _id: params.params.id,
+      owner: new ObjectId(owner),
+    });
+
+    return NextResponse.json(goods, { status: responseMessages.codes[200] });
+  } catch (error) {
+    console.error('Error during GET goods by id:', error);
+    return NextResponse.json(
+      { error: responseMessages.server.error },
+      { status: responseMessages.codes[500] },
+    );
+  }
+};
+
 export const httpPutNewGoods = async (request: NextRequest) => {
   try {
     const session = await getSession();

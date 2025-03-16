@@ -77,7 +77,7 @@ const CartPage = () => {
 
       {!!goodsInCartFilled.length && (
         <>
-          <Box marginTop="4rem">
+          <Box>
             <CartTable
               goodsInCartFilled={goodsInCartFilled}
               changeQuantity={changeQuantity}

@@ -1,4 +1,12 @@
-import goodsService from '@/app/api/goodsService';
+import {
+  deleteGoods,
+  getAllFirms,
+  getAllGoods,
+  getGoodsById,
+  putNewGoods,
+  sellGoods,
+  updateGoods,
+} from '@/app/api/services/goodsService';
 import {
   CartTableGoodsType,
   NewGoodFormType,
@@ -16,15 +24,18 @@ const QUERY_GOODS = 'goods';
 export const useGetAllFirms = () =>
   useQuery({
     queryKey: [QUERY_FIRM],
-    queryFn: goodsService.getAllFirms,
+    queryFn: getAllFirms,
     staleTime: Infinity,
   });
+
+export const useGetGoodsById = (id: string) =>
+  useQuery({ queryKey: [QUERY_GOODS, id], queryFn: () => getGoodsById(id) });
 
 export const usePostNewGoods = () => {
   const client = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: NewGoodFormType) => goodsService.putNewGoods(data),
+    mutationFn: (data: NewGoodFormType) => putNewGoods(data),
     onSuccess: () => {
       client.invalidateQueries({
         queryKey: [QUERY_FIRM],
@@ -47,8 +58,7 @@ export const useUpdateGoods = (category: string) => {
   const client = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: Partial<UpdateGoodsFormType>) =>
-      goodsService.updateGoods(data),
+    mutationFn: (data: Partial<UpdateGoodsFormType>) => updateGoods(data),
     onSuccess: () => {
       client.invalidateQueries({
         queryKey: [QUERY_FIRM],
@@ -82,7 +92,7 @@ export const useGetAllGoods = ({
   useQuery({
     queryKey: [QUERY_GOODS, category],
     queryFn: () =>
-      goodsService.getAllGoods({
+      getAllGoods({
         searchParams: `category=${category}&owner=${owner}&role=${role}`,
       }),
   });
@@ -91,7 +101,7 @@ export const useDeleteGoods = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => goodsService.deleteGoods(id),
+    mutationFn: (id: string) => deleteGoods(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_GOODS] });
     },
@@ -103,7 +113,7 @@ export const useSellGoods = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: CartTableGoodsType[]) => goodsService.sellGoods(data),
+    mutationFn: (data: CartTableGoodsType[]) => sellGoods(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_GOODS] });
     },

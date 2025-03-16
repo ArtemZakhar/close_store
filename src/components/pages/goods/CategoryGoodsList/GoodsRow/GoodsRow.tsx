@@ -1,4 +1,5 @@
 import { responseMessages } from '@/app/api/constants/responseMessages';
+import { routePaths } from '@/constants/routePaths';
 import { GoodsType } from '@/types/goods/good';
 import { GoodsInCartType } from '@/types/localStorage/goods';
 import Box from '@mui/material/Box';
@@ -6,6 +7,8 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 
 import { useState } from 'react';
+
+import Link from 'next/link';
 
 import ConfirmationModal from '@/components/common/ConfirmationModal';
 
@@ -149,21 +152,20 @@ const GoodsRow = ({
           <>
             {canModify && (
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Box>
-                  <Button onClick={() => startMode('editing')}>
-                    Редагування
-                  </Button>
-                </Box>
+                <Button
+                  component={Link}
+                  href={`/${routePaths.goods.root}/${selectedGoods.category.url}/${_id}`}
+                >
+                  Деталі
+                </Button>
 
-                <Box>
-                  <Button onClick={() => startMode()}>Створити копію</Button>
-                </Box>
+                <Button onClick={() => startMode('editing')}>
+                  Редагування
+                </Button>
 
-                <Box>
-                  <Button onClick={showConfirmationRemoveModal}>
-                    Видалення
-                  </Button>
-                </Box>
+                <Button onClick={() => startMode()}>Створити копію</Button>
+
+                <Button onClick={showConfirmationRemoveModal}>Видалення</Button>
               </Box>
             )}
           </>

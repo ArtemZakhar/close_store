@@ -1,8 +1,8 @@
 import { ObjectId } from 'mongodb';
 
 import { CategoryType, CategoryTypeSchema } from './category';
-import { FirmType } from './firm';
-import { SellerType } from './seller';
+import { FirmType, PopulatedFirmType } from './firm';
+import { PopulatedSellerType, SellerType } from './seller';
 
 type BaseGoodType = {
   subCategory: string[];
@@ -49,6 +49,16 @@ export type GoodsType = BaseGoodType & {
   owner: string;
   seller: SellerType;
   firm: FirmType;
+  category: CategoryType;
+};
+
+export type PopulatedGoodsType = BaseGoodType & {
+  _id: string;
+  code: string;
+  season: string;
+  owner: string;
+  seller: PopulatedSellerType;
+  firm: PopulatedFirmType;
   category: CategoryType;
 };
 

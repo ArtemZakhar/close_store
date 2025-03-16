@@ -37,7 +37,16 @@ export const getPopulatedGoods = async (
 export const findOneGoodsByParams = async (
   params: Partial<GoodsSchemaType>,
 ) => {
-  const goods = await Goods.findOne(params);
+  const goods = await Goods.findOne(params)
+    .populate({
+      path: 'seller',
+      populate: ['city', 'country'],
+    })
+    .populate({
+      path: 'firm',
+      populate: ['countryOfOrigin'],
+    })
+    .populate('category');
 
   return goods;
 };
