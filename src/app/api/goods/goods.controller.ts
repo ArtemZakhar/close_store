@@ -69,13 +69,7 @@ export const httpGetGoods = async (request: NextRequest) => {
 
     let goods: GoodsSchemaType[] = [];
 
-    if (role === UserRole.owner) {
-      goods = await getPopulatedGoods({ ...searchParams, owner: owner });
-    }
-
-    if (role === UserRole.seller) {
-      goods = await getPopulatedGoods({ ...searchParams, owner });
-    }
+    goods = await getPopulatedGoods({ ...searchParams, owner });
 
     return NextResponse.json(goods, { status: responseMessages.codes[200] });
   } catch (error) {

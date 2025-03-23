@@ -1,5 +1,6 @@
 import { routePaths } from '@/constants/routePaths';
 import { getSession } from '@/helpers/getSession';
+import { getAllCategories } from '@/services/apiServices/categoryService';
 import { UserRole } from '@/types/users/userType';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -10,8 +11,6 @@ import ContainerWithPadding from '@/components/common/ContainerWithPadding';
 import SectionDescriptionStyled from '@/components/common/SectionDescriptionStyled';
 import TitleStyled from '@/components/common/TitleStyled';
 import CategoryList from '@/components/pages/goods/CategoryList';
-
-import { getAllCategories } from '../api/categoryService';
 
 export const dynamic = 'force-dynamic';
 export const dynamicParams = true;

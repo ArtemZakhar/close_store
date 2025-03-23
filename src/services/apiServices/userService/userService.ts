@@ -1,8 +1,7 @@
+import { apiCalls } from '@/app/api/constants/apiCalls';
 import { NewUserType, UserRole, UserType } from '@/types/users/userType';
 
 import { client } from '@/utils/client';
-
-import { apiCalls } from './constants/apiCalls';
 
 export const getAllUsers = async ({
   tags,

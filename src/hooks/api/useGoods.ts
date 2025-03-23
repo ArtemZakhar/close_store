@@ -6,7 +6,7 @@ import {
   putNewGoods,
   sellGoods,
   updateGoods,
-} from '@/app/api/services/goodsService';
+} from '@/services/apiServices/goodsService';
 import {
   CartTableGoodsType,
   NewGoodFormType,

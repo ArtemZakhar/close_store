@@ -2,7 +2,7 @@ import {
   getAllCategories,
   postNewCategory,
   updateCategory,
-} from '@/app/api/categoryService';
+} from '@/services/apiServices/categoryService';
 import { CategoryType } from '@/types/goods/category';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 

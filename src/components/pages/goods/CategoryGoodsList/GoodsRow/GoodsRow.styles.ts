@@ -4,5 +4,6 @@ export const styles = {
     borderRadius: '2rem',
     backgroundColor: 'background.default',
     paddingInline: '1rem',
+    overflow: 'auto',
   },
 };

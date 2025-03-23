@@ -1,6 +1,6 @@
-import { client } from '@/utils/client';
+import { apiCalls } from '@/app/api/constants/apiCalls';
 
-import { apiCalls } from './constants/apiCalls';
+import { client } from '@/utils/client';
 
 export const login = async (data: { email: string; password: string }) => {
   try {

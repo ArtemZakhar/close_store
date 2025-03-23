@@ -39,57 +39,79 @@ const GoodsDetailsItem = ({
     goodsDetailsKey: string;
   }) => void;
 }) => {
-  const { color, countAndSizes } = goods;
+  const { color, countAndSizes, outcomePrice } = goods;
 
   return (
     <Box sx={styles.container}>
       <Box sx={styles.colorWrapper}>
-        <Typography variant="body1">{color.toUpperCase()}</Typography>
+        <Typography variant="body1">Колір: {color.toUpperCase()}</Typography>
       </Box>
 
-      <Box sx={(theme) => styles.dataWrapper(theme.palette.action.disabled)}>
-        <Typography
-          variant="body2"
-          sx={(theme) => styles.sizeTitle(theme.palette.action.disabled)}
-        >
-          Розмір
-        </Typography>
+      <Box sx={styles.colorWrapper}>
+        <Typography variant="body1">Вартість: {outcomePrice} ₴</Typography>
+      </Box>
 
-        <Box sx={styles.cartWrapper}>
-          <Typography variant="body2" sx={styles.cartTitle}>
-            Додати в корзину
+      <Box sx={styles.detailsWrapper}>
+        <Box sx={(theme) => styles.dataWrapper(theme.palette.action.disabled)}>
+          <Typography
+            variant="body2"
+            sx={(theme) => styles.sizeTitle(theme.palette.action.disabled)}
+          >
+            Розмір
           </Typography>
+
+          <Box sx={styles.cartWrapper}>
+            <Typography variant="body2" sx={styles.cartTitle} noWrap>
+              Додати в корзину
+            </Typography>
+          </Box>
+
+          <Box sx={styles.quantityWrapper}>
+            <Typography variant="body2" sx={styles.cartTitle}>
+              Залишок
+            </Typography>
+          </Box>
         </Box>
-      </Box>
 
-      {countAndSizes.map(({ size, count }) => (
-        <Fragment key={size}>
-          {count === 0 ? null : (
-            <Box
-              sx={(theme) =>
-                styles.dataContainer(theme.palette.action.disabled)
-              }
-            >
-              <Typography
-                variant="body2"
-                sx={(theme) => styles.sizeItem(theme.palette.action.disabled)}
+        {countAndSizes.map(({ size, count }) => (
+          <Fragment key={size}>
+            {count === 0 ? null : (
+              <Box
+                sx={(theme) =>
+                  styles.dataContainer(theme.palette.action.disabled)
+                }
               >
-                {size}
-              </Typography>
+                <Typography
+                  variant="body2"
+                  sx={(theme) => styles.sizeItem(theme.palette.action.disabled)}
+                >
+                  {size}
+                </Typography>
 
-              <HandleCartButton
-                goodsInCart={goodsInCart}
-                removeGoodsFromCart={removeGoodsFromCart}
-                addGoodsInCart={addGoodsInCart}
-                id={id}
-                itemId={goods._id!}
-                color={color}
-                size={size}
-              />
-            </Box>
-          )}
-        </Fragment>
-      ))}
+                <Box sx={{ justifyContent: 'center', alignItems: 'center' }}>
+                  <HandleCartButton
+                    goodsInCart={goodsInCart}
+                    removeGoodsFromCart={removeGoodsFromCart}
+                    addGoodsInCart={addGoodsInCart}
+                    id={id}
+                    itemId={goods._id!}
+                    color={color}
+                    size={size}
+                  />
+                </Box>
+                <Typography
+                  variant="body2"
+                  sx={(theme) =>
+                    styles.countItem(theme.palette.action.disabled)
+                  }
+                >
+                  {count}
+                </Typography>
+              </Box>
+            )}
+          </Fragment>
+        ))}
+      </Box>
     </Box>
   );
 };

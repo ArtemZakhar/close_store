@@ -1,5 +1,6 @@
 import { getSession } from '@/helpers/getSession';
 import { showUsersByTheRole } from '@/helpers/showUserByRole';
+import { getAllUsers } from '@/services/apiServices/userService';
 import { UserRole, UserType } from '@/types/users/userType';
 import Box from '@mui/material/Box';
 
@@ -13,8 +14,6 @@ import Loading from '@/components/common/Loading';
 import SectionDescriptionStyled from '@/components/common/SectionDescriptionStyled';
 import TitleStyled from '@/components/common/TitleStyled';
 import UserPage from '@/components/pages/UserPage';
-
-import { getAllUsers } from '../api/userService';
 
 export const dynamic = 'force-dynamic';
 export const dynamicParams = true;

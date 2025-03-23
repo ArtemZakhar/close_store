@@ -76,24 +76,28 @@ const CategoryGoodsList = ({
 
   if (isEditingMode) {
     return (
-      <HandleGoods
-        selectedGoods={selectedGoods}
-        finishMode={finishMode}
-        isEditing
-        category={category}
-        key={selectedGoods?._id}
-      />
+      <Box padding="2rem">
+        <HandleGoods
+          selectedGoods={selectedGoods}
+          finishMode={finishMode}
+          isEditing
+          category={category}
+          key={selectedGoods?._id}
+        />
+      </Box>
     );
   }
 
   if (isCopyingMode) {
     return (
-      <HandleGoods
-        selectedGoods={selectedGoods}
-        key={selectedGoods?._id}
-        category={category}
-        finishMode={finishMode}
-      />
+      <Box padding="2rem">
+        <HandleGoods
+          selectedGoods={selectedGoods}
+          key={selectedGoods?._id}
+          category={category}
+          finishMode={finishMode}
+        />
+      </Box>
     );
   }
 
@@ -132,7 +136,7 @@ const CategoryGoodsList = ({
           </Typography>
 
           <Typography variant="h4" align="center" width="15rem">
-            Опис
+            Вартість
           </Typography>
 
           <Typography variant="h4" width="2rem"></Typography>

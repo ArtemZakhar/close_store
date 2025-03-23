@@ -1,4 +1,4 @@
-import { getAllSellers } from '@/app/api/sellerService';
+import { getAllSellers } from '@/services/apiServices/sellerService';
 import { useQuery } from '@tanstack/react-query';
 
 export const QUERY_SELLERS = 'sellers';

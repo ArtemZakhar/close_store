@@ -1,6 +1,10 @@
-import { forgotPassword, login, newPassword } from '@/app/api/authService';
-import { finishRegistration } from '@/app/api/userService';
 import { routePaths } from '@/constants/routePaths';
+import {
+  forgotPassword,
+  login,
+  newPassword,
+} from '@/services/apiServices/authService';
+import { finishRegistration } from '@/services/apiServices/userService';
 import { useMutation } from '@tanstack/react-query';
 
 export const useLogin = () => {

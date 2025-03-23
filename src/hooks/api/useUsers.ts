@@ -1,4 +1,4 @@
-import { deleteUser, postNewUser } from '@/app/api/userService';
+import { deleteUser, postNewUser } from '@/services/apiServices/userService';
 import { NewUserType, UserRole, UserType } from '@/types/users/userType';
 import { useMutation } from '@tanstack/react-query';
 

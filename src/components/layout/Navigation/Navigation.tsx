@@ -13,20 +13,26 @@ import Typography from '@mui/material/Typography';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import SearchByProductCode from '@/components/common/SearchByProductCode';
+
 import useGoodsInCartService from '@/hooks/useGoodsInCartService';
 
 import LogoutButton from './LogoutButton';
 import { styles } from './Navigation.styles';
 import { getNavLinksForRole } from './helpers/getNavigationLinks';
 
-export const Navigation = ({ role }: { role?: UserRole }) => {
+export const Navigation = ({
+  role,
+  owner,
+}: {
+  role?: UserRole;
+  owner?: string;
+}) => {
   const pathName = usePathname();
 
   const { goodsInCart } = useGoodsInCartService();
 
-  const isBadgeShown = !!goodsInCart.length;
-
-  if (!role) return;
+  if (!role || !owner) return;
 
   return (
     <AppBar position="static" sx={styles.appBar}>
@@ -48,6 +54,10 @@ export const Navigation = ({ role }: { role?: UserRole }) => {
             {getNavLinksForRole(role, pathName.slice(1))}
           </Box>
         </Box>
+
+        {pathName === '/goods' && (
+          <SearchByProductCode role={role} owner={owner} />
+        )}
 
         <Box>
           <Button

@@ -1,4 +1,4 @@
-import { getDataForGoodsFromCart } from '@/app/api/services/goodsService';
+import { getDataForGoodsFromCart } from '@/services/apiServices/goodsService';
 import { CartTableGoodsType, GoodsDetails } from '@/types/goods/good';
 import { GoodsInCartType } from '@/types/localStorage/goods';
 

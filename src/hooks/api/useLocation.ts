@@ -1,4 +1,7 @@
-import { getAllCities, getAllCountries } from '@/app/api/locationService';
+import {
+  getAllCities,
+  getAllCountries,
+} from '@/services/apiServices/locationService';
 import { useQuery } from '@tanstack/react-query';
 
 export const QUERY_CITIES = 'cities';
