@@ -4,11 +4,11 @@ import { NewUserType, UserRole, UserType } from '@/types/users/userType';
 import { client } from '@/utils/client';
 
 export const getAllUsers = async ({
-  tags,
   query,
+  tags,
 }: {
-  tags: string[];
   query: string;
+  tags?: string[];
 }) => {
   try {
     return await client.get<UserType[]>({

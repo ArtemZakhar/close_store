@@ -1,6 +1,7 @@
 import { routePaths } from '@/constants/routePaths';
 import { UserRole, UserType } from '@/types/users/userType';
 import { UsersDataType } from '@/types/users/usersData';
+import LocalMallIcon from '@mui/icons-material/LocalMall';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import WarehouseOutlinedIcon from '@mui/icons-material/WarehouseOutlined';
 
@@ -30,6 +31,11 @@ export const roleAccess = {
       href: routePaths.goods.root,
       label: 'Товари',
       icon: WarehouseOutlinedIcon,
+    },
+    {
+      href: routePaths.sold,
+      label: 'Продажі',
+      icon: LocalMallIcon,
     },
   ],
   [UserRole.seller]: [

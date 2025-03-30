@@ -150,24 +150,28 @@ const GoodsRow = ({
 
         {selectedGoods?._id === _id && (
           <>
-            {canModify && (
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Button
-                  component={Link}
-                  href={`/${routePaths.goods.root}/${selectedGoods.category.url}/${_id}`}
-                >
-                  Деталі
-                </Button>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Button
+                component={Link}
+                href={`/${routePaths.goods.root}/${selectedGoods.category.url}/${_id}`}
+              >
+                Деталі
+              </Button>
 
-                <Button onClick={() => startMode('editing')}>
-                  Редагування
-                </Button>
+              {canModify && (
+                <>
+                  <Button onClick={() => startMode('editing')}>
+                    Редагування
+                  </Button>
 
-                <Button onClick={() => startMode()}>Створити копію</Button>
+                  <Button onClick={() => startMode()}>Створити копію</Button>
 
-                <Button onClick={showConfirmationRemoveModal}>Видалення</Button>
-              </Box>
-            )}
+                  <Button onClick={showConfirmationRemoveModal}>
+                    Видалення
+                  </Button>
+                </>
+              )}
+            </Box>
           </>
         )}
 

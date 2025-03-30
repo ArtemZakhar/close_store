@@ -29,9 +29,9 @@ export default async function Goods() {
 
   const canAddGoods = role === UserRole.owner;
 
-  const filteredCategories = categories.filter(
-    (category) => category.owner === id,
-  );
+  // const filteredCategories = categories.filter((category) =>
+  //   category.owner === owner ? owner : id,
+  // );
 
   return (
     <ContainerWithPadding>
@@ -67,7 +67,7 @@ export default async function Goods() {
         </Box>
       </SectionDescriptionStyled>
 
-      <CategoryList categories={filteredCategories} />
+      <CategoryList categories={categories} />
     </ContainerWithPadding>
   );
 }

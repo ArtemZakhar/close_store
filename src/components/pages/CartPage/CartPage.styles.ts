@@ -19,4 +19,9 @@ export const styles = {
       },
     };
   },
+  button: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginTop: '2rem',
+  },
 };

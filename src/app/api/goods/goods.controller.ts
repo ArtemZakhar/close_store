@@ -587,7 +587,7 @@ export const httpPatchSellGoods = async (request: NextRequest) => {
       await getGoodsByParams(searchParams).lean();
 
     const dataForSellingGoods: SoldGoodsSchema[] = data.map(
-      ({ goods, key, size, count }) => {
+      ({ goods, key, size, count, soldBy }) => {
         const details = goods.goodsDetails[key];
         return {
           code: goods.code,
@@ -601,8 +601,11 @@ export const httpPatchSellGoods = async (request: NextRequest) => {
           incomePriceGRN: details.incomePriceGRN,
           incomePriceUSD: details.incomePriceUSD,
           outcomePrice: details.outcomePrice,
+          discount: details.discount,
+          salePrice: details.payablePrice,
           size,
           count,
+          soldBy: new ObjectId(soldBy),
         };
       },
     );

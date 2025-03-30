@@ -77,6 +77,8 @@ export type GoodsDetailsItemType = {
   incomePriceUSD?: number;
   incomePriceGRN?: number;
   outcomePrice?: number;
+  discount?: number;
+  payablePrice?: number;
   countAndSizes: GoodsQuantityAndCount[];
 };
 
@@ -102,6 +104,7 @@ export type CartTableGoodsType = {
   key: string;
   color: string;
   size: string;
+  soldBy: string;
 };
 
 export type SoldGoodsSchema = {
@@ -111,6 +114,8 @@ export type SoldGoodsSchema = {
   incomePriceUSD?: number;
   incomePriceGRN?: number;
   outcomePrice?: number;
+  discount?: number;
+  salePrice?: number;
   size: string;
   sellerCode: string;
   firm: string;
@@ -118,6 +123,7 @@ export type SoldGoodsSchema = {
   category: ObjectId;
   owner: ObjectId;
   count: number;
+  soldBy: ObjectId;
 };
 
 export type SeasonType = 'other' | 'summer' | 'winter';

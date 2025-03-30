@@ -1,8 +1,14 @@
-import { deleteUser, postNewUser } from '@/services/apiServices/userService';
+import {
+  deleteUser,
+  getAllUsers,
+  postNewUser,
+} from '@/services/apiServices/userService';
 import { NewUserType, UserRole, UserType } from '@/types/users/userType';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { useRouter } from 'next/navigation';
+
+const USERS_KEY = 'users';
 
 export const useCreateNewUser = () => {
   const router = useRouter();
@@ -20,3 +26,10 @@ export const useDeleteUser = () => {
     onSuccess: () => router.refresh(),
   });
 };
+
+export const useGetAllUsers = (query: string, enabled = true) =>
+  useQuery({
+    queryKey: [USERS_KEY],
+    queryFn: () => getAllUsers({ query }),
+    enabled,
+  });

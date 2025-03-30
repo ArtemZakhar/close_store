@@ -1,8 +1,12 @@
 'use client';
 
 import { routePaths } from '@/constants/routePaths';
+import { SessionType } from '@/types/session/session';
+import { UserRole } from '@/types/users/userType';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+
+import toast from 'react-hot-toast';
 
 import Link from 'next/link';
 
@@ -16,16 +20,23 @@ import { useShowFetchResultMessage } from '@/hooks/useShowUpdateResultMessage';
 
 import { styles } from './CartPage.styles';
 import CartTable from './CartTable';
-import { useGetGoodsInCartFilled } from './hooks/useGetGoodsInCartFilled';
+import { useHandleGoodsInCart } from './hooks/useHandleGoodsInCart';
 
-const CartPage = () => {
+const CartPage = ({
+  session,
+}: {
+  session: Pick<SessionType, 'id' | 'role' | 'owner'>;
+}) => {
   const {
     goodsInCartFilled,
     isError,
     isLoading,
-    setGoodsInCartFilled,
     clearGoodsFromCart,
-  } = useGetGoodsInCartFilled();
+    changeGoodsQuantity,
+    handleSelectOneSeller,
+    handleSelectSellerForAllGoods,
+    updateDiscount,
+  } = useHandleGoodsInCart();
 
   const {
     mutate: sellGoods,
@@ -34,21 +45,24 @@ const CartPage = () => {
     isPending: isSellGoodsPending,
   } = useSellGoods();
 
-  const changeQuantity = (id: string, action: 'decrease' | 'increase') => {
-    setGoodsInCartFilled((prevState) =>
-      prevState.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              count: action === 'decrease' ? item.count - 1 : item.count + 1,
-            }
-          : item,
-      ),
-    );
-  };
-
   const handleSell = () => {
-    sellGoods(goodsInCartFilled);
+    if (session.role === UserRole.owner) {
+      const emptySeller = goodsInCartFilled.some(
+        (item) => item.soldBy.length === 0,
+      );
+      if (emptySeller) {
+        toast.error('Оберіть, будь ласка, продавця');
+        return;
+      }
+      sellGoods(goodsInCartFilled);
+    } else {
+      const updatedGoodsInCart = goodsInCartFilled.map((item) => ({
+        ...item,
+        soldBy: session.id,
+      }));
+
+      sellGoods(updatedGoodsInCart);
+    }
   };
 
   useShowFetchResultMessage({
@@ -79,18 +93,16 @@ const CartPage = () => {
         <>
           <Box>
             <CartTable
+              handleSelectSellerForAllGoods={handleSelectSellerForAllGoods}
+              handleSelectOneSeller={handleSelectOneSeller}
               goodsInCartFilled={goodsInCartFilled}
-              changeQuantity={changeQuantity}
+              changeQuantity={changeGoodsQuantity}
+              session={session}
+              updateDiscount={updateDiscount}
             />
           </Box>
 
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              marginTop: '2rem',
-            }}
-          >
+          <Box sx={styles.button}>
             <LoadingButton
               isLoading={isSellGoodsPending}
               label="Реалізація"
@@ -102,14 +114,14 @@ const CartPage = () => {
         </>
       )}
 
-      {!goodsInCartFilled.length && !isLoading && (
+      {!isLoading && !goodsInCartFilled.length && (
         <Box sx={styles.noDataWrapper}>
           <Typography
             variant="h4"
             sx={(theme) => styles.noDataLink(theme.palette.primary.main)}
           >
-            Корзина порожня. Спершу додайте{' '}
-            <Link href={routePaths.goods.root}>товар</Link> до корзини.
+            Корзина порожня. Спершу додайте
+            <Link href={routePaths.goods.root}> товар</Link> до корзини.
           </Typography>
         </Box>
       )}

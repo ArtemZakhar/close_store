@@ -63,7 +63,6 @@ export const updateMany = async (
   goodsToUpdate: Pick<GoodsSchemaType, '_id' | 'owner' | 'goodsDetails'>[],
   session: mongoose.ClientSession,
 ) => {
-  console.log(goodsToUpdate);
   if (!goodsToUpdate.length) return;
 
   const bulkOperations = goodsToUpdate.map(({ _id, owner, goodsDetails }) => ({

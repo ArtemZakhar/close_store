@@ -16,4 +16,9 @@ export const styles = {
       minWidth: 0,
     },
   },
+  cell(condition: boolean) {
+    return {
+      display: condition ? 'table-cell' : 'none',
+    };
+  },
 };

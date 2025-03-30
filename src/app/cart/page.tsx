@@ -15,13 +15,17 @@ export default async function Users() {
 
   if (!session) return;
 
-  const { role, id, owner } = session;
-
   return (
     <ContainerWithPadding>
       <Suspense fallback={<Loading />}>
         <ErrorBoundary>
-          <CartPage />
+          <CartPage
+            session={{
+              id: session.id,
+              owner: session.owner,
+              role: session.role,
+            }}
+          />
         </ErrorBoundary>
       </Suspense>
     </ContainerWithPadding>

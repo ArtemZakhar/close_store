@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 
 import useGoodsInCartService from '@/hooks/useGoodsInCartService';
 
-export const useGetGoodsInCartFilled = () => {
+export const useHandleGoodsInCart = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [goodsInCartFilled, setGoodsInCartFilled] = useState<
@@ -36,6 +36,9 @@ export const useGetGoodsInCartFilled = () => {
                 )?.count;
 
                 if (maxCount) {
+                  existingGoodsDetails.payablePrice =
+                    existingGoodsDetails.outcomePrice;
+
                   const newGoodsDetails: GoodsDetails = {
                     [elem.goodsDetailsKey]: existingGoodsDetails,
                   };
@@ -53,6 +56,7 @@ export const useGetGoodsInCartFilled = () => {
                     size: elem.size,
                     maxCount,
                     itemId: newGoodsDetails[elem.goodsDetailsKey]._id!,
+                    soldBy: '',
                   });
                 }
               } else {
@@ -95,11 +99,66 @@ export const useGetGoodsInCartFilled = () => {
     clearCart();
   };
 
+  const changeGoodsQuantity = (id: string, action: 'decrease' | 'increase') => {
+    setGoodsInCartFilled((prevState) =>
+      prevState.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              count: action === 'decrease' ? item.count - 1 : item.count + 1,
+            }
+          : item,
+      ),
+    );
+  };
+
+  const updateDiscount = (id: string, key: string, discountAmount: number) => {
+    setGoodsInCartFilled((prevState) =>
+      prevState.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              goods: {
+                ...item.goods,
+                goodsDetails: {
+                  ...item.goods.goodsDetails,
+                  [key]: {
+                    ...item.goods.goodsDetails[key],
+                    discount: discountAmount,
+                    payablePrice:
+                      (item.goods.goodsDetails[key].outcomePrice ?? 0) -
+                      discountAmount,
+                  },
+                },
+              },
+            }
+          : item,
+      ),
+    );
+  };
+
+  const handleSelectOneSeller = (goodsId: string, id: string) => {
+    setGoodsInCartFilled((prevState) =>
+      prevState.map((item) =>
+        item.id === goodsId ? { ...item, soldBy: id } : item,
+      ),
+    );
+  };
+
+  const handleSelectSellerForAllGoods = (id: string) => {
+    setGoodsInCartFilled((prevState) =>
+      prevState.map((item) => ({ ...item, soldBy: id })),
+    );
+  };
+
   return {
     isError,
     isLoading,
     goodsInCartFilled,
-    setGoodsInCartFilled,
     clearGoodsFromCart,
+    changeGoodsQuantity,
+    handleSelectOneSeller,
+    handleSelectSellerForAllGoods,
+    updateDiscount,
   };
 };
