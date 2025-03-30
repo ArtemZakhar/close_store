@@ -13,7 +13,6 @@ export default async function CategoryPage({
   params: { [key: string]: string };
 }) {
   const { category, id } = params;
-  console.log(category, id);
   const session = await getSession();
 
   if (!session) return;

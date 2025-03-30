@@ -35,8 +35,14 @@ const soldGoodsSchema = new mongoose.Schema<SoldGoodsSchema>(
     incomePriceUSD: { type: Number, required: true },
     incomePriceGRN: { type: Number, required: true },
     outcomePrice: { type: Number, required: true },
+    discount: { type: Number },
+    salePrice: { type: Number, required: true },
     size: { type: String, required: true },
     count: { type: Number, required: true },
+    soldBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+    },
   },
   {
     timestamps: true,

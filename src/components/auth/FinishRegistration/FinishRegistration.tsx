@@ -1,7 +1,5 @@
 'use client';
 
-import { finishRegistration } from '@/app/api/userService';
-import { routePaths } from '@/constants/routePaths';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Box from '@mui/material/Box';
@@ -13,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 import LoadingButton from '@/components/common/buttons/LoadingButton';
 

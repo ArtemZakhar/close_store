@@ -69,13 +69,7 @@ export const httpGetGoods = async (request: NextRequest) => {
 
     let goods: GoodsSchemaType[] = [];
 
-    if (role === UserRole.owner) {
-      goods = await getPopulatedGoods({ ...searchParams, owner: owner });
-    }
-
-    if (role === UserRole.seller) {
-      goods = await getPopulatedGoods({ ...searchParams, owner });
-    }
+    goods = await getPopulatedGoods({ ...searchParams, owner });
 
     return NextResponse.json(goods, { status: responseMessages.codes[200] });
   } catch (error) {
@@ -593,7 +587,7 @@ export const httpPatchSellGoods = async (request: NextRequest) => {
       await getGoodsByParams(searchParams).lean();
 
     const dataForSellingGoods: SoldGoodsSchema[] = data.map(
-      ({ goods, key, size, count }) => {
+      ({ goods, key, size, count, soldBy }) => {
         const details = goods.goodsDetails[key];
         return {
           code: goods.code,
@@ -607,8 +601,11 @@ export const httpPatchSellGoods = async (request: NextRequest) => {
           incomePriceGRN: details.incomePriceGRN,
           incomePriceUSD: details.incomePriceUSD,
           outcomePrice: details.outcomePrice,
+          discount: details.discount,
+          salePrice: details.payablePrice,
           size,
           count,
+          soldBy: new ObjectId(soldBy),
         };
       },
     );

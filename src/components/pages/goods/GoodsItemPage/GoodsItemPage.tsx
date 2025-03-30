@@ -76,11 +76,13 @@ const GoodsItemPage = ({
         Детальна інформація по товару
       </TitleStyled>
 
-      <Box sx={{ position: 'absolute', top: '0', right: '0' }}>
-        <Button onClick={handleStartEditMode} variant="contained">
-          Редагувати
-        </Button>
-      </Box>
+      {canModify && (
+        <Box sx={{ position: 'absolute', top: '0', right: '0' }}>
+          <Button onClick={handleStartEditMode} variant="contained">
+            Редагувати
+          </Button>
+        </Box>
+      )}
 
       <GoodsInformation goodsItem={goodsItem} role={role} />
     </Box>

@@ -1,8 +1,7 @@
+import { apiCalls } from '@/app/api/constants/apiCalls';
 import { CategoryType } from '@/types/goods/category';
 
 import { client } from '@/utils/client';
-
-import { apiCalls } from './constants/apiCalls';
 
 export const getAllCategories = ({
   tags,

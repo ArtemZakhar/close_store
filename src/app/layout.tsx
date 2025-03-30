@@ -37,8 +37,11 @@ export default async function RootLayout({
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
             <ReactQueryProvider>
-              <Navigation role={session?.role} />
-              <Box component="main" sx={{ minHeight: '90vh' }}>
+              <Navigation
+                role={session?.role}
+                owner={session?.owner ? session.owner : session?.id}
+              />
+              <Box component="main" sx={{ minHeight: '85vh' }}>
                 <Toaster position="top-center" />
                 <CssBaseline />
                 {globalStyles}

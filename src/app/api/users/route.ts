@@ -15,8 +15,6 @@ import { revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
-import mongoose from 'mongoose';
-
 import { responseMessages } from '../constants/responseMessages';
 
 export async function GET(request: NextRequest) {
@@ -29,6 +27,7 @@ export async function GET(request: NextRequest) {
   const role = query.get('role');
   const id = query.get('id');
   const owner = query.get('owner');
+  const employee = query.get('employee');
 
   let users: UserSchemaType[] = [];
 
@@ -47,7 +46,11 @@ export async function GET(request: NextRequest) {
     users = await User.find(
       {
         status: { $ne: 'deleted' },
-        role: { $in: [UserRole.seller, UserRole.buyer] },
+        role: {
+          $in: !!employee
+            ? [UserRole.seller]
+            : [UserRole.seller, UserRole.buyer],
+        },
         owner: id,
       },
       'name email _id role',

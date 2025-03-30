@@ -1,3 +1,4 @@
+import { apiCalls } from '@/app/api/constants/apiCalls';
 import { FirmType } from '@/types/goods/firm';
 import {
   CartTableGoodsType,
@@ -9,8 +10,6 @@ import {
 import { GoodsInCartType } from '@/types/localStorage/goods';
 
 import { client } from '@/utils/client';
-
-import { apiCalls } from '../../constants/apiCalls';
 
 export const getAllFirms = async () =>
   await client.get<FirmType[]>({ url: apiCalls.firms });
